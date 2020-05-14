@@ -53,11 +53,5 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-# Bootstrap for frontend beautification
-gem 'bootstrap'
-# Bootstrap stylesheet depends on Sass
-gem 'sassc-rails', '>= 2.1.0'
-# Bootstrap JavaScript depends on jQuery
-gem 'jquery-rails'
 # Bootswatch for Simplex theme
 gem 'bootswatch'
