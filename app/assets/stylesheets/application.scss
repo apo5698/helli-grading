@@ -15,8 +15,25 @@
   tr, td {
     background-color: transparent !important;
     border-color: transparent;
-    text-align:center;
+    text-align: center;
   }
+}
+
+.terminal {
+  background-color: #282c34;
+  border-radius: 5px;
+  height: 350px;
+  padding: 1em;
+}
+
+.terminal-content {
+  color: #d8d8d8;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  white-space: pre;
+}
+
+.code {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 @import "bootswatch/simplex/variables";
