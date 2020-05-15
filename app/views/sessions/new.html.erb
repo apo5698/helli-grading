@@ -1,0 +1,33 @@
+<div class="row">
+  <div class=<%= "col-lg-4"%>></div>
+  <div class="col-lg-4">
+    <div class="center pb-3">
+      <i class="fas fa-toilet-paper fa-6x"></i>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <%= form_tag sessions_path %>
+          <fieldset>
+            <legend>Sign in</legend>
+            <div class="form-group"
+              <%= label 'user', 'username', 'Username or email address' %>
+              <%= text_field 'user', 'username', class: "form-control" %>
+              <small id="usernameHelp" class="form-text text-muted">We'll share your email and your password with everyone
+                else.</small>
+            </div>
+            <div class="form-group">
+              <%= label 'user', 'password', 'Password' %>
+              <%= text_field 'user', 'password', class: "form-control" %>
+            </div>
+            <%= link_to 'Forget your password?', '#' %>
+            <%= submit_tag "Login", class: "btn btn-primary float-right" %>
+          </fieldset>
+      </div>
+      <div class="card-footer center">
+        Don't have an account?&nbsp;
+        <strong><a href="/">Sign up!</a></strong>
+      </div>
+    </div>
+  </div>
+</div>

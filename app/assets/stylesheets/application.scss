@@ -36,6 +36,12 @@
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.center {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
 @import "bootswatch/simplex/variables";
 @import "bootstrap/scss/bootstrap";
 @import "bootswatch/simplex/bootswatch";
