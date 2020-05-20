@@ -20,15 +20,16 @@
 }
 
 .terminal {
+  // window
   background-color: #282c34;
   border-radius: 5px;
   height: 350px;
-  padding: 1em;
-}
-
-.terminal-content {
+  padding: 2em;
+  overflow: auto;
+  // font
   color: #d8d8d8;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12px;
   white-space: pre;
 }
 

@@ -72,7 +72,7 @@
   </div>
   <div class="col-lg-9">
     <div class="row">
-      <div class="col-lg-12" style="margin-bottom: 4em">
+      <div class="col-lg-12 mb-5">
         <% if step == 1 %>
           <%= render partial: "prepare" %>
         <% elsif step == 2 %>
@@ -86,10 +86,39 @@
         <% end %>
       </div>
       <div class="col-lg-12">
-        <a href="?step=<%= @step + 1 %>">
-          <button class="btn btn-primary">Next</button>
-        </a>
+        <% if @step > 1 %>
+          <a href="?step=<%= @step - 1 %>">
+            <button class="btn btn-primary">Back</button>
+          </a>
+        <% end %>
+        <% if @step < 5 %>
+          <a href="?step=<%= @step + 1 %>">
+            <button class="btn btn-primary">Next</button>
+          </a>
+        <% end %>
+        <% if @step == 5 %>
+          <button class="btn btn-primary">Done</button>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
+<script>
+  $(document).on('click', '#options-select-all', () => {
+    $("#options input:checkbox").prop('checked', true);
+  });
+  $(document).on('click', '#options-reset', () => {
+    $("#options input:checkbox").prop('checked', false);
+  });
+
+  let customCount = 0;
+  $(document).on('click', '#custom-add', () => {
+    customCount++;
+    $("#custom-compile").append(
+      `<div class="input-group mb-2" id="custom-command-${customCount}">` +
+      `<input type="text" class="form-control" placeholder="Command ${customCount}" id="inputDefault">` +
+      `<div class="input-group-append">` +
+      `<button type="button" class="btn btn-primary" id="custom-command-${customCount}">Remove</button>` +
+      `</div></div>`);
+  });
+</script>
