@@ -1,8 +1,11 @@
 class UsersController < ApplicationController
   def new
-    flash[:info] = 'Registered.'
-    redirect_to root_path
+    render layout: 'pre_application'
   end
 
-  def create; end
+  def create
+    session[:user] = params[:user]
+    flash[:success] = '🐂🍺'
+    redirect_to root_path
+  end
 end

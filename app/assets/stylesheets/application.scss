@@ -43,6 +43,11 @@
   display: flex;
 }
 
+label.required:after {
+  content: " *";
+  color: #dc3545;
+}
+
 @import "bootswatch/simplex/variables";
 @import "bootstrap/scss/bootstrap";
 @import "bootswatch/simplex/bootswatch";

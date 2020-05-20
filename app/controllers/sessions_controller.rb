@@ -1,5 +1,7 @@
 class SessionsController < ApplicationController
-  def new; end
+  def new
+    render layout: 'pre_application'
+  end
 
   def create
     if params[:user][:username] != '' and params[:user][:password] != ''
