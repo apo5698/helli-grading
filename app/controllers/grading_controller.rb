@@ -132,10 +132,17 @@ class GradingController < ApplicationController
   private
 
   def set_variables
-    @id = params[:id]
-    if params[:id]
-      @upload_root = Rails.root.join('public', 'uploads', params[:id])
+    if params[:exercise_id]
+      @assignment_type = "exercises"
+      @id = params[:exercise_id]
+    elsif params[:project_id]
+      @assignment_type = "projects"
+      @id = params[:project_id]
+    elsif params[:homework_id]
+      @assignment_type = "homework"
+      @id = params[:homework_id]
     end
+    @upload_root = Rails.root.join('public', 'uploads', @id) if @id
     @action = params[:action]
   end
 

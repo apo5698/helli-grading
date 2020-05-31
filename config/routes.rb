@@ -1,24 +1,23 @@
 Rails.application.routes.draw do
-  resources :grading
+  resources :grading do
+    collection do
+      resources :exercises, :projects, :homework do
+        get 'prepare', to: 'grading#prepare'
+        post 'upload', to: 'grading#upload'
+        post 'delete_upload', to: 'grading#delete_upload'
+        get 'compile', to: 'grading#compile'
+        post 'compile', to: 'grading#compile_all'
+        get 'run', to: 'grading#run'
+        post 'run', to: 'grading#run_selected'
+        get 'checkstyle', to: 'grading#checkstyle'
+        post 'checkstyle', to: 'grading#checkstyle_run'
+        get 'summary', to: 'grading#summary'
+        post 'summary', to: 'grading#summary'
+      end
+    end
+  end
   resources :users
   resources :sessions
 
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root to: 'home#index'
-
-  get '/grading/:id/prepare', to: 'grading#prepare'
-  post '/grading/:id/upload', to: 'grading#upload'
-  post '/grading/:id/delete_upload', to: 'grading#delete_upload'
-
-  get '/grading/:id/compile', to: 'grading#compile'
-  post '/grading/:id/compile', to: 'grading#compile_all'
-
-  get '/grading/:id/run', to: 'grading#run'
-  post '/grading/:id/run', to: 'grading#run_selected'
-
-  get '/grading/:id/checkstyle', to: 'grading#checkstyle'
-  post '/grading/:id/checkstyle', to: 'grading#checkstyle_run'
-
-  get '/grading/:id/summary', to: 'grading#summary'
-  post '/grading/:id/summary', to: 'grading#summary'
 end
