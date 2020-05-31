@@ -115,8 +115,6 @@ class GradingController < ApplicationController
   private
 
   def set_variables
-    @step = params[:step].to_i
-    @step = 1 if @step.zero?
     @id = params[:id]
     if params[:id]
       @upload_root = Rails.root.join('public', 'uploads', params[:id])
