@@ -1,35 +1,29 @@
 <div class="row mb-4">
-  <div class="col-lg-12">
-    <h1>Compile</h1>
-  </div>
-</div>
-<div class="row mb-4">
   <div class="col-lg-5">
     <h3>Source Files</h3>
     <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center code">
-        Box.java
-        <span class="badge badge-success badge-pill"><i class="fas fa-check"></i></span>
-      </li>
-      <li class="list-group-item d-flex justify-content-between align-items-center active code">
-        BoxList.java
-        <span class="badge badge-dark badge-pill">12</span>
-      </li>
-      <li class="list-group-item d-flex justify-content-between align-items-center code">
-        BoxUI.java
-        <span class="badge badge-primary badge-pill">7</span>
-      </li>
+      <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
+        <li class="list-group-item d-flex justify-content-between align-items-center code">
+          <%= File.basename(filepath) %>
+          <% if Dir.glob(filepath.gsub('src', 'bin').gsub('.java', '.class')).empty? %>
+            <% span_class = 'badge badge-danger' %>
+            <% tooltip_title = 'Not yet compiled' %>
+            <% icon_class = 'fas fa-question' %>
+          <% else %>
+            <% span_class = 'badge badge-success' %>
+            <% tooltip_title = 'Compiled' %>
+            <% icon_class = 'fas fa-check' %>
+          <% end %>
+          <span class="<%= span_class %>" data-toggle="tooltip" data-placement="right" title="<%= tooltip_title %>">
+            <i class="<%= icon_class %>"></i>
+          </span>
+        </li>
+      <% end %>
     </ul>
   </div>
   <div class="col-lg-7">
     <h3>Options</h3>
     <div class="form-group" id="options">
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="bin">
-        <label class="custom-control-label" for="bin">
-          Nested structure, compile to /bin (<span class="code">-d bin</span>)
-        </label>
-      </div>
       <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" id="junit">
         <label class="custom-control-label" for="junit">
@@ -39,13 +33,13 @@
       <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" id="customCheck3">
         <label class="custom-control-label" for="customCheck3">
-          Some option3
+          Some option2
         </label>
       </div>
       <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" id="customCheck4">
         <label class="custom-control-label" for="customCheck4">
-          Some option4
+          Some option3
         </label>
       </div>
     </div>
@@ -60,25 +54,31 @@
     <label class="col-form-label">Enter full command(s) below:</label>
     <div class="form-group" id="custom-compile">
       <div class="input-group mb-2">
-        <input type="text" class="form-control" placeholder="Command 0">
+        <input type="text" class="form-control" placeholder="javac ...">
         <div class="input-group-append">
           <button type="button" class="btn btn-dark disabled">Remove</button>
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" id="custom-add">Add</button>
+    <button type="button" class="btn btn-primary" id="custom-add" onclick="add()">Add</button>
   </div>
 </div>
 <div class="row mb-4">
   <div class="col-lg-12">
-    <button type="button" class="btn btn-primary" id="compile-all">Compile All</button>
-    <button type="button" class="btn btn-outline-primary" id="compile">Compile single file</button>
+    <%= form_tag "/grading/#{@id}/compile" %>
+    <button class="btn btn-primary">Compile all</button>
   </div>
 </div>
 <div class="row mb-4">
   <div class="col-lg-12">
     <h3>Console Output</h3>
-    <div class="terminal"><%= File.open('app/views/grading/sample_compile_output.txt').read %>
-    </div>
+    <div class="terminal"><%= @console_output %></div>
   </div>
 </div>
+<script>
+  let customCount = 0;
+
+  function add() {
+    customAdd(customCount++);
+  }
+</script>

@@ -1,5 +1,49 @@
 <div class="row mb-4">
-  <div class="col-lg-12">
-    <h1>Prepare</h1>
+  <div class="col-lg-6">
+    <%= form_tag({action: :upload}, multipart: true, id: @id) do %>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="custom-file">
+            <%= file_field_tag 'file', class: 'custom-file-input' %>
+            <label class="custom-file-label" for="file">Choose zip</label>
+          </div>
+          <div class="input-group-append">
+            <%= submit_tag 'Upload', class: 'input-group-text' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
+<div class="row mb-4">
+  <div class="col-lg-6">
+    <h3>Uploaded files</h3>
+    <%= form_tag({action: :delete_upload}, multipart: true, id: @id) do %>
+      <div class="form-group">
+        <ul class="list-group mb-2">
+          <% Dir.glob(Rails.root.join('public', 'uploads', @id, '**', '*.java')).sort.each do |filepath| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center code">
+              <%= File.basename(filepath) %>
+              <div class="custom-control custom-checkbox">
+                <%= check_box :filepaths, filepath, class: "custom-control-input" %>
+                <label class="custom-control-label" for="filepaths_<%= filepath %>"></label>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <%= submit_tag 'Delete', class: 'btn btn-outline-primary' %>
+    <% end %>
+  </div>
+</div>
+<script>
+  const uploadedFilesForm = $("ul[class='list-group mb-2']")
+  if (uploadedFilesForm.text().trim() === '') {
+    $("input[value='Delete']").hide()
+    uploadedFilesForm.append('None')
+  }
+
+  $('#file').on('change', function () {
+    $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
+  })
+</script>

@@ -37,11 +37,14 @@
     <orderEntry type="library" scope="PROVIDED" name="activejob (v6.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activemodel (v6.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activerecord (v6.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="activerecord-session_store (v1.1.3@1c5636, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activestorage (v6.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v6.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="addressable (v2.7.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="autoprefixer-rails (v9.7.6, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="better_errors (v2.7.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bindex (v0.8.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="binding_of_caller (v0.8.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bootsnap (v1.4.6, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bootswatch (v4.3.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.4, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
@@ -49,8 +52,11 @@
     <orderEntry type="library" scope="PROVIDED" name="byebug (v11.1.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara (v3.32.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="childprocess (v3.0.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="coderay (v1.1.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.1.6, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="crass (v1.0.6, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="debug_inspector (v0.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubi (v1.9.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="execjs (v2.7.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.12.2, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
@@ -67,6 +73,7 @@
     <orderEntry type="library" scope="PROVIDED" name="mini_portile2 (v2.4.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.14.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="msgpack (v1.3.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.14.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nio4r (v2.5.2, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.10.9, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="public_suffix (v4.0.5, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
