@@ -1,51 +1,45 @@
 <div class="row mb-4">
-  <div class="col-lg-12">
-    <h3>Options</h3>
-    <div class="form-group" id="options">
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="magic-number">
-        <label class="custom-control-label" for="magic-number">
-          Ignore magic numbers
-        </label>
+  <div class="col-lg-6">
+    <h3>Compiled Classes</h3>
+    <%= form_tag({action: :checkstyle}, multipart: true, id: @id) do %>
+      <div class="form-group">
+        <ul class="list-group mb-2">
+          <% Dir.glob(Rails.root.join('public', 'uploads', @id, '**', '*.java')).sort.each do |filepath| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center code">
+              <%= filename = File.basename(filepath) %>
+              <% checked = filename.exclude? 'UI' %>
+              <div class="custom-control custom-checkbox">
+                <%= check_box :filepaths, filepath, class: 'custom-control-input', checked: checked %>
+                <label class="custom-control-label" for="filepaths_<%= filepath %>"></label>
+              </div>
+            </li>
+          <% end %>
+        </ul>
       </div>
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="ui">
-        <label class="custom-control-label" for="ui">
-          Ignore UI files
-        </label>
+      <div class="custom-control custom-checkbox mb-2">
+        <%= check_box :options, 'ignore', class: 'custom-control-input' %>
+        <label class="custom-control-label" for="options_ignore">Ignore magic numbers</label>
       </div>
-    </div>
-    <button type="button" class="btn btn-primary" id="options-select-all">Select all</button>
-    <button type="button" class="btn btn-outline-primary" id="options-reset">Reset</button>
-  </div>
-</div>
-<div class="row mb-4">
-  <div class="col-lg-12">
-    <a class="btn btn-secondary" href="/grading/1/checkstyle?step=<%= @step %>">Run checkstyle for all</a>
-    <a class="btn btn-secondary" href="/grading/1/checkstyle?step=<%= @step %>">Run checkstyle for selected</a>
+      <%= submit_tag 'Run checkstyle', class: 'btn btn-primary' %>
+      <%#= submit_tag 'Run for selected', class: 'btn btn-outline-primary' %>
+    <% end %>
   </div>
 </div>
 <div class="row mb-4">
   <div class="col-lg-6">
     <h3>Result</h3>
-    <div class="card mb-3">
+    <div class="card">
       <h3 class="card-header d-flex justify-content-between align-items-center">
         Total
-        <span class="badge badge-primary">17</span>
+        <span class="badge badge-dark"><%= @cs_count&.sum { |_, v| v } %></span>
       </h3>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <span class="code">Box.java</span>
-          <span class="badge badge-primary badge-pill">6</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <span class="code">BoxList.java</span>
-          <span class="badge badge-primary badge-pill">11</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <span class="code"><del>BoxUI.java</del></span>
-          <span class="badge badge-dark badge-pill">3</span>
-        </li>
+        <% @cs_count&.each do |f, c| %>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="code"><%= f %></span>
+            <span class="badge badge-warning badge-pill"><%= c %></span>
+          </li>
+        <% end %>
       </ul>
     </div>
   </div>

@@ -36,7 +36,7 @@ class GradingController < ApplicationController
     end
 
     @action = "compile"
-    render '/grading/show'
+    compile
   end
 
   def run
@@ -59,13 +59,30 @@ class GradingController < ApplicationController
     end
 
     @action = 'run'
-    render '/grading/show'
+    run
   end
 
   def checkstyle
-    path = '~/cs-checkstyle/checkstyle'
-    exec(path, params[:filename]) unless params[:filename].nil?
     render '/grading/show'
+  end
+
+  def checkstyle_run
+    cs_path = '~/cs-checkstyle/checkstyle'
+    @cs_count = {}
+    ignore = params[:options][:ignore]
+    params[:filepaths].each do |f|
+      next if f[1].to_i.zero?
+
+      filename = File.basename(f[0])
+      ret = exec(cs_path, f[0])[0]
+      @cs_count[:"#{filename}"] = if ignore.to_i.zero?
+                                    ret.scan(/#{filename}:/).count
+                                  else
+                                    ret.scan(/^((?!magic number).)*$/).count - 4
+                                  end
+    end
+    @action = 'checkstyle'
+    checkstyle
   end
 
   def summary

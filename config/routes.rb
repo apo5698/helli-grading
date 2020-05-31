@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   post '/grading/:id/run', to: 'grading#run_selected'
 
   get '/grading/:id/checkstyle', to: 'grading#checkstyle'
-  post '/grading/:id/checkstyle', to: 'grading#checkstyle'
+  post '/grading/:id/checkstyle', to: 'grading#checkstyle_run'
 
   get '/grading/:id/summary', to: 'grading#summary'
   post '/grading/:id/summary', to: 'grading#summary'
