@@ -8,4 +8,8 @@ class UsersController < ApplicationController
     flash[:success] = '🐂🍺'
     redirect_to root_path
   end
+
+  def show
+
+  end
 end

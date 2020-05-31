@@ -13,6 +13,9 @@
           <a class="nav-link" href="/grading">Grading</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="#">Export</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="#">Setting</a>
         </li>
         <li class="nav-item">
@@ -20,11 +23,13 @@
         </li>
       </ul>
       <ul class="navbar-nav my-2 my-lg-0">
-        <li class="nav-item center" style="padding: 0.7em">
-          <i class="fas fa-user-circle fa-2x"></i>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-method="delete" href="/sessions/1">Logout</a>
+        <li class="nav-item center dropdown show">
+          <a data-toggle="dropdown" href="#"><i class="fas fa-user-circle fa-2x"></i></a>
+          <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform;">
+            <a class="dropdown-item" href="/users/1">Profile</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" data-method="delete" href="/sessions/1">Logout</a>
+          </div>
         </li>
       </ul>
     </div>
