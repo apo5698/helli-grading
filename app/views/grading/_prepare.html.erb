@@ -21,7 +21,7 @@
     <%= form_tag({action: :delete_upload}, multipart: true, id: @id) do %>
       <div class="form-group">
         <ul class="list-group mb-2">
-          <% Dir.glob(Rails.root.join('public', 'uploads', @id, '**', '*.java')).sort.each do |filepath| %>
+          <% Dir.glob(@upload_root.join('**', '*.class')).sort.each do |filepath| %>
             <li class="list-group-item d-flex justify-content-between align-items-center code">
               <%= File.basename(filepath) %>
               <div class="custom-control custom-checkbox">
@@ -37,10 +37,10 @@
   </div>
 </div>
 <script>
-  const uploadedFilesForm = $("ul[class='list-group mb-2']")
+  const uploadedFilesForm = $("ul[class='list-group mb-2']");
   if (uploadedFilesForm.text().trim() === '') {
-    $("input[value='Delete']").hide()
-    uploadedFilesForm.append('None')
+    $("input[value='Delete']").hide();
+    uploadedFilesForm.append('None');
   }
 
   $('#file').on('change', function () {
