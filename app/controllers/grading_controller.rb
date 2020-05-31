@@ -46,13 +46,13 @@ class GradingController < ApplicationController
   def run_selected
     file = params[:file]
     if file.nil?
-      flash[:error] = 'No file selected.'
+      flash.now[:error] = 'No file selected.'
     else
       exec_ret = exec("java -cp #{@upload_root.join('bin')}", file.gsub('.class', ''))
       if exec_ret[1].empty?
-        flash[:success] = 'Run successfully.'
+        flash.now[:success] = 'Run successfully.'
       else
-        flash[:error] = 'Error occurs during running. '\
+        flash.now[:error] = 'Error occurs during running. '\
                       'Please check the console output.'
       end
       @console_output = exec_ret[0] + exec_ret[1]
