@@ -76,3 +76,6 @@ yarn-debug.log*
 yarn-debug.log*
 .yarn-integrity
 .idea/discord.xml
+
+# Ignore user uploads
+/public/uploads
