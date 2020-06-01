@@ -22,8 +22,8 @@ class GradingController < ApplicationController
     bin_path = @upload_root.join('bin')
     Dir.glob(@upload_root.join('src').join('*.java')) do |file|
       ret = exec("javac -d #{bin_path} -cp #{bin_path}", file)
-      exec_ret[0] += ret[0]
-      exec_ret[1] += ret[1]
+      exec_ret[0] += (ret[0] + "\n\n") unless ret[0].empty?
+      exec_ret[1] += (ret[1] + "\n\n") unless ret[1].empty?
     end
 
     if exec_ret[1].empty?
@@ -31,11 +31,11 @@ class GradingController < ApplicationController
       @console_output = 'Nothing wrong happened.'
     else
       flash.now[:error] = 'Error occurs during compilation. '\
-                      'Please check the console output.'
+                          'Please check the console output.'
       @console_output = exec_ret[1]
     end
 
-    @action = "compile"
+    @action = 'compile'
     compile
   end
 
@@ -53,7 +53,7 @@ class GradingController < ApplicationController
         flash.now[:success] = 'Run successfully.'
       else
         flash.now[:error] = 'Error occurs during running. '\
-                      'Please check the console output.'
+                            'Please check the console output.'
       end
       @console_output = exec_ret[0] + exec_ret[1]
     end
@@ -92,11 +92,8 @@ class GradingController < ApplicationController
 
   def upload
     uploaded_file = params[:file]
-    bytes = uploaded_file&.read
     if uploaded_file.nil?
       flash[:error] = 'No file selected.'
-    elsif bytes.empty?
-      flash[:error] = 'File cannot be empty.'
     else
       filename = uploaded_file.original_filename
       src_path = @upload_root.join('src')
@@ -106,8 +103,11 @@ class GradingController < ApplicationController
       upload_to = !filename.end_with?('Test.java') ? src_path : test_path
 
       File.open(upload_to.join(filename), 'wb') do |f|
-        f.write(bytes)
-        flash[:success] = 'Upload successfully.'
+        if f.write(uploaded_file.read).zero?
+          flash[:error] = 'File cannot be empty.'
+        else
+          flash[:success] = 'Upload successfully.'
+        end
       end
     end
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
