@@ -4,7 +4,7 @@
     <%= form_tag({action: :checkstyle}, multipart: true, id: @id) do %>
       <div class="form-group">
         <ul class="list-group mb-2">
-          <% Dir.glob(Rails.root.join('public', 'uploads', @id, '**', '*.java')).sort.each do |filepath| %>
+          <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
             <li class="list-group-item d-flex justify-content-between align-items-center code">
               <%= filename = File.basename(filepath) %>
               <% checked = filename.exclude? 'UI' %>
@@ -31,7 +31,7 @@
     <div class="card">
       <h3 class="card-header d-flex justify-content-between align-items-center">
         Total
-        <span class="badge badge-dark"><%= @cs_count&.sum { |_, v| v } %></span>
+        <span class="badge badge-dark"><%= @cs_count&.sum { |_, v| v } || '0' %></span>
       </h3>
       <ul class="list-group list-group-flush">
         <% @cs_count&.each do |f, c| %>

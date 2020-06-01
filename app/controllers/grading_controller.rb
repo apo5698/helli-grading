@@ -81,6 +81,7 @@ class GradingController < ApplicationController
                                     ret.scan(/^((?!magic number).)*$/).count - 4
                                   end
     end
+    flash.now[:error] = 'No file selected.' if @cs_count.empty?
     @action = 'checkstyle'
     checkstyle
   end
@@ -109,7 +110,7 @@ class GradingController < ApplicationController
         end
       end
     end
-    redirect_to "/grading/#{@id}/prepare"
+    redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
   end
 
   def delete_upload
@@ -126,23 +127,23 @@ class GradingController < ApplicationController
       end
       flash[:success] = 'File(s) deleted.'
     end
-    redirect_to "/grading/#{@id}/prepare"
+    redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
   end
 
   private
 
   def set_variables
     if params[:exercise_id]
-      @assignment_type = "exercises"
+      @assignment_type = 'exercises'
       @id = params[:exercise_id]
     elsif params[:project_id]
-      @assignment_type = "projects"
+      @assignment_type = 'projects'
       @id = params[:project_id]
     elsif params[:homework_id]
-      @assignment_type = "homework"
+      @assignment_type = 'homework'
       @id = params[:homework_id]
     end
-    @upload_root = Rails.root.join('public', 'uploads', @id) if @id
+    @upload_root = Rails.root.join('public', 'uploads', @assignment_type, @id) if @id
     @action = params[:action]
   end
 
