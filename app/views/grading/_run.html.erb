@@ -2,18 +2,18 @@
   <div class="col-lg-5">
     <h3>Compiled Classes</h3>
     <%= form_tag({action: :run_selected}, multipart: true, id: @id) do %>
-      <div class="list-group mb-2" id="compiled-files">
+      <div class="list-group mb-2 code" id="compiled-files">
         <% Dir.glob(@upload_root.join('**', '*.class')).sort.each do |filepath| %>
           <% filename = File.basename(filepath) %>
-          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center code" id=<%= filename %>>
+          <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0" data-toggle="list">
             <%= filename %>
             <% if Dir.glob(filepath.gsub('bin', 'src').gsub('.class', '.java')).empty? %>
               <span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Missing source file">
                 <i class="fas fa-question"></i>
               </span>
             <% end %>
-            <%= radio_button_tag 'file', filename %>
-          </a>
+            <%= radio_button_tag 'file', filename, false, style: 'display: none' %>
+          </div>
         <% end %>
       </div>
       <%= submit_tag 'Run selected', class: 'btn btn-primary' %>
@@ -79,4 +79,10 @@
   function add() {
     customAdd(customCount++);
   }
+
+  $(window).on('load', () => {
+    $("#compiled-files div").on('click', function () {
+      $(this).children('input').prop('checked', true)
+    })
+  });
 </script>
