@@ -1,28 +1,28 @@
 <div class="card-body">
-  <%= form_tag users_path %>
+  <%= form_tag users_path, method: 'post' %>
   <fieldset>
     <legend>Sign up</legend>
     <div class="form-group row">
       <div class="col-lg-6">
-        <%= label 'user', 'first_name', 'First name' %>
-        <%= text_field 'user', 'first_name', class: "form-control" %>
+        <%= label :user, :first_name, "First name" %>
+        <%= text_field :user, :first_name, class: "form-control" %>
       </div>
       <div class="col-lg-6">
-        <%= label 'user', 'last_name', 'Last name' %>
-        <%= text_field 'user', 'last_name', class: "form-control" %>
+        <%= label :user, :last_name, "Last name" %>
+        <%= text_field :user, :last_name, class: "form-control" %>
       </div>
     </div>
     <div class="form-group required">
-      <%= label 'user', 'email', 'Email address', class: "required" %>
-      <%= text_field 'user', 'email', class: "form-control" %>
+      <%= label :user, :email, "Email address", class: "required" %>
+      <%= email_field :user, :email, class: "form-control" %>
     </div>
     <div class="form-group">
-      <%= label 'user', 'password', 'Password (6 or more characters)', class: "required" %>
-      <%= password_field 'user', 'password', class: "form-control" %>
+      <%= label :user, :password, "Password (6 or more characters)", class: "required" %>
+      <%= password_field :user, :password, class: "form-control" %>
     </div>
     <div class="form-group">
-      <%= label 'user', 'confirm_password', 'Confirm password', class: "required" %>
-      <%= password_field 'user', 'confirm_password', class: "form-control" %>
+      <%= label :user, :confirm_password, "Confirm password", class: "required" %>
+      <%= password_field :user, :confirm_password, class: "form-control" %>
     </div>
     <%= submit_tag "Register", class: "btn btn-primary float-right btn-block" %>
   </fieldset>

@@ -26,9 +26,9 @@
         <li class="nav-item center dropdown show">
           <a data-toggle="dropdown" href="#"><i class="fas fa-user-circle fa-2x"></i></a>
           <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform;">
-            <a class="dropdown-item" href="/users/1">Profile</a>
+            <a class="dropdown-item" href="/users/<%= session[:user].id %>">Profile</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" data-method="delete" href="/sessions/1">Logout</a>
+            <a class="dropdown-item" data-method="delete" href="/sessions/<%= session[:user].id %>">Logout</a>
           </div>
         </li>
       </ul>

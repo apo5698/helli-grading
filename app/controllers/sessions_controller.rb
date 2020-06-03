@@ -4,11 +4,13 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if params[:user][:username] != '' and params[:user][:password] != ''
-      session[:user] = params[:user]
-      flash[:success] = '🐂🍺'
+    email = params[:user][:email]
+    password = params[:user][:password]
+    if email != '' or password != ''
+      user = User.find_by(email: email, password: password)
+      session[:user] = user
     else
-      flash[:error] = '求你了输点东西吧qwq'
+      flash[:error] = '慢慢改～'
     end
     redirect_to root_path
   end

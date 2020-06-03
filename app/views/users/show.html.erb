@@ -2,82 +2,77 @@
   <div class="col-lg-2"></div>
   <div class="col-lg-4">
     <img src="https://pbs.twimg.com/tweet_video_thumb/D5UMN0kUIAAhyvs.jpg:small" width="250px" height="250px" alt="">
+    <div class="form-group pt-2">
+      <input type="file" class="form-control-file" id="exampleInputFile">
+      <small id="fileHelp" class="form-text text-muted">Customize your avatar!</small>
+    </div>
   </div>
   <div class="col-lg-5">
-    <h1>Hi, Cutie Meow-meow</h1>
-    <form>
-      <fieldset>
-        <legend>Profile</legend>
-        <div class="form-group row">
-          <label for="staticEmail" class="col-lg-4 col-form-label">Email</label>
+    <h1>Hi, <%= @user.first_name %> <%= @user.last_name %></h1>
+    <%= form_tag user_path, method: 'put' %>
+    <fieldset>
+      <legend>Profile</legend>
+      <div class="form-group row">
+        <label class="col-lg-4 col-form-label">Email</label>
+        <div class="col-lg-8">
+          <%= text_field :user, :email, class: "form-control-plaintext", readonly: "" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= label :user, :email, "Email address" %>
+        <%= email_field :user, :email, class: "form-control", aria: {describedby: "emailHelp"} %>
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+      </div>
+      <div class="form-group row">
+        <div class="col-lg-6">
+          <%= label :user, :first_name, "First name" %>
+          <%= text_field :user, :first_name, class: "form-control" %>
+        </div>
+        <div class="col-lg-6">
+          <%= label :user, :last_name, "Last name" %>
+          <%= text_field :user, :last_name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group row">
+        <%= label :user, :phone_number, "Phone number", class: "col-lg-4 col-form-label" %>
+        <div class="col-lg-8">
+          <%= text_field :user, :phone_number, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group row">
+        <%= label :user, :date_of_birth, "Date of birth", class: "col-lg-4 col-form-label" %>
           <div class="col-lg-8">
-            <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="minmin@example.com">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="minmin@example.com">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group row">
-          <div class="col-lg-6">
-            <label for="exampleInputEmail1">First name</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="Cutie">
-          </div>
-          <div class="col-lg-6">
-            <label for="exampleInputEmail1">Last name</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="Meow-meow">
+            <%= date_field :user, :date_of_birth, class: "form-control" %>
           </div>
         </div>
         <div class="form-group row">
-          <label for="exampleInputEmail1" class="col-lg-4 col-form-label">Phone number</label>
-          <div class="col-lg-8">
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="123456789">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="example-date-input" class="col-lg-4 col-form-label">Date of birth</label>
-          <div class="col-lg-8">
-            <input class="form-control" type="date" value="1998-11-30" id="example-date-input">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="example-date-input" class="col-lg-6 radio control-label">Gender</label>
+          <%= label :user, :gender, "Gender", class: "col-lg-6 radio control-label" %>
           <div class="form-check col-lg-3">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
+              <%= radio_button :user, :gender, "Male", class: "form-check-input" %>
               Male
             </label>
           </div>
           <div class="form-check col-lg-3">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3">
+              <%= radio_button :user, :gender, "Female", class: "form-check-input" %>
               Female
             </label>
           </div>
         </div>
-        <div class="form-group">
-          <div class="input-group">
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="inputGroupFile02">
-              <label class="custom-file-label" for="inputGroupFile02">Choose file for avatar</label>
-            </div>
-            <div class="input-group-append">
-              <button class="btn btn-outline-dark" id="">Upload</button>
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Confirm password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
-        </div>
-      </fieldset>
-      <button type="submit" class="btn btn-primary float-right">Submit</button>
+      <hr>
+
+      <div class="form-group">
+        <%= label :user, :password, "Password" %>
+        <%= password_field :user, :password, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= label :user, :confirm_password, "Confirm password" %>
+        <%= password_field :user, :password_confirmation, class: "form-control" %>
+      </div>
+    </fieldset>
+    <%= submit_tag "Submit", class: "btn btn-primary float-right" %>
+    </fieldset>
     </form>
   </div>
 </div>
