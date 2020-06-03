@@ -80,7 +80,7 @@
     customAdd(customCount++);
   }
 
-  $(window).on('load', () => {
+  $(document).ready(() => {
     $("#compiled-files div").on('click', function () {
       $(this).children('input').prop('checked', true)
     })
