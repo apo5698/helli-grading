@@ -9,8 +9,8 @@
               <%= filename = File.basename(filepath) %>
               <% checked = filename.exclude? 'UI' %>
               <div class="custom-control custom-checkbox">
-                <%= check_box :filepaths, filepath, class: 'custom-control-input', checked: checked %>
-                <label class="custom-control-label" for="filepaths_<%= filepath %>"></label>
+                <%= check_box :selected_checkstyle, filename, class: 'custom-control-input', checked: checked %>
+                <label class="custom-control-label" for="selected_checkstyle_<%= filename %>"></label>
               </div>
             </li>
           <% end %>

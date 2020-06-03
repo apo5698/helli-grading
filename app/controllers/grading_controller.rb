@@ -19,13 +19,11 @@ class GradingController < ApplicationController
 
   def compile_all
     exec_ret = Array.new(2, '')
-    bin_path = @upload_root.join('bin')
-    Dir.glob(@upload_root.join('src').join('*.java')) do |file|
-      ret = exec("javac -d #{bin_path} -cp #{bin_path}", file)
+    Dir.glob(@src_path.join('*.java')) do |file|
+      ret = exec("javac -d #{@bin_path} -cp #{@bin_path}", file)
       exec_ret[0] += (ret[0] + "\n\n") unless ret[0].empty?
       exec_ret[1] += (ret[1] + "\n\n") unless ret[1].empty?
     end
-
     if exec_ret[1].empty?
       flash.now[:success] = 'Compile successfully.'
       @console_output = 'Nothing wrong happened.'
@@ -48,7 +46,7 @@ class GradingController < ApplicationController
     if file.nil?
       flash.now[:error] = 'No file selected.'
     else
-      exec_ret = exec("java -cp #{@upload_root.join('bin')}", file.gsub('.class', ''))
+      exec_ret = exec("java -cp #{@bin_path}", file.gsub('.class', ''))
       if exec_ret[1].empty?
         flash.now[:success] = 'Run successfully.'
       else
@@ -70,15 +68,17 @@ class GradingController < ApplicationController
     cs_path = '~/cs-checkstyle/checkstyle'
     @cs_count = {}
     ignore = params[:options][:ignore]
-    params[:filepaths].each do |f|
+    params[:selected_checkstyle].each do |f|
       next if f[1].to_i.zero?
 
-      filename = File.basename(f[0])
-      ret = exec(cs_path, f[0])[0]
+      filename = f[0]
+      checkstyle_from = !filename.end_with?('Test.java') ? @src_path : @test_path
+      filepath = checkstyle_from.join(File.basename(filename))
+      stdout = exec(cs_path, filepath)[0]
       @cs_count[:"#{filename}"] = if ignore.to_i.zero?
-                                    ret.scan(/#{filename}:/).count
+                                    stdout.scan(/#{filename}:/).count
                                   else
-                                    ret.scan(/^((?!magic number).)*$/).count - 4
+                                    stdout.scan(/^((?!magic number).)*$/).count - 4
                                   end
     end
     flash.now[:error] = 'No file selected.' if @cs_count.empty?
@@ -96,11 +96,9 @@ class GradingController < ApplicationController
       flash[:error] = 'No file selected.'
     else
       filename = uploaded_file.original_filename
-      src_path = @upload_root.join('src')
-      test_path = @upload_root.join('test')
-      FileUtils.mkdir_p(src_path)
-      FileUtils.mkdir_p(test_path)
-      upload_to = !filename.end_with?('Test.java') ? src_path : test_path
+      FileUtils.mkdir_p(@src_path)
+      FileUtils.mkdir_p(@test_path)
+      upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
 
       File.open(upload_to.join(filename), 'wb') do |f|
         if f.write(uploaded_file.read).zero?
@@ -114,14 +112,15 @@ class GradingController < ApplicationController
   end
 
   def delete_upload
-    files_to_be_deleted = params[:filepaths]
-    if files_to_be_deleted.nil?
+    selected_delete = params[:selected_delete]
+    if selected_delete.nil?
       flash[:error] = 'Nothing to delete.'
     else
-      params[:filepaths].each do |filepath, checked|
+      selected_delete.each do |filename, checked|
         next if checked.to_i.zero?
 
-        File.open(filepath, 'r') do |f|
+        delete_from = !filename.end_with?('Test.java') ? @src_path : @test_path
+        File.open(delete_from.join(filename), 'r') do |f|
           File.delete(f)
         end
       end
@@ -144,15 +143,18 @@ class GradingController < ApplicationController
       @id = params[:homework_id]
     end
     @upload_root = Rails.root.join('public', 'uploads', @assignment_type, @id) if @id
+    @src_path = @upload_root&.join('src')
+    @test_path = @upload_root&.join('test')
+    @bin_path = @upload_root&.join('bin')
     @action = params[:action]
   end
 
   def exec(cmd, filename)
     full_cmd = "#{cmd} #{filename}"
-    puts "Running #{full_cmd.gsub(Rails.root.to_s, '').green}"
+    puts "Running #{full_cmd.green}"
     Open3.popen3(full_cmd) do |_, stdout, stderr, _|
-      [stdout.read.gsub(filename, File.basename(filename)),
-       stderr.read.gsub(filename, File.basename(filename))]
+      [stdout.read.gsub(/#{filename}/, File.basename(filename)),
+       stderr.read.gsub(/#{filename}/, File.basename(filename))]
     end
   end
 end
