@@ -32,8 +32,8 @@
     mutations.forEach((m) => {
       m.addedNodes?.forEach((node) => {
         alert(node);
-      })
-    })
+      });
+    });
   });
 
   observer.observe(document.getElementById("bar"), {
@@ -41,5 +41,5 @@
     subtree: true,
     attributes: false,
     characterData: false
-  })
+  });
 </script>
