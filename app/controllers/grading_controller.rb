@@ -67,19 +67,23 @@ class GradingController < ApplicationController
   def checkstyle_run
     cs_path = '~/cs-checkstyle/checkstyle'
     @cs_count = {}
-    ignore = params[:options][:ignore]
     params[:selected_checkstyle].each do |f|
       next if f[1].to_i.zero?
 
       filename = f[0]
       checkstyle_from = !filename.end_with?('Test.java') ? @src_path : @test_path
       filepath = checkstyle_from.join(File.basename(filename))
-      stdout = exec(cs_path, filepath)[0]
-      @cs_count[:"#{filename}"] = if ignore.to_i.zero?
-                                    stdout.scan(/#{filename}:/).count
-                                  else
-                                    stdout.scan(/^((?!magic number).)*$/).count - 4
-                                  end
+      stdout = exec(cs_path, filepath)[0].split("\n")
+
+      stdout = stdout.grep(/#{filename}:.+/)
+      if params[:options][:ignore_magic_numbers].to_i == 1
+        stdout = stdout.grep_v(/is a magic number/)
+      end
+      if params[:options][:ignore_javadoc].to_i == 1
+        stdout = stdout.grep_v(/Missing a Javadoc comment/)
+      end
+      puts stdout
+      @cs_count[:"#{filename}"] = stdout.count
     end
     flash.now[:error] = 'No file selected.' if @cs_count.empty?
     @action = 'checkstyle'
@@ -113,7 +117,7 @@ class GradingController < ApplicationController
 
   def delete_upload
     selected_delete = params[:selected_delete]
-    if selected_delete.nil?
+    if selected_delete.values.all? { |v| v.to_i.zero? }
       flash[:error] = 'Nothing to delete.'
     else
       selected_delete.each do |filename, checked|

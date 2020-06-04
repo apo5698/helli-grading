@@ -3,7 +3,7 @@
     <h3>Compiled Classes</h3>
     <%= form_tag({action: :checkstyle}, multipart: true, id: @id) do %>
       <div class="form-group">
-        <ul class="list-group mb-2">
+        <ul class="list-group">
           <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
             <li class="list-group-item d-flex justify-content-between align-items-center code">
               <%= filename = File.basename(filepath) %>
@@ -16,12 +16,17 @@
           <% end %>
         </ul>
       </div>
-      <div class="custom-control custom-checkbox mb-2">
-        <%= check_box :options, 'ignore', class: 'custom-control-input' %>
-        <label class="custom-control-label" for="options_ignore">Ignore magic numbers</label>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <%= check_box :options, 'ignore_magic_numbers', class: 'custom-control-input' %>
+          <label class="custom-control-label" for="options_ignore_magic_numbers">Ignore magic numbers</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <%= check_box :options, 'ignore_javadoc', class: 'custom-control-input' %>
+          <label class="custom-control-label" for="options_ignore_javadoc">Ignore Javadoc</label>
+        </div>
       </div>
       <%= submit_tag 'Run checkstyle', class: 'btn btn-primary' %>
-      <%#= submit_tag 'Run for selected', class: 'btn btn-outline-primary' %>
     <% end %>
   </div>
 </div>
