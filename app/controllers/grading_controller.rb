@@ -117,7 +117,7 @@ class GradingController < ApplicationController
 
   def delete_upload
     selected_delete = params[:selected_delete]
-    if selected_delete.nil?
+    if selected_delete.values.all? { |v| v.to_i.zero? }
       flash[:error] = 'Nothing to delete.'
     else
       selected_delete.each do |filename, checked|
