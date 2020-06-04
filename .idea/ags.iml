@@ -42,6 +42,7 @@
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v6.0.3, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="addressable (v2.7.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="autoprefixer-rails (v9.7.6, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bcrypt (v3.1.13, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="better_errors (v2.7.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bindex (v0.8.1, RVM: ruby-2.7.0 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="binding_of_caller (v0.8.0, RVM: ruby-2.7.0 [global]) [gem]" level="application" />

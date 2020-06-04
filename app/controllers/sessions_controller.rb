@@ -4,10 +4,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    email = params[:user][:email]
-    password = params[:user][:password]
-    if email != '' or password != ''
-      user = User.find_by(email: email, password: password)
+    user = User.find_by(email: params[:user][:email])
+    if user.authenticate(params[:user][:password])
       session[:user] = user
     else
       flash[:error] = '慢慢改～'
