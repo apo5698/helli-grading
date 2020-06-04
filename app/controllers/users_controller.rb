@@ -4,7 +4,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    session[:user] = User.create(user_params)
+    user = User.create(user_params.merge(password_params))
+    if user.errors.full_messages.blank?
+      session[:user] = user
+    else
+      flash[:error] = user.errors.full_messages
+    end
     redirect_to root_path
   end
 
