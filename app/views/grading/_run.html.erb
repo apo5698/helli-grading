@@ -1,49 +1,35 @@
 <div class="row mb-4">
-  <div class="col-lg-5">
+  <div class="col-auto" style="min-width: 400px">
     <h3>Compiled Classes</h3>
     <%= form_tag({action: :run_selected}, multipart: true, id: @id) do %>
-      <div class="list-group mb-2 code" id="compiled-files">
-        <% Dir.glob(@upload_root.join('**', '*.class')).sort.each do |filepath| %>
-          <% filename = File.basename(filepath) %>
-          <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0" data-toggle="list">
-            <%= filename %>
-            <% if Dir.glob(filepath.gsub('bin', 'src').gsub('.class', '.java')).empty? %>
+      <div class="form-group">
+        <ul class="list-group code" id="compiled-classes">
+          <% Dir.glob(@upload_root.join('**', '*.class')).sort.each do |filepath| %>
+            <% filename = File.basename(filepath) %>
+            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0" id="radio">
+              <%= filename %>
+              <% if Dir.glob(filepath.gsub('bin', 'src').gsub('.class', '.java')).empty? %>
               <span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Missing source file">
                 <i class="fas fa-question"></i>
               </span>
-            <% end %>
-            <%= radio_button_tag 'file', filename, false, style: 'display: none' %>
-          </div>
-        <% end %>
+              <% end %>
+              <%= radio_button_tag 'file', filename, false, style: 'display: none' %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <%= check_box :run_options, 'option_1', class: 'custom-control-input' %>
+          <label class="custom-control-label" for="run_options_option_1">Option 1</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <%= check_box :run_options, 'option_2', class: 'custom-control-input' %>
+          <label class="custom-control-label" for="run_options_option_2">Option 2</label>
+        </div>
       </div>
       <%= submit_tag 'Run selected', class: 'btn btn-primary' %>
     <% end %>
-  </div>
-  <div class="col-lg-7">
-    <h3>Options</h3>
-    <div class="form-group" id="options">
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="junit">
-        <label class="custom-control-label" for="junit">
-          JUnit (<span class="code">-cp "bin:lib/*" org.junit.runner.JUnitCore</span>)
-        </label>
-      </div>
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="customCheck3">
-        <label class="custom-control-label" for="customCheck3">
-          Some option2
-        </label>
-      </div>
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="customCheck4">
-        <label class="custom-control-label" for="customCheck4">
-          Some option3
-        </label>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary">Apply to all</button>
-    <button type="button" class="btn btn-outline-primary" id="options-select-all">Select all</button>
-    <button type="button" class="btn btn-outline-primary" id="options-reset">Reset</button>
   </div>
 </div>
 <div class="row mb-4">
@@ -79,10 +65,4 @@
   function add() {
     customAdd(customCount++);
   }
-
-  $(document).ready(() => {
-    $("#compiled-files div").on('click', function () {
-      $(this).children('input').prop('checked', true);
-    });
-  });
 </script>

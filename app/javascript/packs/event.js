@@ -22,3 +22,22 @@ $(document).on('click', "button[id^='custom-command-']", (e) => {
 $(() => {
   $('[data-toggle="tooltip"]').tooltip();
 }); // Toggle tooltip
+
+$(document).ready(() => {
+  $('li#checkbox').on('click', function () {
+    if ($(this).hasClass('active')) {
+      $(this).removeClass('active');
+    } else {
+      $(this).addClass('active');
+    }
+    let checkbox = $(this).children('.custom-checkbox').children('input.custom-control-input');
+    checkbox.prop('checked', !checkbox.is(':checked'));
+  });
+  $('li#radio').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $('li#radio').removeClass('active');
+      $(this).addClass('active');
+      $(this).children('input').prop('checked', true);
+    }
+  });
+}); // Multi-select list buttons

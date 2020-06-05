@@ -1,5 +1,5 @@
 <div class="row mb-4">
-  <div class="col-lg-6">
+  <div class="col-auto" style="min-width: 400px">
     <%= form_tag({action: :upload}, multipart: true, id: @id) do %>
       <div class="form-group">
         <div class="input-group">
@@ -16,36 +16,28 @@
   </div>
 </div>
 <div class="row mb-4">
-  <div class="col-lg-6">
+  <div class="col-auto" style="min-width: 400px">
     <h3>Uploaded files</h3>
     <%= form_tag({action: :delete_upload}, multipart: true, id: @id) do %>
-      <div class="list-group mb-2 code" id="uploaded-files">
-        <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
-          <% filename = File.basename(filepath) %>
-          <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <%= filename %>
-            <div class="custom-control custom-checkbox">
-              <%= check_box :selected_delete, filename, class: 'custom-control-input' %>
-              <label class="custom-control-label" for="uploads_<%= filename %>" style="display: none"></label>
-            </div>
-          </div>
-        <% end %>
+      <div class="form-group">
+        <ul class="list-group code" id="uploaded-files">
+          <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
+            <% filename = File.basename(filepath) %>
+            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="checkbox">
+              <%= filename %>
+              <div class="custom-control custom-checkbox">
+                <%= check_box :selected_delete, filename, class: 'custom-control-input' %>
+                <label class="custom-control-label" for="uploads_<%= filename %>" style="display: none"></label>
+              </div>
+            </li>
+          <% end %>
+        </ul>
       </div>
       <%= submit_tag 'Delete', class: 'btn btn-outline-primary' %>
     <% end %>
   </div>
 </div>
 <script>
-  $('.list-group-item').on('click', function () {
-    if ($(this).hasClass('active')) {
-      $(this).removeClass('active');
-    } else {
-      $(this).addClass('active');
-    }
-    let checkbox = $(this).children('.custom-checkbox').children('input.custom-control-input');
-    checkbox.prop('checked', !checkbox.is(':checked'));
-  });
-
   const uploadedFilesForm = $('#uploaded-files');
   if (uploadedFilesForm.text().trim() === '') {
     $('input[value="Delete"]').hide();
