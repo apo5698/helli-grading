@@ -20,13 +20,15 @@ class UsersController < ApplicationController
   def update
     user = User.find(params[:id])
     user.update_attributes(user_params)
+    avatar_error_msg = user.update_avatar(params[:user][:avatar])
     unless params[:user][:password].blank?
       user.update_attributes(password_params)
     end
-    if user.errors.full_messages.blank?
+    if user.errors.full_messages.blank? and avatar_error_msg.blank?
       flash[:success] = 'Your profile has been updated.'
     else
-      flash[:error] = user.errors.full_messages
+      messages = user.errors.full_messages << avatar_error_msg
+      flash[:error] = messages.uniq.reject(&:blank?).join("\n")
     end
 
     redirect_to user_path
@@ -42,5 +44,9 @@ class UsersController < ApplicationController
 
   def password_params
     params.require(:user).permit(:password, :password_confirmation)
+  end
+
+  def upload_file
+
   end
 end

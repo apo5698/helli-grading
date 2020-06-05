@@ -1,15 +1,20 @@
+<%= form_tag user_path, multipart: true, method: 'put' %>
 <div class="row">
   <div class="col-lg-2"></div>
   <div class="col-lg-4">
-    <img src="https://pbs.twimg.com/tweet_video_thumb/D5UMN0kUIAAhyvs.jpg:small" width="250px" height="250px" alt="">
+    <% if @user.path_to_avatar %>
+      <img src="<%= '/' + @user.path_to_avatar %>" width="250px" height="250px" alt="avatar">
+    <% else %>
+      <img src="https://pbs.twimg.com/profile_images/1107821274632343552/vS0teDIE_400x400.jpg" width="250px" height="250px" alt="avatar">
+
+  <% end %>
     <div class="form-group pt-2">
-      <input type="file" class="form-control-file" id="exampleInputFile">
+      <%= file_field :user, :avatar, class: "form-control-file" %>
       <small id="fileHelp" class="form-text text-muted">Customize your avatar!</small>
     </div>
   </div>
   <div class="col-lg-5">
     <h1>Hi, <%= @user.first_name %> <%= @user.last_name %></h1>
-    <%= form_tag user_path, method: 'put' %>
     <fieldset>
       <legend>Profile</legend>
       <div class="form-group row">
