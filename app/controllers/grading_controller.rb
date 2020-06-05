@@ -71,15 +71,15 @@ class GradingController < ApplicationController
       next if f[1].to_i.zero?
 
       filename = f[0]
-      checkstyle_from = !filename.end_with?('Test.java') ? @src_path : @test_path
-      filepath = checkstyle_from.join(File.basename(filename))
+      file_type = !filename.end_with?('Test.java') ? @src_path : @test_path
+      filepath = file_type.join(File.basename(filename))
       stdout = exec(cs_path, filepath)[0].split("\n")
 
       stdout = stdout.grep(/#{filename}:.+/)
-      if params[:options][:ignore_magic_numbers].to_i == 1
+      if params[:checkstyle_options][:ignore_magic_numbers].to_i == 1
         stdout = stdout.grep_v(/is a magic number/)
       end
-      if params[:options][:ignore_javadoc].to_i == 1
+      if params[:checkstyle_options][:ignore_javadoc].to_i == 1
         stdout = stdout.grep_v(/Missing a Javadoc comment/)
       end
       puts stdout

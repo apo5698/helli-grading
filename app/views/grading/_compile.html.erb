@@ -1,51 +1,40 @@
 <div class="row mb-4">
-  <div class="col-lg-5">
+  <div class="col-auto" style="min-width: 400px">
     <h3>Source Files</h3>
-    <ul class="list-group">
-      <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
-        <li class="list-group-item d-flex justify-content-between align-items-center code">
-          <%= File.basename(filepath) %>
-          <% if Dir.glob(filepath.gsub('src', 'bin').gsub('.java', '.class')).empty? %>
-            <% span_class = 'badge badge-danger' %>
-            <% tooltip_title = 'Not yet compiled' %>
-            <% icon_class = 'fas fa-question' %>
-          <% else %>
-            <% span_class = 'badge badge-success' %>
-            <% tooltip_title = 'Compiled' %>
-            <% icon_class = 'fas fa-check' %>
-          <% end %>
-          <span class="<%= span_class %>" data-toggle="tooltip" data-placement="right" title="<%= tooltip_title %>">
+    <%= form_tag({action: :compile}, multipart: true, id: @id) do %>
+      <div class="form-group">
+        <ul class="list-group code">
+          <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center code">
+              <%= File.basename(filepath) %>
+              <% if Dir.glob(filepath.gsub('src', 'bin').gsub('.java', '.class')).empty? %>
+                <% span_class = 'badge badge-danger' %>
+                <% tooltip_title = 'Not yet compiled' %>
+                <% icon_class = 'fas fa-question' %>
+              <% else %>
+                <% span_class = 'badge badge-success' %>
+                <% tooltip_title = 'Compiled' %>
+                <% icon_class = 'fas fa-check' %>
+              <% end %>
+              <span class="<%= span_class %>" data-toggle="tooltip" data-placement="right" title="<%= tooltip_title %>">
             <i class="<%= icon_class %>"></i>
           </span>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-  <div class="col-lg-7">
-    <h3>Options</h3>
-    <div class="form-group" id="options">
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="junit">
-        <label class="custom-control-label" for="junit">
-          JUnit (<span class="code">-cp "bin:lib/*"</span>)
-        </label>
+            </li>
+          <% end %>
+        </ul>
       </div>
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="customCheck3">
-        <label class="custom-control-label" for="customCheck3">
-          Some option2
-        </label>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <%= check_box :compile_options, 'option_1', class: 'custom-control-input' %>
+          <label class="custom-control-label" for="compile_options_option_1">Option 1</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <%= check_box :compile_options, 'option_2', class: 'custom-control-input' %>
+          <label class="custom-control-label" for="compile_options_option_2">Option 2</label>
+        </div>
       </div>
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="customCheck4">
-        <label class="custom-control-label" for="customCheck4">
-          Some option3
-        </label>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary">Apply to all</button>
-    <button type="button" class="btn btn-outline-primary" id="options-select-all">Select all</button>
-    <button type="button" class="btn btn-outline-primary" id="options-reset">Reset</button>
+      <%= submit_tag 'Compile all', class: 'btn btn-primary' %>
+    <% end %>
   </div>
 </div>
 <div class="row mb-4">
