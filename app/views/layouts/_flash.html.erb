@@ -1,34 +1,34 @@
 <% if flash[:warning] %>
-  <div class="alert alert-dismissible alert-warning">
+  <div class="alert alert-dismissible alert-warning new-line">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= flash[:warning] %>
+    <span class="new-line"><%= flash[:warning] %></span>
   </div>
 <% end %>
 
 <% if flash[:danger] %>
-  <div class="alert alert-dismissible alert-danger">
+  <div class="alert alert-dismissible alert-danger new-line">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= flash[:danger] %>
+    <span class="new-line"><%= flash[:danger] %></span>
   </div>
 <% end %>
 
 <% if flash[:success] %>
-  <div class="alert alert-dismissible alert-success">
+  <div class="alert alert-dismissible alert-success new-line">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= flash[:success] %>
+    <span class="new-line"><%= flash[:success] %></span>
   </div>
 <% end %>
 
 <% if flash[:info] %>
-  <div class="alert alert-dismissible alert-info">
+  <div class="alert alert-dismissible alert-info new-line">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= flash[:info] %>
+    <span class="new-line"><%= flash[:info] %></span>
   </div>
 <% end %>
 
 <% if flash[:error] %>
   <div class="alert alert-dismissible alert-primary">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <%= flash[:error] %>
+    <span class="new-line"><%= flash[:error] %></span>
   </div>
 <% end %>

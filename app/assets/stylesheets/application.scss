@@ -48,6 +48,10 @@ label.required:after {
   color: #dc3545;
 }
 
+.new-line {
+  white-space: pre;
+}
+
 @import "bootswatch/simplex/variables";
 @import "bootstrap/scss/bootstrap";
 @import "bootswatch/simplex/bootswatch";

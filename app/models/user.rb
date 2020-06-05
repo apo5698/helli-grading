@@ -15,4 +15,27 @@ class User < ApplicationRecord
 
     errors.add(:date_of_birth, "can't be in the future")
   end
+
+  def update_avatar(avatar)
+    return if avatar.nil?
+
+    filepath = "uploads/avatars/#{avatar.original_filename}"
+    file = Rails.root.join('public', filepath)
+
+    # update with the new one
+    File.open(file, 'wb') do |f|
+      if f.write(avatar.read).zero?
+        return 'Error occurred when updating the avatar'
+      end
+    end
+
+    # delete the old one
+    if path_to_avatar
+      old_file = Rails.root.join('public', path_to_avatar)
+      File.open(old_file, 'r') { |f| File.delete(f) }
+    end
+    self.path_to_avatar = filepath
+    save
+    ''
+  end
 end
