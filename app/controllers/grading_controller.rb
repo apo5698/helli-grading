@@ -104,10 +104,12 @@ class GradingController < ApplicationController
       FileUtils.mkdir_p(@test_path)
       upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
 
-      File.open(upload_to.join(filename), 'wb') do |f|
-        if f.write(uploaded_file.read).zero?
-          flash[:error] = 'File cannot be empty.'
-        else
+      byte = uploaded_file.read
+      if byte.empty?
+        flash[:error] = 'File cannot be empty.'
+      else
+        File.open(upload_to.join(filename), 'wb') do |f|
+          f.write(byte)
           flash[:success] = 'Upload successfully.'
         end
       end
