@@ -1,14 +1,14 @@
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
-    <%= form_tag({action: :upload}, multipart: true, id: @id) do %>
+    <%= form_for :upload, url: {action: 'upload'} do |f| %>
       <div class="form-group">
         <div class="input-group">
           <div class="custom-file">
-            <%= file_field_tag 'file', class: 'custom-file-input' %>
-            <label class="custom-file-label" for="file">Choose zip</label>
+            <%= f.file_field 'file', class: 'custom-file-input' %>
+            <%= f.label :file, 'Choose a zip or file', class: 'custom-file-label' %>
           </div>
           <div class="input-group-append">
-            <%= submit_tag 'Upload', class: 'input-group-text' %>
+            <%= f.submit 'Upload', class: 'input-group-text' %>
           </div>
         </div>
       </div>
@@ -18,22 +18,21 @@
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
     <h3>Uploaded files</h3>
-    <%= form_tag({action: :delete_upload}, multipart: true, id: @id) do %>
+    <%= form_for :delete_upload, url: {action: 'delete_upload'} do |f| %>
       <div class="form-group">
         <ul class="list-group code" id="uploaded-files">
           <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
-            <% filename = File.basename(filepath) %>
             <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="checkbox">
-              <%= filename %>
+              <%= filename = File.basename(filepath) %>
               <div class="custom-control custom-checkbox">
-                <%= check_box :selected_delete, filename, class: 'custom-control-input' %>
-                <label class="custom-control-label" for="uploads_<%= filename %>" style="display: none"></label>
+                <%= f.check_box :"#{filename}", class: 'custom-control-input' %>
+                <%= f.label :"#{filename}", class: "custom-control-label", style: "display: none" %>
               </div>
             </li>
           <% end %>
         </ul>
       </div>
-      <%= submit_tag 'Delete', class: 'btn btn-outline-primary' %>
+      <%= f.submit 'Delete', class: 'btn btn-outline-primary' %>
     <% end %>
   </div>
 </div>
@@ -44,7 +43,7 @@
     uploadedFilesForm.append('None');
   }
 
-  $('#file').on('change', function () {
+  $('#upload_file').on('change', function () {
     $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
   });
 </script>
