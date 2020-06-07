@@ -1,7 +1,7 @@
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
     <h3>Source Files</h3>
-    <%= form_tag({action: :compile}, multipart: true, id: @id) do %>
+    <%= form_for :compile do |f| %>
       <div class="form-group">
         <ul class="list-group code">
           <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
@@ -25,15 +25,15 @@
       </div>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <%= check_box :compile_options, 'option_1', class: 'custom-control-input' %>
-          <label class="custom-control-label" for="compile_options_option_1">Option 1</label>
-        </div>
-        <div class="custom-control custom-checkbox">
-          <%= check_box :compile_options, 'option_2', class: 'custom-control-input' %>
-          <label class="custom-control-label" for="compile_options_option_2">Option 2</label>
+          <%= f.check_box :"options[junit]", class: 'custom-control-input' %>
+          <%= f.label :"options[junit]", 'Run with Junit library (tests)', class: 'custom-control-label' %>
         </div>
       </div>
-      <%= submit_tag 'Compile all', class: 'btn btn-primary' %>
+      <div class="form-group">
+        <%= f.label :arg, 'Optional arguments (separated by space)', class: 'col-form-label' %>
+        <%= f.text_field :arg, class: 'form-control', placeholder: 'Arguments' %>
+      </div>
+      <%= f.submit 'Compile all', class: 'btn btn-primary' %>
     <% end %>
   </div>
 </div>

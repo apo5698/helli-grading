@@ -19,23 +19,32 @@ class GradingController < ApplicationController
 
   def compile_all
     exec_ret = Array.new(2, '')
-    Dir.glob(@src_path.join('*.java')) do |file|
-      ret = exec('javac',
-                 '-d',
-                 @bin_path,
-                 '-cp',
-                 @bin_path,
-                 file)
-      exec_ret[0] += (ret[0] + "\n\n") unless ret[0].empty?
-      exec_ret[1] += (ret[1] + "\n\n") unless ret[1].empty?
-    end
-    if exec_ret[1].empty?
-      flash.now[:success] = 'Compile successfully.'
-      @console_output = 'Nothing wrong happened.'
+    files = Dir.glob(@src_path.join('*.java'))
+    if files.empty?
+      flash[:error] = 'No file found.'
     else
-      flash.now[:error] = 'Error occurs during compilation. '\
-                          'Please check the console output.'
-      @console_output = exec_ret[1]
+      cp_path = @bin_path.to_s
+      cp_path << ":#{@public_lib_path.join('junit', '*')}" if params[:compile][:options][:junit].to_i == 1
+
+      files.each do |file|
+        ret = exec('javac',
+                   '-d',
+                   @bin_path,
+                   '-cp',
+                   cp_path,
+                   file,
+                   params[:compile][:arg])
+        exec_ret[0] << (ret[0] + "\n\n") unless ret[0].empty?
+        exec_ret[1] << (ret[1] + "\n\n") unless ret[1].empty?
+      end
+      if exec_ret[1].empty?
+        flash.now[:success] = 'Compile successfully.'
+        @console_output = 'Nothing wrong happened.'
+      else
+        flash.now[:error] = 'Error occurs during compilation. '\
+                            'Please check the console output.'
+        @console_output = exec_ret[1]
+      end
     end
 
     @action = 'compile'
@@ -47,14 +56,21 @@ class GradingController < ApplicationController
   end
 
   def run_selected
-    file = params[:file]
+    file = params[:run][:file]
     if file.nil?
       flash.now[:error] = 'No file selected.'
     else
+      cp_path = @bin_path.to_s
+      junit_pkg = ''
+      if params[:run][:options][:junit].to_i == 1
+        cp_path << ":#{@public_lib_path.join('junit', '*')}"
+        junit_pkg = 'org.junit.runner.JUnitCore'
+      end
+
       exec_ret = exec('java',
                       '-cp',
-                      @bin_path,
-                      params[:run][:junit].to_i.zero? ? '' : 'org.junit.runner.JUnitCore',
+                      cp_path,
+                      junit_pkg,
                       file.gsub('.class', ''),
                       params[:run][:arg])
       if exec_ret[1].empty?
@@ -77,7 +93,7 @@ class GradingController < ApplicationController
   def checkstyle_run
     cs_path = '~/cs-checkstyle/checkstyle'
     @cs_count = {}
-    params[:selected_checkstyle].each do |f|
+    params[:checkstyle][:files]&.each do |f|
       next if f[1].to_i.zero?
 
       filename = f[0]
@@ -86,9 +102,9 @@ class GradingController < ApplicationController
       stdout = exec(cs_path, filepath)[0].split("\n")
 
       stdout = stdout.grep(/#{filename}:.+/)
-      stdout = stdout.grep_v(/is a magic number/) if params[:checkstyle_options][:ignore_magic_numbers].to_i == 1
-      stdout = stdout.grep_v(/Missing a Javadoc comment/) if params[:checkstyle_options][:ignore_javadoc].to_i == 1
-      puts stdout
+      options = params[:checkstyle][:options]
+      stdout = stdout.grep_v(/is a magic number/) if options[:ignore_magic_numbers].to_i == 1
+      stdout = stdout.grep_v(/Missing a Javadoc comment/) if options[:ignore_javadoc].to_i == 1
       @cs_count[:"#{filename}"] = stdout.count
     end
     flash.now[:error] = 'No file selected.' if @cs_count.empty?
@@ -101,19 +117,19 @@ class GradingController < ApplicationController
   end
 
   def upload
-    uploaded_file = params[:file]
-    if uploaded_file.nil?
+    if params[:upload].nil?
       flash[:error] = 'No file selected.'
     else
-      filename = uploaded_file.original_filename
-      FileUtils.mkdir_p(@src_path)
-      FileUtils.mkdir_p(@test_path)
-      upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
-
+      uploaded_file = params[:upload][:file]
       byte = uploaded_file.read
       if byte.empty?
         flash[:error] = 'File cannot be empty.'
       else
+        FileUtils.mkdir_p(@src_path)
+        FileUtils.mkdir_p(@test_path)
+
+        filename = uploaded_file.original_filename
+        upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
         File.open(upload_to.join(filename), 'wb') do |f|
           f.write(byte)
           flash[:success] = 'Upload successfully.'
@@ -124,15 +140,16 @@ class GradingController < ApplicationController
   end
 
   def delete_upload
-    selected_delete = params[:selected_delete]
-    if selected_delete.values.all? { |v| v.to_i.zero? }
+    delete_files = params[:delete_upload]
+    if delete_files.values.all? { |v| v.to_i.zero? }
       flash[:error] = 'Nothing to delete.'
     else
-      selected_delete.each do |filename, checked|
+      delete_files.each do |filename, checked|
         next if checked.to_i.zero?
 
         delete_from = !filename.end_with?('Test.java') ? @src_path : @test_path
-        File.open(delete_from.join(filename), 'r') do |f|
+        filepath = delete_from.join(filename)
+        File.open(delete_from.join(filepath), 'r') do |f|
           File.delete(f)
         end
       end
@@ -158,6 +175,8 @@ class GradingController < ApplicationController
     @src_path = @upload_root&.join('src')
     @test_path = @upload_root&.join('test')
     @bin_path = @upload_root&.join('bin')
+    @lib_path = @upload_root&.join('lib')
+    @public_lib_path = Rails.root.join('public', 'lib')
     @action = params[:action]
   end
 
