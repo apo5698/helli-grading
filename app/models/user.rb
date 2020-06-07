@@ -19,6 +19,7 @@ class User < ApplicationRecord
   def update_avatar(avatar)
     return if avatar.nil?
 
+    FileUtils.mkdir_p(Rails.root.join('public', 'uploads', 'avatars'))
     filepath = "uploads/avatars/#{avatar.original_filename}"
     file = Rails.root.join('public', filepath)
 

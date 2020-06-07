@@ -20,7 +20,12 @@ class GradingController < ApplicationController
   def compile_all
     exec_ret = Array.new(2, '')
     Dir.glob(@src_path.join('*.java')) do |file|
-      ret = exec("javac -d #{@bin_path} -cp #{@bin_path}", file)
+      ret = exec('javac',
+                 '-d',
+                 @bin_path,
+                 '-cp',
+                 @bin_path,
+                 file)
       exec_ret[0] += (ret[0] + "\n\n") unless ret[0].empty?
       exec_ret[1] += (ret[1] + "\n\n") unless ret[1].empty?
     end
@@ -46,7 +51,12 @@ class GradingController < ApplicationController
     if file.nil?
       flash.now[:error] = 'No file selected.'
     else
-      exec_ret = exec("java -cp #{@bin_path}", file.gsub('.class', ''))
+      exec_ret = exec('java',
+                      '-cp',
+                      @bin_path,
+                      params[:run][:junit].to_i.zero? ? '' : 'org.junit.runner.JUnitCore',
+                      file.gsub('.class', ''),
+                      params[:run][:arg])
       if exec_ret[1].empty?
         flash.now[:success] = 'Run successfully.'
       else
@@ -76,12 +86,8 @@ class GradingController < ApplicationController
       stdout = exec(cs_path, filepath)[0].split("\n")
 
       stdout = stdout.grep(/#{filename}:.+/)
-      if params[:checkstyle_options][:ignore_magic_numbers].to_i == 1
-        stdout = stdout.grep_v(/is a magic number/)
-      end
-      if params[:checkstyle_options][:ignore_javadoc].to_i == 1
-        stdout = stdout.grep_v(/Missing a Javadoc comment/)
-      end
+      stdout = stdout.grep_v(/is a magic number/) if params[:checkstyle_options][:ignore_magic_numbers].to_i == 1
+      stdout = stdout.grep_v(/Missing a Javadoc comment/) if params[:checkstyle_options][:ignore_javadoc].to_i == 1
       puts stdout
       @cs_count[:"#{filename}"] = stdout.count
     end
@@ -104,10 +110,12 @@ class GradingController < ApplicationController
       FileUtils.mkdir_p(@test_path)
       upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
 
-      File.open(upload_to.join(filename), 'wb') do |f|
-        if f.write(uploaded_file.read).zero?
-          flash[:error] = 'File cannot be empty.'
-        else
+      byte = uploaded_file.read
+      if byte.empty?
+        flash[:error] = 'File cannot be empty.'
+      else
+        File.open(upload_to.join(filename), 'wb') do |f|
+          f.write(byte)
           flash[:success] = 'Upload successfully.'
         end
       end
@@ -153,12 +161,18 @@ class GradingController < ApplicationController
     @action = params[:action]
   end
 
-  def exec(cmd, filename)
-    full_cmd = "#{cmd} #{filename}"
-    puts "Running #{full_cmd.green}"
+  def exec(cmd, *args)
+    args = args.join(' ')
+    puts "#{'exec>'.bold} #{cmd.green} #{args}"
+
+    full_cmd = "#{cmd} #{args}"
+    output = []
     Open3.popen3(full_cmd) do |_, stdout, stderr, _|
-      [stdout.read.gsub(/#{filename}/, File.basename(filename)),
-       stderr.read.gsub(/#{filename}/, File.basename(filename))]
+      output = [stdout.read.gsub(%r{[/\w]+/}, '').strip,
+                stderr.read.gsub(%r{[/\w]+/}, '').strip]
     end
+    puts "  #{'stdout:'.magenta.bold} #{output[0].gsub("\n", "\n#{' ' * 10}")}"
+    puts "  #{'stderr:'.magenta.bold} #{output[1].gsub("\n", "\n#{' ' * 10}")}"
+    output
   end
 end
