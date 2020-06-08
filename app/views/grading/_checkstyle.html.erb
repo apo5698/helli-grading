@@ -1,34 +1,39 @@
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
-    <h3>Compiled Classes</h3>
-    <%= form_for :checkstyle do |f| %>
-      <div class="form-group">
-        <ul class="list-group code">
-          <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
-            <% filename = File.basename(filepath) %>
-            <% checked = filename.exclude? 'UI' %>
-            <% active = checked ? 'active' : '' %>
-            <li class="list-group-item d-flex justify-content-between align-items-center <%= active %>" id="checkbox">
-              <%= filename %>
-              <div class="custom-control custom-checkbox">
-                <%= f.check_box :"files[#{filename}]", class: 'custom-control-input', checked: checked %>
-                <%= f.label :"files[#{filename}]", class: 'custom-control-label', style: 'display:none' %>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <%= f.check_box :"options[ignore_magic_numbers]", class: 'custom-control-input' %>
-          <%= f.label :"options[ignore_magic_numbers]", 'Ignore magic numbers', class: 'custom-control-label' %>
+    <h3>Source Files</h3>
+    <% source_files = Dir.glob(@upload_root.join('**', '*.java')) %>
+    <% if source_files.empty? %>
+      None
+    <% else %>
+      <%= form_for :checkstyle do |f| %>
+        <div class="form-group">
+          <ul class="list-group code">
+            <% source_files.sort.each do |filepath| %>
+              <% filename = File.basename(filepath) %>
+              <% checked = filename.exclude? 'UI' %>
+              <% active = checked ? 'active' : '' %>
+              <li class="list-group-item d-flex justify-content-between align-items-center <%= active %>" id="checkbox">
+                <%= filename %>
+                <div class="custom-control custom-checkbox">
+                  <%= f.check_box :"files[#{filename}]", class: 'custom-control-input', checked: checked %>
+                  <%= f.label :"files[#{filename}]", class: 'custom-control-label', style: 'display:none' %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
         </div>
-        <div class="custom-control custom-checkbox">
-          <%= f.check_box :"options[ignore_javadoc]", class: 'custom-control-input' %>
-          <%= f.label :"options[ignore_javadoc]", 'Ignore Javadoc', class: 'custom-control-label' %>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <%= f.check_box :"options[ignore_magic_numbers]", class: 'custom-control-input' %>
+            <%= f.label :"options[ignore_magic_numbers]", 'Ignore magic numbers', class: 'custom-control-label' %>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <%= f.check_box :"options[ignore_javadoc]", class: 'custom-control-input' %>
+            <%= f.label :"options[ignore_javadoc]", 'Ignore Javadoc', class: 'custom-control-label' %>
+          </div>
         </div>
-      </div>
-      <%= f.submit 'Run checkstyle', class: 'btn btn-primary' %>
+        <%= f.submit 'Run checkstyle', class: 'btn btn-primary' %>
+      <% end %>
     <% end %>
   </div>
 </div>
