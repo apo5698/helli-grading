@@ -1,7 +1,7 @@
 <% actions = %w[prepare compile run checkstyle summary] %>
 <%= javascript_pack_tag 'event', 'data-turbolinks-track': 'reload' %>
 
-<div class="row">
+<div class="row d-none d-lg-block">
   <table class="table table-hover" id="transparent-table">
     <tbody>
     <tr class="table-light">
@@ -23,7 +23,7 @@
 </div>
 
 <div class="row">
-  <div class="col-lg-3">
+  <div class="col-lg-3 mb-4 mb-lg-0">
     <ul class="list-group">
       <% (0...5).each_with_index do |s, i| %>
         <li class="list-group-item d-flex justify-content-between align-items-center">
