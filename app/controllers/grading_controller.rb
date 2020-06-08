@@ -5,7 +5,9 @@ require 'open3'
 class GradingController < ApplicationController
   before_action :set_variables
 
-  def index; end
+  def index
+    redirect_to "/grading/exercises"
+  end
 
   def show; end
 

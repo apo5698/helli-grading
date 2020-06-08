@@ -1,26 +1,78 @@
 <div class="row">
   <div class="col-lg-12 pb-lg-3">
-    <h2><%= type + "s" %></h2>
+    <h2><%= type.capitalize %></h2>
   </div>
 </div>
 
-<% (1..number).each_with_index do |x, i| %>
-  <% if i % 3 == 0 %>
-    <div class="row pb-3">
-  <% end %>
-  <div class="col-lg-4">
-    <div class="card">
+<!--number - the number of items (exercise, project, or homework)-->
+<!--number_of_cards - the number of cards to render (one additional card for adding new item)-->
+<% number_of_cards = number + 1 %>
+<div class="row">
+<% (1..number_of_cards).each_with_index do |x, i| %>
+  <div class="col-lg-4 pb-3">
+    <div class="card" style="height: 10rem;">
       <div class="card-body">
-        <h4 class="card-title"><a href="<%= url_prefix + (i + 1).to_s %>/prepare"><%= type + " " + x.to_s %></a></h4>
+      <% if i == number_of_cards - 1 %>
+        <!--center the 'plus' button-->
+        <div class="center" style="height: 100%">
+          <a href="#" class="stretched-link" data-toggle="modal" data-target="#addAssignmentModal">
+            <i class="fas fa-plus-circle fa-4x"></i>
+          </a>
+        </div>
+      <% else %>
+        <h4 class="card-title"><a href="<%= url_prefix + (i + 1).to_s %>/prepare"><%= type.singularize.capitalize + " " + x.to_s %></a></h4>
         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
           content.</p>
         <a href="#" class="card-link">Card link</a>
         <a href="#" class="card-link">Another link</a>
+      <% end %>
       </div>
     </div>
   </div>
-  <% if i % 3 == 2 || i == number %>
-    </div>
-  <% end %>
 <% end %>
+</div>
+
+<!-- Add assignment modal -->
+<%= form_tag "/grading/#{type}", method: 'post' %>
+  <div class="modal fade" id="addAssignmentModal" tabindex="-1" role="dialog" aria-labelledby="addAssignmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAssignmentModalLabel">Add a new <%= type.singularize %></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <%= label :assignment, :name, "Name" %>
+            <%= text_field :assignment, :name, class: "form-control" %>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <%= label :assignment, :term, "Term" %>
+                <%= select :assignment, :term, ["Spring 2020", "Fall 2019", "Spring 2019"], {}, {class: "form-control"} %>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <%= label :assignment, :class, "Class" %>
+                <%= select :assignment, :class, ["CSC 116 (001)", "CSC 116 (002)", "CSC 116 (003)"], {}, {class: "form-control"} %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= label :assignment, :description, "Description" %>
+            <%= text_area :assignment, :description, class: "form-control", spellcheck: "true", rows: "3" %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <%= submit_tag "Submit", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
