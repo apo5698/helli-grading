@@ -24,7 +24,8 @@ class UsersController < ApplicationController
     unless params[:user][:password].blank?
       user.update_attributes(password_params)
     end
-    if user.errors.full_messages.blank? and avatar_error_msg.blank?
+    if user.errors.full_messages.blank? && avatar_error_msg.blank?
+      session[:user] = user
       flash[:success] = 'Your profile has been updated.'
     else
       messages = user.errors.full_messages << avatar_error_msg

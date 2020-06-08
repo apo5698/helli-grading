@@ -20,8 +20,8 @@ class User < ApplicationRecord
     return if avatar.nil?
 
     FileUtils.mkdir_p(Rails.root.join('public', 'uploads', 'avatars'))
-    filepath = "uploads/avatars/#{avatar.original_filename}"
-    file = Rails.root.join('public', filepath)
+    file = Rails.root.join('public', 'uploads', 'avatars',
+                           avatar.original_filename)
 
     # update with the new one
     File.open(file, 'wb') do |f|
@@ -31,11 +31,11 @@ class User < ApplicationRecord
     end
 
     # delete the old one
-    if path_to_avatar
-      old_file = Rails.root.join('public', path_to_avatar)
+    if self.avatar
+      old_file = Rails.root.join('public', 'uploads', 'avatars', self.avatar)
       File.open(old_file, 'r') { |f| File.delete(f) }
     end
-    self.path_to_avatar = filepath
+    self.avatar = avatar.original_filename
     save
     ''
   end

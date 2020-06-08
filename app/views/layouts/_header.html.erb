@@ -25,8 +25,8 @@
       <ul class="navbar-nav my-2 my-lg-0">
         <li class="nav-item center dropdown show">
           <a data-toggle="dropdown" href="#">
-            <% if session[:user].path_to_avatar %>
-              <img src="<%= "/#{session[:user].path_to_avatar}" %>" width="30px" height="30px" alt="avatar" style="border-radius: 50%">
+            <% if session[:user].avatar %>
+              <img src="<%= "/uploads/avatars/#{session[:user].avatar}" %>" width="30px" height="30px" alt="avatar" style="border-radius: 50%">
             <% else %>
               <a data-toggle="dropdown" href="#"><i class="fas fa-user-circle fa-2x"></i></a>
             <% end %>

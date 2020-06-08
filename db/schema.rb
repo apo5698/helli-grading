@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_04_234603) do
+ActiveRecord::Schema.define(version: 2020_06_08_032816) do
 
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_234603) do
     t.string "phone_number", limit: 10
     t.date "date_of_birth"
     t.string "password_digest"
-    t.string "path_to_avatar"
+    t.string "avatar"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "gender"
