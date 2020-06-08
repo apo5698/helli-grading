@@ -44,27 +44,6 @@
 </div>
 <div class="row mb-4">
   <div class="col-lg-12">
-    <h3>Custom Compile</h3>
-    <label class="col-form-label">Enter full command(s) below:</label>
-    <div class="form-group" id="custom-compile">
-      <div class="input-group mb-2">
-        <input type="text" class="form-control" placeholder="javac ...">
-        <div class="input-group-append">
-          <button type="button" class="btn btn-dark disabled">Remove</button>
-        </div>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary" id="custom-add" onclick="add()">Add</button>
-  </div>
-</div>
-<div class="row mb-4">
-  <div class="col-lg-12">
-    <%= form_tag "/grading/#{@assignment_type}/#{@id}/compile" %>
-    <button class="btn btn-primary">Compile all</button>
-  </div>
-</div>
-<div class="row mb-4">
-  <div class="col-lg-12">
     <h3>Console Output</h3>
     <div class="terminal"><%= @console_output %></div>
   </div>
