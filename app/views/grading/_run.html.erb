@@ -1,34 +1,39 @@
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
     <h3>Compiled Classes</h3>
-    <%= form_for :run do |f| %>
-      <div class="form-group">
-        <ul class="list-group code" id="compiled-classes">
-          <% Dir.glob(@upload_root.join('**', '*.class')).sort.each do |filepath| %>
-            <% filename = File.basename(filepath) %>
-            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0" id="radio">
-              <%= filename %>
-              <% if Dir.glob(filepath.gsub('bin', 'src').gsub('.class', '.java')).empty? %>
+    <% compiled_classes = Dir.glob(@bin_path.join('*.class')) %>
+    <% if compiled_classes.empty? %>
+      None
+    <% else %>
+      <%= form_for :run do |f| %>
+        <div class="form-group">
+          <ul class="list-group code">
+            <% compiled_classes.sort.each do |filepath| %>
+              <% filename = File.basename(filepath) %>
+              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0" id="radio">
+                <%= filename %>
+                <% if Dir.glob(filepath.gsub('bin', 'src').gsub('.class', '.java')).empty? %>
               <span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Missing source file">
                 <i class="fas fa-question"></i>
               </span>
-              <% end %>
-              <%= f.radio_button :file, filename, checked: false, style: 'display: none' %>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <%= f.check_box :"options[junit]", class: 'custom-control-input' %>
-          <%= f.label :"options[junit]", 'Run with Junit library (tests)', class: 'custom-control-label' %>
+                <% end %>
+                <%= f.radio_button :file, filename, checked: false, style: 'display: none' %>
+              </li>
+            <% end %>
+          </ul>
         </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :arg, 'Optional arguments (separated by space)', class: 'col-form-label' %>
-        <%= f.text_field :arg, class: 'form-control', placeholder: 'Arguments' %>
-      </div>
-      <%= f.submit 'Run selected', class: 'btn btn-primary' %>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <%= f.check_box :"options[junit]", class: 'custom-control-input' %>
+            <%= f.label :"options[junit]", 'Run with Junit library (tests)', class: 'custom-control-label' %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :arg, 'Optional arguments (separated by space)', class: 'col-form-label' %>
+          <%= f.text_field :arg, class: 'form-control', placeholder: 'Arguments' %>
+        </div>
+        <%= f.submit 'Run selected', class: 'btn btn-primary' %>
+      <% end %>
     <% end %>
   </div>
 </div>

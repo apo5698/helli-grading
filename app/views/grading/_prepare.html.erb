@@ -18,31 +18,30 @@
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
     <h3>Uploaded files</h3>
-    <%= form_for :delete_upload, url: {action: 'delete_upload'} do |f| %>
-      <div class="form-group">
-        <ul class="list-group code" id="uploaded-files">
-          <% Dir.glob(@upload_root.join('**', '*.java')).sort.each do |filepath| %>
-            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="checkbox">
-              <%= filename = File.basename(filepath) %>
-              <div class="custom-control custom-checkbox">
-                <%= f.check_box :"#{filename}", class: 'custom-control-input' %>
-                <%= f.label :"#{filename}", class: "custom-control-label", style: "display: none" %>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-      <%= f.submit 'Delete', class: 'btn btn-outline-primary' %>
+    <% uploaded_files = Dir.glob(@upload_root.join('**', '*.java')) %>
+    <% if uploaded_files.empty? %>
+      None
+    <% else %>
+      <%= form_for :delete_upload, url: {action: 'delete_upload'} do |f| %>
+        <div class="form-group">
+          <ul class="list-group code" id="uploaded-files">
+            <% uploaded_files.sort.each do |filepath| %>
+              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="checkbox">
+                <%= filename = File.basename(filepath) %>
+                <div class="custom-control custom-checkbox">
+                  <%= f.check_box :"#{filename}", class: 'custom-control-input' %>
+                  <%= f.label :"#{filename}", class: "custom-control-label", style: "display: none" %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <%= f.submit 'Delete', class: 'btn btn-outline-primary' %>
+      <% end %>
     <% end %>
   </div>
 </div>
 <script>
-  const uploadedFilesForm = $('#uploaded-files');
-  if (uploadedFilesForm.text().trim() === '') {
-    $('input[value="Delete"]').hide();
-    uploadedFilesForm.append('None');
-  }
-
   $('#upload_file').on('change', function () {
     $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
   });
