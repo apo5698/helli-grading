@@ -5,10 +5,11 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:user][:email])
-    if user.authenticate(params[:user][:password])
+    if !user.nil? && user.authenticate(params[:user][:password])
       session[:user] = user
     else
-      flash[:error] = '慢慢改～'
+      flash[:error] = 'The email and password you entered did not match our ' \
+                      'records. Please double-check and try again.'
     end
     redirect_to root_path
   end
