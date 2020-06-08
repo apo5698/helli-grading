@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :catch_denied_access, except: %i[new create]
+
   def new
     render layout: 'pre_application'
   end
@@ -7,10 +9,11 @@ class UsersController < ApplicationController
     user = User.create(user_params.merge(password_params))
     if user.errors.full_messages.blank?
       session[:user] = user
+      redirect_to root_path
     else
       flash[:error] = user.errors.full_messages
+      redirect_back new_user_path
     end
-    redirect_to root_path
   end
 
   def show
@@ -47,7 +50,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(:password, :password_confirmation)
   end
 
-  def upload_file
-
+  def access_allowed?
+    super and session[:user].id == params[:id].to_i
   end
 end
