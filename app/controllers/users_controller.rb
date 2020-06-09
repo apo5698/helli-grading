@@ -9,6 +9,7 @@ class UsersController < ApplicationController
     user = User.create(user_params.merge(password_params))
     if user.errors.full_messages.blank?
       session[:user] = user
+      FileUtils.mkdir_p Rails.root.join('public', 'uploads', 'users', user.email)
       redirect_to root_path
     else
       flash[:error] = user.errors.full_messages

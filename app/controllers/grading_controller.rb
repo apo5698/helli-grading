@@ -12,6 +12,16 @@ class GradingController < ApplicationController
   def create
     assignment = Assignment.create(assignment_params)
     if assignment
+      type = assignment.type.downcase
+      type = type.pluralize if type != 'homework'
+      assignment_path = @user_root.join(type, assignment.id.to_s)
+      if type != 'homework'
+        FileUtils.mkdir_p assignment_path.join('bin')
+        FileUtils.mkdir_p assignment_path.join('src')
+        FileUtils.mkdir_p assignment_path.join('test')
+        FileUtils.mkdir_p assignment_path.join('test_files')
+      end
+
       flash[:success] = "#{assignment.name} has been successfully created"
     else
       flash[:error] = "Error occurred when creating #{assignment.name}"
@@ -23,10 +33,14 @@ class GradingController < ApplicationController
 
   def destroy
     assignment = Assignment.find(params[:id])
-    assignment_type = assignment.type
-    flash[:success] = "#{assignment.name} has been successfully deleted"
+    name = assignment.name
+    type = assignment.type.downcase
+    type = type.pluralize if type != 'homework'
+
     assignment.destroy
-    redirect_to last_page(assignment_type)
+    FileUtils.rm_rf @user_root.join(type, assignment.id.to_s)
+    flash[:success] = "#{name} has been successfully deleted"
+    redirect_to last_page(type)
   end
 
   def prepare
@@ -145,9 +159,6 @@ class GradingController < ApplicationController
       if byte.empty?
         flash[:error] = 'File cannot be empty.'
       else
-        FileUtils.mkdir_p(@src_path)
-        FileUtils.mkdir_p(@test_path)
-
         filename = uploaded_file.original_filename
         upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
         File.open(upload_to.join(filename), 'wb') do |f|
@@ -199,18 +210,22 @@ class GradingController < ApplicationController
       @assignment_type = 'homework'
       @id = params[:homework_id]
     end
-    @upload_root = Rails.root.join('public', 'uploads', @assignment_type, @id) if @id
+
+    public_path = Rails.root.join('public')
+    @public_lib_path = public_path.join('lib')
+    @user_root = public_path.join('uploads', 'users', session[:user].email)
+    @upload_root = @user_root.join(@assignment_type, @id) if @id
     @src_path = @upload_root&.join('src')
     @test_path = @upload_root&.join('test')
     @bin_path = @upload_root&.join('bin')
     @lib_path = @upload_root&.join('lib')
-    @public_lib_path = Rails.root.join('public', 'lib')
+
     @action = params[:action]
   end
 
   def assignment_params
     params.require(:assignment).permit(:name, :type, :term,
-                                 :course, :section, :description)
+                                       :course, :section, :description)
   end
 
   def exec(cmd, *args)
