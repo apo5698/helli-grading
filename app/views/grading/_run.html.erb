@@ -10,14 +10,17 @@
           <ul class="list-group code">
             <% compiled_classes.sort.each do |filepath| %>
               <% filename = File.basename(filepath) %>
-              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0" id="radio">
+              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-0">
                 <%= filename %>
                 <% if Dir.glob(filepath.gsub('bin', 'src').gsub('.class', '.java')).empty? %>
-              <span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Missing source file">
-                <i class="fas fa-question"></i>
-              </span>
+                  <span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Missing source file">
+                    <i class="fas fa-question"></i>
+                  </span>
                 <% end %>
-                <%= f.radio_button :file, filename, checked: false, style: 'display: none' %>
+                <div class="custom-control custom-radio">
+                  <%= f.radio_button :file, "#{filename}", class: 'custom-control-input' %>
+                  <%= f.label :"file_#{filename.downcase.gsub('.', '_')}", 0.chr, class: 'custom-control-label' %>
+                </div>
               </li>
             <% end %>
           </ul>
@@ -43,10 +46,3 @@
     <div class="terminal"><%= @console_output %></div>
   </div>
 </div>
-<script>
-  let customCount = 0;
-
-  function add() {
-    customAdd(customCount++);
-  }
-</script>

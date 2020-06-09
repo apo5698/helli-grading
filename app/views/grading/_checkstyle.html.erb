@@ -9,14 +9,11 @@
         <div class="form-group">
           <ul class="list-group code">
             <% source_files.sort.each do |filepath| %>
-              <% filename = File.basename(filepath) %>
-              <% checked = filename.exclude? 'UI' %>
-              <% active = checked ? 'active' : '' %>
-              <li class="list-group-item d-flex justify-content-between align-items-center <%= active %>" id="checkbox">
-                <%= filename %>
+              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <%= filename = File.basename(filepath) %>
                 <div class="custom-control custom-checkbox">
-                  <%= f.check_box :"files[#{filename}]", class: 'custom-control-input', checked: checked %>
-                  <%= f.label :"files[#{filename}]", class: 'custom-control-label', style: 'display:none' %>
+                  <%= f.check_box :"files[#{filename}]", class: 'custom-control-input' %>
+                  <%= f.label :"files[#{filename}]", 0.chr, class: 'custom-control-label' %>
                 </div>
               </li>
             <% end %>

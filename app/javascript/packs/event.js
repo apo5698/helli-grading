@@ -1,43 +1,52 @@
-$(document).on('click', '#options-select-all', () => {
-  $("#options input:checkbox").prop('checked', true);
-}); // Check all checkboxes
-
-$(document).on('click', '#options-reset', () => {
-  $("#options input:checkbox").prop('checked', false);
-}); // Uncheck all checkboxes
-
-window.customAdd = (placeholder, count) => {
-  $("#custom-compile").append(
-    `<div class="input-group mb-2" id="custom-command-${count}">` +
-    `<input type="text" class="form-control">` +
-    `<div class="input-group-append">` +
-    `<button type="button" class="btn btn-primary" id="custom-command-${count}">Remove` +
-    `</button></div></div>`);
-}; // Add a custom command
-
-$(document).on('click', "button[id^='custom-command-']", (e) => {
-  $(`#${e.target.id}`).remove();
-}); // Remove a custom command
-
+// Toggle tooltip
 $(() => {
   $('[data-toggle="tooltip"]').tooltip();
-}); // Toggle tooltip
+});
 
-$(document).ready(() => {
-  $('li#checkbox').on('click', function () {
-    if ($(this).hasClass('active')) {
-      $(this).removeClass('active');
-    } else {
-      $(this).addClass('active');
-    }
-    let checkbox = $(this).children('.custom-checkbox').children('input.custom-control-input');
-    checkbox.prop('checked', !checkbox.is(':checked'));
+// Expand checkboxes and radio buttons
+// $(document).ready(() => {
+//   $('li[class*="list-group-item-action"]').on('click', function () {
+//     let input = $(this).find('input');
+//     input.prop('checked', !input.is(':checked'));
+//   });
+// });
+
+// Keep input values on page reload until session expires
+if (window.sessionStorage) {
+  let url = $(location).attr('href');
+
+  $(document).ready(() => {
+    let selectorInputCheckbox = $(':checkbox');
+    let selectorInputRadio = $(':radio');
+    let selectorInputText = $(':text');
+
+    selectorInputCheckbox.each(function () {
+      let item = `${url}?${$(this).attr('id')}`;
+      $(this).prop('checked', JSON.parse(sessionStorage.getItem(item)) || $(this).is(':checked'));
+      // Only restore once or clear on page reload
+      sessionStorage.removeItem(item);
+    });
+    selectorInputRadio.each(function () {
+      let item = `${url}?radio`;
+      $(`input#${sessionStorage.getItem(item)}`).prop('checked', true);
+      // Only restore once or clear on page reload
+      sessionStorage.removeItem(item);
+    });
+    selectorInputText.each(function () {
+      let item = `${url}?${$(this).attr('id')}`;
+      $(this).val(sessionStorage.getItem(item) || $(this).val());
+      // Only restore once or clear on page reload
+      sessionStorage.removeItem(item);
+    });
+
+    selectorInputCheckbox.on('change', function () {
+      sessionStorage.setItem(`${url}?${$(this).attr('id')}`, $(this).is(':checked'));
+    });
+    selectorInputRadio.on('change', function () {
+      sessionStorage.setItem(`${url}?radio_check`, $(this).attr('id'));
+    });
+    selectorInputText.on('change', function () {
+      sessionStorage.setItem(`${url}?${$(this).attr('id')}`, $(this).val());
+    });
   });
-  $('li#radio').on('click', function () {
-    if (!$(this).hasClass('active')) {
-      $('li#radio').removeClass('active');
-      $(this).addClass('active');
-      $(this).children('input').prop('checked', true);
-    }
-  });
-}); // Multi-select list buttons
+}
