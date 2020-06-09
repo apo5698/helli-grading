@@ -7,12 +7,14 @@ class UsersController < ApplicationController
 
   def create
     user = User.create(user_params.merge(password_params))
-    if user.errors.full_messages.blank?
+    messages = user.errors.full_messages
+    if messages.blank?
       session[:user] = user
       FileUtils.mkdir_p Rails.root.join('public', 'uploads', 'users', user.email)
+      flash[:success] = 'You have successfully signed in.'
       redirect_to root_path
     else
-      flash[:error] = user.errors.full_messages
+      flash[:error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
       redirect_to new_user_path
     end
   end
@@ -33,7 +35,7 @@ class UsersController < ApplicationController
       flash[:success] = 'Your profile has been updated.'
     else
       messages = user.errors.full_messages << avatar_error_msg
-      flash[:error] = messages.uniq.reject(&:blank?).join("\n")
+      flash[:error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
     end
 
     redirect_to user_path

@@ -63,7 +63,7 @@ gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 gem 'colorize'
 
 # Password encryption
-gem 'bcrypt'
+gem 'bcrypt-ruby', '~> 3.1.2'
 
 group :development do
   gem 'better_errors'

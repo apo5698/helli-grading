@@ -4,11 +4,11 @@
     <legend>Sign up</legend>
     <div class="form-group row">
       <div class="col-lg-6">
-        <%= label :user, :first_name, "First name" %>
+        <%= label :user, :first_name, "First name", class: "required" %>
         <%= text_field :user, :first_name, class: "form-control" %>
       </div>
       <div class="col-lg-6">
-        <%= label :user, :last_name, "Last name" %>
+        <%= label :user, :last_name, "Last name", class: "required" %>
         <%= text_field :user, :last_name, class: "form-control" %>
       </div>
     </div>
@@ -21,8 +21,8 @@
       <%= password_field :user, :password, class: "form-control" %>
     </div>
     <div class="form-group">
-      <%= label :user, :confirm_password, "Confirm password", class: "required" %>
-      <%= password_field :user, :confirm_password, class: "form-control" %>
+      <%= label :user, :password_confirmation, "Confirm password", class: "required" %>
+      <%= password_field :user, :password_confirmation, class: "form-control" %>
     </div>
     <%= submit_tag "Register", class: "btn btn-primary float-right btn-block" %>
   </fieldset>

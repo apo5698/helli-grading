@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates :phone_number, length: {is: 10}, allow_blank: true
   validate :date_of_birth_in_the_past
   validates :gender, inclusion: {in: %w[Male Female]}, allow_blank: true
-  validates :password, confirmation: true
+  validates :password, confirmation: true, length: { minimum: 6 }
 
   def date_of_birth_in_the_past
     return if date_of_birth.blank?
