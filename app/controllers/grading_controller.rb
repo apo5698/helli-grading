@@ -6,10 +6,28 @@ class GradingController < ApplicationController
   before_action :set_variables
 
   def index
-    redirect_to "/grading/exercises"
+    redirect_to '/grading/exercises'
+  end
+
+  def create
+    assignment = Assignment.create(assignment_params)
+    if assignment
+      flash[:success] = "#{assignment.name} has been successfully created"
+    else
+      flash[:error] = "Error occurred when creating #{assignment.name}"
+    end
+    redirect_to last_page(assignment.type)
   end
 
   def show; end
+
+  def destroy
+    assignment = Assignment.find(params[:id])
+    assignment_type = assignment.type
+    flash[:success] = "#{assignment.name} has been successfully deleted"
+    assignment.destroy
+    redirect_to last_page(assignment_type)
+  end
 
   def prepare
     render '/grading/show'
@@ -162,6 +180,14 @@ class GradingController < ApplicationController
 
   private
 
+  def last_page(type)
+    if type == 'Homework'
+      "/grading/#{type.downcase}"
+    else
+      "/grading/#{type.downcase.pluralize}"
+    end
+  end
+
   def set_variables
     if params[:exercise_id]
       @assignment_type = 'exercises'
@@ -180,6 +206,11 @@ class GradingController < ApplicationController
     @lib_path = @upload_root&.join('lib')
     @public_lib_path = Rails.root.join('public', 'lib')
     @action = params[:action]
+  end
+
+  def assignment_params
+    params.require(:assignment).permit(:name, :type, :term,
+                                 :course, :section, :description)
   end
 
   def exec(cmd, *args)
