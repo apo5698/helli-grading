@@ -31,18 +31,6 @@ class GradingController < ApplicationController
 
   def show; end
 
-  def destroy
-    assignment = Assignment.find(params[:id])
-    name = assignment.name
-    type = assignment.type.downcase
-    type = type.pluralize if type != 'homework'
-
-    assignment.destroy
-    FileUtils.rm_rf @user_root.join(type, assignment.id.to_s)
-    flash[:success] = "#{name} has been successfully deleted"
-    redirect_to last_page(type)
-  end
-
   def prepare
     render '/grading/show'
   end
@@ -210,7 +198,11 @@ class GradingController < ApplicationController
       @assignment_type = 'homework'
       @id = params[:homework_id]
     end
+    @action = params[:action]
+    set_paths
+  end
 
+  def set_paths
     public_path = Rails.root.join('public')
     @public_lib_path = public_path.join('lib')
     @user_root = public_path.join('uploads', 'users', session[:user].email)
@@ -219,8 +211,6 @@ class GradingController < ApplicationController
     @test_path = @upload_root&.join('test')
     @bin_path = @upload_root&.join('bin')
     @lib_path = @upload_root&.join('lib')
-
-    @action = params[:action]
   end
 
   def assignment_params

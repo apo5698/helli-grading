@@ -1,8 +1,15 @@
-class ProjectsController < ApplicationController
+class ProjectsController < GradingController
   def index
-    @controller = params[:controller]
     @assignments = Project.all
     @assignment = Project.new
-    render '/grading/index'
+  end
+
+  def destroy
+    assignment = Project.find(params[:id])
+    name = assignment.name
+    FileUtils.rm_rf @user_root.join('projects', assignment.id.to_s)
+    assignment.destroy
+    flash[:success] = "#{name} has been successfully deleted"
+    redirect_to '/grading/projects'
   end
 end
