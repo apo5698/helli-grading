@@ -76,9 +76,36 @@
       </div>
 
       <div class="form-group d-flex justify-content-between align-items-center">
-        <a href="/users/<%= @user.id %>" data-method="delete" class="float-left">Delete my account</a>
+        <%= link_to 'Delete my account', "/users/#{@user.id}/confirm", data: { target: '#modal-window', toggle: 'modal' }%>
         <%= submit_tag "Submit", class: "btn btn-primary float-right" %>
       </div>
     </fieldset>
+  </div>
+</div>
+
+<div class="modal hide fade" id="modal-window" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= form_tag "/users/#{@user.id}", method: "delete" %>
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignmentModalLabel">Confirm your password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          Please confirm your password before continuing. Note that this action cannot be undone.
+        </div>
+        <div class="form-group">
+          <%= label :user, :password, "Password" %>
+          <%= text_field :user, :password, class: "form-control" %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <%= submit_tag "Delete my account", class: "btn btn-primary" %>
+      </div>
+    </div>
   </div>
 </div>

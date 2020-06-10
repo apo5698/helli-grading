@@ -43,10 +43,15 @@ class UsersController < ApplicationController
 
   def destroy
     user = User.find(params[:id])
-    user.destroy
-    session[:user] = nil
-    flash[:success] = "You account has been deleted."
-    redirect_to root_path
+    if user.authenticate(password_params[:password])
+      user.destroy
+      session[:user] = nil
+      flash[:success] = 'You account has been deleted.'
+      redirect_to root_path
+    else
+      flash[:error] = 'The password you entered does not match our record. Please try again.'
+      redirect_to user_path
+    end
   end
 
   private
