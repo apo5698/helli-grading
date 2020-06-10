@@ -9,26 +9,6 @@ class GradingController < ApplicationController
     redirect_to '/grading/exercises'
   end
 
-  def create
-    assignment = Assignment.create(assignment_params)
-    if assignment
-      type = assignment.type.downcase
-      type = type.pluralize if type != 'homework'
-      assignment_path = @user_root.join(type, assignment.id.to_s)
-      if type != 'homework'
-        FileUtils.mkdir_p assignment_path.join('bin')
-        FileUtils.mkdir_p assignment_path.join('src')
-        FileUtils.mkdir_p assignment_path.join('test')
-        FileUtils.mkdir_p assignment_path.join('test_files')
-      end
-
-      flash[:success] = "#{assignment.name} has been successfully created"
-    else
-      flash[:error] = "Error occurred when creating #{assignment.name}"
-    end
-    redirect_to last_page(assignment.type)
-  end
-
   def show; end
 
   def prepare
@@ -178,14 +158,6 @@ class GradingController < ApplicationController
   end
 
   private
-
-  def last_page(type)
-    if type == 'Homework'
-      "/grading/#{type.downcase}"
-    else
-      "/grading/#{type.downcase.pluralize}"
-    end
-  end
 
   def set_variables
     if params[:exercise_id]

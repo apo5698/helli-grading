@@ -1,0 +1,2 @@
+$("#modal-window").find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {url: "/grading/projects", title: "Add a new project", type: "Project", method: "post"} %>");
+$("#modal-window").modal('show');

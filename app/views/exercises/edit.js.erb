@@ -1,2 +1,2 @@
-$("#editAssignmentModalContent").html("<%= render partial: "/grading/assignment_modal", locals: { title: "Edit #{assignment.name}", type: assignment_type } %>");
-$('#editAssignmentModal').modal('show');
+$("#modal-window").find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {url: "/grading/exercises/#{@assignment.id}", title: "Edit #{@assignment.name}", type: "Exercise", method: "put"} %>");
+$("#modal-window").modal('show');

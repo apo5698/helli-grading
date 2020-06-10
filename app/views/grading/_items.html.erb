@@ -18,7 +18,7 @@
             <% if i == number_of_cards - 1 %>
               <!--center the 'plus' button-->
               <div class="center" style="height: 100%">
-                <a href="#" class="stretched-link" data-toggle="modal" data-target="#addAssignmentModal">
+                <a href="<%= url_prefix + "new" %>" class="stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
                   <i class="fas fa-plus-circle fa-4x"></i>
                 </a>
               </div>
@@ -28,7 +28,7 @@
               <h6 class="card-subtitle mb-2 text-muted"><%= assignment.term %> <%= assignment.course %>
                 (<%= assignment.section %>)</h6>
               <p class="card-text"><%= assignment.description %></p>
-              <a href="#" class="card-link" data-toggle="modal" data-target="#editAssignmentModal">Edit</a>
+              <%= link_to 'Edit', "#{url_prefix + assignment.id.to_s}/edit", remote: true, data: { target: '#modal-window', toggle: 'modal' }, class: 'card-link'%>
               <a href="<%= url_prefix + assignment.id.to_s %>" data-method="delete" class="card-link">Delete</a>
             <% end %>
           </div>
@@ -36,13 +36,5 @@
       </div>
     <% end %>
   </div>
-
-  <%= form_tag "/grading/", method: 'post' %>
-  <div class="modal fade" id="addAssignmentModal" tabindex="-1" role="dialog" aria-labelledby="addAssignmentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <%= render partial: "/grading/assignment_modal", locals: { title: "Add a new #{type}", type: type } %>
-      </div>
-    </div>
-  </div>
+  <%= render partial: '/layouts/modal' %>
 </div>
