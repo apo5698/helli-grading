@@ -1,0 +1,8 @@
+<% error = flash[:create_modal_error] %>
+<% error = flash[:update_modal_error] unless error %>
+<% if error %>
+  <div class="alert alert-dismissible alert-primary">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <span class="new-line"><%= error %></span>
+  </div>
+<% end %>

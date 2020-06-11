@@ -6,7 +6,29 @@ class GradingController < ApplicationController
   before_action :set_variables
 
   def index
-    redirect_to '/grading/exercises'
+    if flash[:create_modal_error] or flash[:update_modal_error]
+      @assignment = Assignment.new(assignment_params)
+      @assignment_id = params[:assignment_id]
+    end
+  end
+
+  def new
+    @assignment = Assignment.new
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def create
+    @assignment = Assignment.create(assignment_params)
+    @messages = @assignment.errors.full_messages
+    if @messages.blank?
+      flash[:success] = "#{@assignment.name} has been successfully created."
+    else
+      flash[:create_modal_error] = @messages.uniq.reject(&:blank?).join(".\n") << '.'
+    end
+    redirect_to action: 'index', assignment: assignment_params.to_h
   end
 
   def show; end
@@ -157,6 +179,35 @@ class GradingController < ApplicationController
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
   end
 
+  def destroy
+    assignment = Assignment.find(params[:id])
+    name = assignment.name
+    @id = assignment.id
+    assignment.destroy
+    flash[:success] = "#{name} has been successfully deleted"
+    redirect_to action: 'index'
+  end
+
+  def edit
+    @assignment = Assignment.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def update
+    assignment = Assignment.find(params[:id])
+    assignment.update_attributes(assignment_params)
+    messages = assignment.errors.full_messages
+    if messages.blank?
+      flash[:success] = "#{assignment.name} has been successfully updated."
+    else
+      flash[:update_modal_error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
+    end
+    redirect_to action: 'index', assignment: assignment_params, assignment_id: assignment.id
+  end
+
   private
 
   def set_variables
@@ -203,5 +254,16 @@ class GradingController < ApplicationController
     puts "  #{'stdout:'.magenta.bold} #{output[0].gsub("\n", "\n#{' ' * 10}")}"
     puts "  #{'stderr:'.magenta.bold} #{output[1].gsub("\n", "\n#{' ' * 10}")}"
     output
+  end
+
+  def make_subdirectories(base_path)
+    FileUtils.mkdir_p base_path.join('bin')
+    FileUtils.mkdir_p base_path.join('src')
+    FileUtils.mkdir_p base_path.join('test')
+    FileUtils.mkdir_p base_path.join('test_files')
+  end
+
+  def remove_subdirectories(base_path)
+    FileUtils.rm_rf base_path
   end
 end
