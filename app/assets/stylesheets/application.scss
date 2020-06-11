@@ -52,6 +52,6 @@ label.required:after {
   white-space: pre;
 }
 
-@import "bootswatch/simplex/variables";
+@import "bootswatch/dist/simplex/variables";
 @import "bootstrap/scss/bootstrap";
-@import "bootswatch/simplex/bootswatch";
+@import "bootswatch/dist/simplex/bootswatch";

@@ -27,19 +27,4 @@
       width: "100%"
     }, 2000);
   });
-
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((m) => {
-      m.addedNodes?.forEach((node) => {
-        alert(node);
-      });
-    });
-  });
-
-  observer.observe(document.getElementById("bar"), {
-    childList: true,
-    subtree: true,
-    attributes: false,
-    characterData: false
-  });
 </script>
