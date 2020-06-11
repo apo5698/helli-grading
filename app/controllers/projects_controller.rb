@@ -1,19 +1,21 @@
 class ProjectsController < GradingController
   def index
-    super
-    @assignments = Project.all
+    super(Object.const_get('Project'))
   end
 
-  def create
-    super
-    if @messages.blank?
-      assignment_path = @user_root.join('projects', @assignment.id.to_s)
-      make_subdirectories assignment_path
-    end
+  def new
+    super(Object.const_get('Project'))
   end
 
   def destroy
     super
     remove_subdirectories @user_root.join('projects', @id.to_s)
+  end
+
+  private
+
+  def assignment_params
+    params.require(:project).permit(:name, :type, :term,
+                                     :course, :section, :description)
   end
 end

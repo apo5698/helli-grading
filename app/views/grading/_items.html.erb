@@ -41,12 +41,12 @@
 
 <script>
   <% if flash[:create_modal_error] %>
-    $('#modal-window').find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {url: url_prefix, title: "Add a new #{type.downcase}", type: type, method: "post"} %>");
+    $('#modal-window').find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {title: "Add a new #{type.downcase}", type: type, method: "post"} %>");
     $('#modal-window').removeClass("fade");
     $('#modal-window').modal('show');
   <% end %>
   <% if flash[:update_modal_error] %>
-    $("#modal-window").find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {url: "#{url_prefix + @assignment_id}", title: "Edit #{@assignment.name}", type: type, method: "put"} %>");
+    $("#modal-window").find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {title: "Edit #{@assignment.name}", type: type, method: "put"} %>");
     $('#modal-window').removeClass("fade");
     $("#modal-window").modal('show');
   <% end %>

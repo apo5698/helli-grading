@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :grading do
     collection do
-      resources :exercises, :projects, :homework do
+      resources :exercises, :projects do
         get 'prepare', to: 'grading#prepare'
         post 'upload', to: 'grading#upload'
         post 'delete_upload', to: 'grading#delete_upload'
@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         get 'summary', to: 'grading#summary'
         post 'summary', to: 'grading#summary'
       end
+      resources :homework, as: :homeworks
     end
   end
 

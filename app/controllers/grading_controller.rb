@@ -5,15 +5,17 @@ require 'open3'
 class GradingController < ApplicationController
   before_action :set_variables
 
-  def index
+  def index(the_class)
+    @assignments = the_class.all
     if flash[:create_modal_error] or flash[:update_modal_error]
-      @assignment = Assignment.new(assignment_params)
-      @assignment_id = params[:assignment_id]
+      @assignment = Assignment.find_by(id: params[:assignment_id])
+      @assignment = the_class.new unless @assignment
+      @assignment.assign_attributes(assignment_params)
     end
   end
 
-  def new
-    @assignment = Assignment.new
+  def new(the_class)
+    @assignment = the_class.new
     respond_to do |format|
       format.html
       format.js
@@ -23,12 +25,17 @@ class GradingController < ApplicationController
   def create
     @assignment = Assignment.create(assignment_params)
     @messages = @assignment.errors.full_messages
+    assignment_type = assignment_params[:type].downcase
     if @messages.blank?
+      if assignment_type != 'Homework'
+        assignment_path = @user_root.join(assignment_type.downcase.pluralize, @assignment.id.to_s)
+        make_subdirectories assignment_path
+      end
       flash[:success] = "#{@assignment.name} has been successfully created."
     else
       flash[:create_modal_error] = @messages.uniq.reject(&:blank?).join(".\n") << '.'
     end
-    redirect_to action: 'index', assignment: assignment_params.to_h
+    redirect_to action: 'index', assignment_type => assignment_params.to_h
   end
 
   def show; end
@@ -197,15 +204,16 @@ class GradingController < ApplicationController
   end
 
   def update
-    assignment = Assignment.find(params[:id])
-    assignment.update_attributes(assignment_params)
-    messages = assignment.errors.full_messages
+    @assignment = Assignment.find(params[:id])
+    @assignment.update_attributes(assignment_params)
+    assignment_type = assignment_params[:type].downcase
+    messages = @assignment.errors.full_messages
     if messages.blank?
-      flash[:success] = "#{assignment.name} has been successfully updated."
+      flash[:success] = "#{@assignment.name} has been successfully updated."
     else
       flash[:update_modal_error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
     end
-    redirect_to action: 'index', assignment: assignment_params, assignment_id: assignment.id
+    redirect_to action: 'index', assignment_type => assignment_params, assignment_id: params[:id]
   end
 
   private
@@ -234,11 +242,6 @@ class GradingController < ApplicationController
     @test_path = @upload_root&.join('test')
     @bin_path = @upload_root&.join('bin')
     @lib_path = @upload_root&.join('lib')
-  end
-
-  def assignment_params
-    params.require(:assignment).permit(:name, :type, :term,
-                                       :course, :section, :description)
   end
 
   def exec(cmd, *args)

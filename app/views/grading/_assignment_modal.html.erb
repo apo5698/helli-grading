@@ -1,51 +1,52 @@
-<%= form_tag url, method: method %>
-<div class="modal-header">
-  <h5 class="modal-title" id="assignmentModalLabel"><%= title %></h5>
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <%= render partial: '/layouts/modal_flash' %>
-  <div class="form-group">
-    <%= hidden_field :assignment, :type, value: type.capitalize %>
+<%= form_with model: @assignment, method: method do |form| %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="assignmentModalLabel"><%= title %></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <div class="form-group">
-    <%= label :assignment, :name, "Name" %>
-    <%= text_field :assignment, :name, class: "form-control" %>
-  </div>
-  <div class="row">
-    <div class="col-lg-5">
-      <div class="form-group">
-        <%= label :assignment, :term, "Term" %>
-        <%= select :assignment, :term, ["Spring 2020", "Fall 2019", "Spring 2019"], {}, {class: "form-control"} %>
+  <div class="modal-body">
+    <%= render partial: '/layouts/modal_flash' %>
+    <div class="form-group">
+      <%= form.hidden_field :type %>
+    </div>
+    <div class="form-group">
+      <%= form.label :name, "Name" %>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="form-group">
+          <%= form.label :term, "Term" %>
+          <%= form.select :term, ["Spring 2020", "Fall 2019", "Spring 2019"], {}, {class: "form-control"} %>
+        </div>
+      </div>
+      <div class="col-lg-1">
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <%= form.label :course, "Course" %>
+          <%= form.select :course, ["CSC 116"], {}, {class: "form-control"} %>
+        </div>
+      </div>
+      <div class="col-lg-2">
+        <div class="form-group">
+          <%= form.label :section, "Section" %>
+          <%= form.text_field :section, class: "form-control" %>
+        </div>
       </div>
     </div>
-    <div class="col-lg-1">
-    </div>
-    <div class="col-lg-4">
-      <div class="form-group">
-        <%= label :assignment, :course, "Course" %>
-        <%= select :assignment, :course, ["CSC 116"], {}, {class: "form-control"} %>
-      </div>
-    </div>
-    <div class="col-lg-2">
-      <div class="form-group">
-        <%= label :assignment, :section, "Section" %>
-        <%= text_field :assignment, :section, class: "form-control" %>
-      </div>
-    </div>
-  </div>
 
-  <div class="form-group">
-    <%= label :assignment, :description, "Description" %>
-    <%= text_area :assignment, :description, class: "form-control", spellcheck: "true", rows: "4" %>
+    <div class="form-group">
+      <%= form.label :description, "Description" %>
+      <%= form.text_area :description, class: "form-control", spellcheck: "true", rows: "4" %>
+    </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="assignment_modal_close">Close</button>
-  <%= submit_tag "Submit", class: "btn btn-primary" %>
-</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="assignment_modal_close">Close</button>
+    <%= form.submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>
 
 <script>
   $('button#assignment_modal_close').on('click', () => {

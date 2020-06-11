@@ -1,19 +1,21 @@
 class ExercisesController < GradingController
   def index
-    super
-    @assignments = Exercise.all
+    super(Object.const_get('Exercise'))
   end
 
-  def create
-    super
-    if @messages.blank?
-      assignment_path = @user_root.join('exercises', @assignment.id.to_s)
-      make_subdirectories assignment_path
-    end
+  def new
+    super(Object.const_get('Exercise'))
   end
 
   def destroy
     super
     remove_subdirectories @user_root.join('exercises', @id.to_s)
+  end
+
+  private
+
+  def assignment_params
+    params.require(:exercise).permit(:name, :type, :term,
+                                       :course, :section, :description)
   end
 end
