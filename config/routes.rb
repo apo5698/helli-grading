@@ -16,7 +16,13 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :users
+
+  resources :users do
+    collection do
+      get 'reset_password', to: 'users#reset_password'
+    end
+  end
+
   resources :sessions
 
   root to: 'home#index'

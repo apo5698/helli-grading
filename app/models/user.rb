@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  require 'securerandom'
+
   has_secure_password
 
   validates :email, presence: true, uniqueness: true
@@ -38,5 +40,11 @@ class User < ApplicationRecord
     self.avatar = avatar.original_filename
     save
     ''
+  end
+
+  def random_password
+    random_password = SecureRandom.base64(10)
+    self.update_attributes({password: random_password, password_confirmation: random_password})
+    random_password
   end
 end

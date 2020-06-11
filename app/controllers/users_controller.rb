@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :catch_denied_access, except: %i[new create]
+  before_action :catch_denied_access, except: %i[new create reset_password]
 
   def new
     render layout: 'pre_application'
@@ -52,6 +52,18 @@ class UsersController < ApplicationController
       flash[:error] = 'The password you entered does not match our record. Please try again.'
       redirect_to user_path
     end
+  end
+
+  def reset_password
+    user = User.find_by(email: params[:user][:recovery_email])
+    if user
+      random_password = user.random_password
+      UserMailer.with(user: user, random_password: random_password).email_on_temporary_password.deliver_later
+      flash[:success] = 'An temporary password has been sent to your email. Please check it!'
+    else
+      flash[:error] = 'The email you entered does not match our record. Please try another.'
+    end
+    redirect_to root_path
   end
 
   private

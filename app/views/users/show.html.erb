@@ -1,4 +1,4 @@
-<%= form_tag user_path, multipart: true, method: 'put' %>
+<%= form_tag user_path, multipart: true, method: 'put' do %>
 <div class="row">
   <div class="col-lg-2"></div>
   <div class="col-lg-4">
@@ -76,17 +76,18 @@
       </div>
 
       <div class="form-group d-flex justify-content-between align-items-center">
-        <%= link_to 'Delete my account', "/users/#{@user.id}/confirm", data: { target: '#modal-window', toggle: 'modal' }%>
+        <%= link_to 'Delete my account', "#", data: { target: '#modal-window', toggle: 'modal' }%>
         <%= submit_tag "Submit", class: "btn btn-primary float-right" %>
       </div>
     </fieldset>
   </div>
 </div>
+<% end %>
 
 <div class="modal hide fade" id="modal-window" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= form_tag "/users/#{@user.id}", method: "delete" %>
+      <%= form_tag "/users/#{@user.id}", method: "delete" do %>
       <div class="modal-header">
         <h5 class="modal-title" id="assignmentModalLabel">Confirm your password</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -106,6 +107,7 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <%= submit_tag "Delete my account", class: "btn btn-primary" %>
       </div>
+      <% end %>
     </div>
   </div>
 </div>
