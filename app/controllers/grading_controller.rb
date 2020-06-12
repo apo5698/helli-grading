@@ -7,7 +7,7 @@ class GradingController < ApplicationController
 
   def index(the_class)
     @assignments = the_class.all
-    if flash[:create_modal_error] or flash[:update_modal_error]
+    if flash[:modal_error]
       @assignment = Assignment.find_by(id: params[:assignment_id])
       @assignment = the_class.new unless @assignment
       @assignment.assign_attributes(assignment_params)
@@ -33,7 +33,7 @@ class GradingController < ApplicationController
       end
       flash[:success] = "#{@assignment.name} has been successfully created."
     else
-      flash[:create_modal_error] = @messages.uniq.reject(&:blank?).join(".\n") << '.'
+      flash[:modal_error] = @messages.uniq.reject(&:blank?).join(".\n") << '.'
     end
     redirect_to action: 'index', assignment_type => assignment_params.to_h
   end
@@ -211,7 +211,7 @@ class GradingController < ApplicationController
     if messages.blank?
       flash[:success] = "#{@assignment.name} has been successfully updated."
     else
-      flash[:update_modal_error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
+      flash[:modal_error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
     end
     redirect_to action: 'index', assignment_type => assignment_params, assignment_id: params[:id]
   end

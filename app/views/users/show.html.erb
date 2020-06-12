@@ -95,16 +95,17 @@
         </button>
       </div>
       <div class="modal-body">
+        <%= render partial: "/layouts/modal_flash" %>
         <div class="form-group">
           Please confirm your password before continuing. Note that this action cannot be undone.
         </div>
         <div class="form-group">
-          <%= form.label "user[password]", "Password" %>
-          <%= form.text_field "user[password]", class: "form-control" %>
+          <%= form.label :confirmed_password, "Password" %>
+          <%= form.password_field :confirmed_password, class: "form-control" %>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modal-close">Close</button>
         <%= form.submit "Delete my account", class: "btn btn-primary" %>
       </div>
       <% end %>
@@ -116,5 +117,12 @@
 <script>
   $(document).ready(function(){
     $('#user_phone_number').mask('000-000-0000');
+  });
+  <% if flash[:modal_error] %>
+    $('#modal-window').removeClass("fade");
+    $("#modal-window").modal('show');
+  <% end %>
+  $('button#modal-close').on('click', () => {
+    $('#modal-window').addClass('fade');
   });
 </script>

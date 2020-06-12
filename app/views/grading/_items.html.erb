@@ -40,14 +40,18 @@
 </div>
 
 <script>
-  <% if flash[:create_modal_error] %>
-    $('#modal-window').find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {title: "Add a new #{type.downcase}", type: type, method: "post"} %>");
-    $('#modal-window').removeClass("fade");
-    $('#modal-window').modal('show');
+  <% if flash[:modal_error] %>
+    <% if @assignment.id %>
+      $("#modal-window").find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {title: "Edit #{@assignment.name}", type: type, method: "put"} %>");
+      $('#modal-window').removeClass("fade");
+      $("#modal-window").modal('show');
+    <% else %>
+      $('#modal-window').find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {title: "Add a new #{type.downcase}", type: type, method: "post"} %>");
+      $('#modal-window').removeClass("fade");
+      $('#modal-window').modal('show');
+    <% end %>
   <% end %>
-  <% if flash[:update_modal_error] %>
-    $("#modal-window").find(".modal-content").html("<%= j render partial: 'grading/assignment_modal', locals: {title: "Edit #{@assignment.name}", type: type, method: "put"} %>");
-    $('#modal-window').removeClass("fade");
-    $("#modal-window").modal('show');
-  <% end %>
+  $('button#assignment_modal_close').on('click', () => {
+    $('#modal-window').addClass('fade');
+  });
 </script>

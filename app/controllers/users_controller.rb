@@ -43,13 +43,13 @@ class UsersController < ApplicationController
 
   def destroy
     user = User.find(params[:id])
-    if user.authenticate(password_params[:password])
+    if user.authenticate(params[:confirmed_password])
       user.destroy
       session[:user] = nil
       flash[:success] = 'You account has been deleted.'
       redirect_to root_path
     else
-      flash[:error] = 'The password you entered does not match our record. Please try again.'
+      flash[:modal_error] = 'The password you entered does not match our record. Please try again.'
       redirect_to user_path
     end
   end
@@ -60,10 +60,11 @@ class UsersController < ApplicationController
       random_password = user.random_password
       UserMailer.with(user: user, random_password: random_password).email_on_temporary_password.deliver_later
       flash[:success] = 'An temporary password has been sent to your email. Please check it!'
+      redirect_to root_path
     else
-      flash[:error] = 'The email you entered does not match our record. Please try another.'
+      flash[:modal_error] = 'The email you entered does not match our record. Please try another.'
+      redirect_to controller: 'sessions', action: 'new', recovery_email: params[:recovery_email]
     end
-    redirect_to root_path
   end
 
   private

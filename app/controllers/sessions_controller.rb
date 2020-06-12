@@ -2,6 +2,7 @@ class SessionsController < ApplicationController
   before_action :catch_denied_access, except: %i[new create]
 
   def new
+    @recovery_email = params[:recovery_email]
     render layout: 'pre_application'
   end
 
