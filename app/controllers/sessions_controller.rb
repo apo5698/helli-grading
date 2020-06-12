@@ -6,8 +6,9 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:user][:email])
-    if !user.nil? && user.authenticate(params[:user][:password])
+    user = User.find_by(email: params[:email])
+    if !user.nil? && user.authenticate(params[:password])
+      flash[:success] = 'You have been successfully signed in.'
       session[:user] = user
     else
       flash[:error] = 'The email and password you entered did not match our ' \

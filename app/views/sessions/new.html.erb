@@ -1,19 +1,19 @@
 <div class="card-body">
-  <%= form_tag sessions_path do %>
+  <%= form_with url: sessions_path do |form| %>
     <fieldset>
       <legend>Sign in</legend>
       <div class="form-group">
-        <%= label 'user', 'email', 'Email' %>
-        <%= text_field 'user', 'email', class: "form-control" %>
+        <%= form.label 'email', 'Email' %>
+        <%= form.text_field 'email', class: "form-control" %>
         <small id="email-help" class="form-text text-muted">We'll share your email and your password with everyone
           else.</small>
       </div>
       <div class="form-group">
-        <%= label 'user', 'password', 'Password' %>
-        <%= password_field 'user', 'password', class: "form-control" %>
+        <%= form.label 'password', 'Password' %>
+        <%= form.password_field 'password', class: "form-control" %>
       </div>
       <%= link_to 'Forgot your password?', '#', data: { target: '#modal-window', toggle: 'modal' }%>
-      <%= submit_tag "Login", class: "btn btn-primary float-right" %>
+      <%= form.submit "Login", class: "btn btn-primary float-right" %>
     </fieldset>
   <% end %>
 </div>
@@ -26,7 +26,7 @@
 <div class="modal hide fade" id="modal-window" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= form_tag "/users/reset_password", method: "get" do %>
+      <%= form_with url: "/users/reset_password", method: "get", local: true do |form| %>
         <div class="modal-header">
           <h5 class="modal-title" id="assignmentModalLabel">Forgot your password?</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -38,13 +38,13 @@
             Please enter your email address below and we'll email you a temporary password.
           </div>
           <div class="form-group">
-            <%= label :user, :recovery_email, "Email" %>
-            <%= email_field :user, :recovery_email, class: "form-control" %>
+            <%= form.label :recovery_email, "Email" %>
+            <%= form.email_field :recovery_email, class: "form-control" %>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <%= submit_tag "Reset my password", class: "btn btn-primary" %>
+          <%= form.submit "Reset my password", class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>

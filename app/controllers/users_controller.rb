@@ -55,7 +55,7 @@ class UsersController < ApplicationController
   end
 
   def reset_password
-    user = User.find_by(email: params[:user][:recovery_email])
+    user = User.find_by(email: params[:recovery_email])
     if user
       random_password = user.random_password
       UserMailer.with(user: user, random_password: random_password).email_on_temporary_password.deliver_later
