@@ -69,6 +69,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
+    params[:user][:phone_number] = params[:user][:phone_number].tr('-', '') if params[:user][:phone_number]
     params.require(:user).permit(:first_name, :last_name, :email,
                                  :phone_number, :date_of_birth,
                                  :gender, :path_to_avatar)

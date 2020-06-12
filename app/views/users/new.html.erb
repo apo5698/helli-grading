@@ -1,31 +1,32 @@
 <div class="card-body">
-  <%= form_tag users_path, method: 'post' %>
+  <%= form_with url: users_path, method: 'post' do |form| %>
   <fieldset>
     <legend>Sign up</legend>
     <div class="form-group row">
       <div class="col-lg-6">
-        <%= label :user, :first_name, "First name", class: "required" %>
-        <%= text_field :user, :first_name, class: "form-control" %>
+        <%= form.label "user[first_name]", "First name", class: "required" %>
+        <%= form.text_field "user[first_name]", class: "form-control" %>
       </div>
       <div class="col-lg-6">
-        <%= label :user, :last_name, "Last name", class: "required" %>
-        <%= text_field :user, :last_name, class: "form-control" %>
+        <%= form.label "user[last_name]", "Last name", class: "required" %>
+        <%= form.text_field "user[last_name]", class: "form-control" %>
       </div>
     </div>
     <div class="form-group required">
-      <%= label :user, :email, "Email address", class: "required" %>
-      <%= email_field :user, :email, class: "form-control" %>
+      <%= form.label "user[email]", "Email address", class: "required" %>
+      <%= form.email_field "user[email]", class: "form-control" %>
     </div>
     <div class="form-group">
-      <%= label :user, :password, "Password (6 or more characters)", class: "required" %>
-      <%= password_field :user, :password, class: "form-control" %>
+      <%= form.label "user[password]", "Password (6 or more characters)", class: "required" %>
+      <%= form.password_field "user[password]", class: "form-control" %>
     </div>
     <div class="form-group">
-      <%= label :user, :password_confirmation, "Confirm password", class: "required" %>
-      <%= password_field :user, :password_confirmation, class: "form-control" %>
+      <%= form.label "user[password_confirmation]", "Confirm password", class: "required" %>
+      <%= form.password_field "user[password_confirmation]", class: "form-control" %>
     </div>
-    <%= submit_tag "Register", class: "btn btn-primary float-right btn-block" %>
+    <%= form.submit "Register", class: "btn btn-primary float-right btn-block" %>
   </fieldset>
+  <% end %>
 </div>
 <div class="card-footer center">
   Already have an account?&nbsp;

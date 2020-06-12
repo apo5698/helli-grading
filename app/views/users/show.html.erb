@@ -1,4 +1,4 @@
-<%= form_tag user_path, multipart: true, method: 'put' do %>
+<%= form_with model: @user, multipart: true, method: 'put' do |form| %>
 <div class="row">
   <div class="col-lg-2"></div>
   <div class="col-lg-4">
@@ -8,7 +8,7 @@
       <img src="https://pbs.twimg.com/profile_images/1107821274632343552/vS0teDIE_400x400.jpg" width="250px" height="250px" alt="avatar">
     <% end %>
     <div class="form-group pt-2">
-      <%= file_field :user, :avatar, class: "form-control-file" %>
+      <%= form.file_field :avatar, class: "form-control-file" %>
       <small id="fileHelp" class="form-text text-muted">Customize your avatar!</small>
     </div>
   </div>
@@ -19,47 +19,47 @@
       <div class="form-group row">
         <label class="col-lg-4 col-form-label">Email</label>
         <div class="col-lg-8">
-          <%= text_field :user, :email, class: "form-control-plaintext", readonly: "" %>
+          <%= form.text_field :email, class: "form-control-plaintext", readonly: "" %>
         </div>
       </div>
       <div class="form-group">
-        <%= label :user, :email, "Email address" %>
-        <%= email_field :user, :email, class: "form-control", aria: {describedby: "emailHelp"} %>
+        <%= form.label :email, "Email address" %>
+        <%= form.email_field :email, class: "form-control", aria: {describedby: "emailHelp"} %>
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
       <div class="form-group row">
         <div class="col-lg-6">
-          <%= label :user, :first_name, "First name" %>
-          <%= text_field :user, :first_name, class: "form-control" %>
+          <%= form.label :first_name, "First name" %>
+          <%= form.text_field :first_name, class: "form-control" %>
         </div>
         <div class="col-lg-6">
-          <%= label :user, :last_name, "Last name" %>
-          <%= text_field :user, :last_name, class: "form-control" %>
+          <%= form.label :last_name, "Last name" %>
+          <%= form.text_field :last_name, class: "form-control" %>
         </div>
       </div>
       <div class="form-group row">
-        <%= label :user, :phone_number, "Phone number", class: "col-lg-4 col-form-label" %>
+        <%= form.label :phone_number, "Phone number", class: "col-lg-4 col-form-label" %>
         <div class="col-lg-8">
-          <%= text_field :user, :phone_number, class: "form-control" %>
+          <%= form.text_field :phone_number, class: "form-control" %>
         </div>
       </div>
       <div class="form-group row">
-        <%= label :user, :date_of_birth, "Date of birth", class: "col-lg-4 col-form-label" %>
+        <%= form.label :date_of_birth, "Date of birth", class: "col-lg-4 col-form-label" %>
         <div class="col-lg-8">
-          <%= date_field :user, :date_of_birth, class: "form-control" %>
+          <%= form.date_field :date_of_birth, class: "form-control" %>
         </div>
       </div>
       <div class="form-group row">
-        <%= label :user, :gender, "Gender", class: "col-lg-6 radio control-label" %>
+        <%= form.label :gender, "Gender", class: "col-lg-6 radio control-label" %>
         <div class="form-check col-lg-3">
           <label class="form-check-label">
-            <%= radio_button :user, :gender, "Male", class: "form-check-input" %>
+            <%= form.radio_button :gender, "Male", class: "form-check-input" %>
             Male
           </label>
         </div>
         <div class="form-check col-lg-3">
           <label class="form-check-label">
-            <%= radio_button :user, :gender, "Female", class: "form-check-input" %>
+            <%= form.radio_button :gender, "Female", class: "form-check-input" %>
             Female
           </label>
         </div>
@@ -67,17 +67,17 @@
       <hr>
 
       <div class="form-group">
-        <%= label :user, :password, "Password" %>
-        <%= password_field :user, :password, class: "form-control" %>
+        <%= form.label :password, "Password" %>
+        <%= form.password_field :password, class: "form-control" %>
       </div>
       <div class="form-group">
-        <%= label :user, :confirm_password, "Confirm password" %>
-        <%= password_field :user, :password_confirmation, class: "form-control" %>
+        <%= form.label :confirm_password, "Confirm password" %>
+        <%= form.password_field :password_confirmation, class: "form-control" %>
       </div>
 
       <div class="form-group d-flex justify-content-between align-items-center">
         <%= link_to 'Delete my account', "#", data: { target: '#modal-window', toggle: 'modal' }%>
-        <%= submit_tag "Submit", class: "btn btn-primary float-right" %>
+        <%= form.submit "Submit", class: "btn btn-primary float-right" %>
       </div>
     </fieldset>
   </div>
@@ -87,7 +87,7 @@
 <div class="modal hide fade" id="modal-window" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= form_tag "/users/#{@user.id}", method: "delete" do %>
+      <%= form_with url: "/users/#{@user.id}", method: "delete" do |form| %>
       <div class="modal-header">
         <h5 class="modal-title" id="assignmentModalLabel">Confirm your password</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -99,13 +99,13 @@
           Please confirm your password before continuing. Note that this action cannot be undone.
         </div>
         <div class="form-group">
-          <%= label :user, :password, "Password" %>
-          <%= text_field :user, :password, class: "form-control" %>
+          <%= form.label "user[password]", "Password" %>
+          <%= form.text_field "user[password]", class: "form-control" %>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <%= submit_tag "Delete my account", class: "btn btn-primary" %>
+        <%= form.submit "Delete my account", class: "btn btn-primary" %>
       </div>
       <% end %>
     </div>
