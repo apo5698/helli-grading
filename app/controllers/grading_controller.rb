@@ -3,6 +3,7 @@ require 'open3'
 
 class GradingController < ApplicationController
   before_action :set_variables
+  before_action :set_paths
 
   def index(the_class)
     @assignments = the_class.all
@@ -36,8 +37,6 @@ class GradingController < ApplicationController
     end
     redirect_to action: 'index', assignment_type => assignment_params.to_h
   end
-
-  def show; end
 
   def prepare
     render '/grading/show'
@@ -211,18 +210,9 @@ class GradingController < ApplicationController
   private
 
   def set_variables
-    if params[:exercise_id]
-      @assignment_type = 'exercises'
-      @id = params[:exercise_id]
-    elsif params[:project_id]
-      @assignment_type = 'projects'
-      @id = params[:project_id]
-    elsif params[:homework_id]
-      @assignment_type = 'homework'
-      @id = params[:homework_id]
-    end
+    @assignment_type = params[:controller]
+    @id = params[@assignment_type.singularize + '_id']
     @action = params[:action]
-    set_paths
   end
 
   def set_paths
