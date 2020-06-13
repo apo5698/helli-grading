@@ -16,6 +16,6 @@ class ProjectsController < GradingController
 
   def assignment_params
     params.require(:project).permit(:name, :type, :term,
-                                     :course, :section, :description)
+                                    :course, :section, :description)
   end
 end

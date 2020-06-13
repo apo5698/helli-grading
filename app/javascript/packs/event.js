@@ -3,6 +3,19 @@ $(() => {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
+$(document).ready(() => {
+  // Select/Deselect all checkboxes
+  $('button#toggle-all').on('click', () => {
+    let checkboxes = $('input:checkbox');
+    checkboxes.prop('checked', !checkboxes.prop('checked'));
+  });
+
+  // File upload
+  $('input:file').on('change', function () {
+    $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
+  });
+});
+
 // Expand checkboxes and radio buttons
 // $(document).ready(() => {
 //   $('li[class*="list-group-item-action"]').on('click', function () {

@@ -35,7 +35,7 @@ class User < ApplicationRecord
     # delete the old one
     if self.avatar
       old_file = Rails.root.join('public', 'uploads', 'avatars', self.avatar)
-      File.open(old_file, 'r') { |f| File.delete(f) }
+      File.open(old_file, 'r') { |f| File.rm(f) }
     end
     self.avatar = avatar.original_filename
     save

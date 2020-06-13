@@ -12,13 +12,43 @@
           </div>
         </div>
       </div>
+      <!-- Modal -->
+      <div class="modal fade" id="filename-warning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Filename warning</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" id="discard">
+                  <i class="fas fa-times"></i>
+                </span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div id="actual">
+                Filename <code></code> may not be a valid submission zip file.
+              </div>
+              <div id="expected">
+                Expected:
+                <code>[Course] ([Section]) [Semester] [Year]-[AssignmentName]-[MoodleSubmissionId].zip</code>
+              </div>
+              <br/>
+              Proceed to upload?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="discard">Discard</button>
+              <%= f.submit 'Upload', class: 'btn btn-primary' %>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
 <div class="row mb-4">
   <div class="col-auto" style="min-width: 400px">
     <h3>Uploaded files</h3>
-    <% uploaded_files = Dir.glob(@upload_root.join('**', '*.java')) %>
+    <% uploaded_files = Dir[@upload_root.join('**', '*')].select { |e| File.file?(e) } %>
     <% if uploaded_files.empty? %>
       None
     <% else %>
@@ -27,7 +57,7 @@
           <ul class="list-group code">
             <% uploaded_files.sort.each do |filepath| %>
               <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                <%= filename = File.basename(filepath) %>
+                <%= filename = filepath.gsub(@user_root.to_s, '') %>
                 <div class="custom-control custom-checkbox">
                   <%= f.check_box :"#{filename}", class: 'custom-control-input' %>
                   <%= f.label :"#{filename}", 0.chr, class: "custom-control-label" %>
@@ -36,14 +66,29 @@
             <% end %>
           </ul>
         </div>
-        <%= f.submit 'Delete', class: 'btn btn-outline-primary' %>
+        <div class="float-left">
+          <button type="button" class="btn btn-secondary" id="toggle-all">Select/Deselect all</button>
+        </div>
+        <div class="form-group float-right">
+          <%= f.submit 'Delete', class: 'btn btn-outline-primary' %>
+        </div>
       <% end %>
     <% end %>
   </div>
 </div>
 <script>
-  $('#upload_file').on('change', function () {
-    $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
+  let uploadFileInput = $('input:file');
+  uploadFileInput.on('change', () => {
+    let filename = uploadFileInput.val().replace('C:\\fakepath\\', '');
+    if (!filename.match(/\w+\s\d+\s\(\d+\)\s\w+\s\d+-\w+\s*\d+-\d+\.zip/)) {
+      $('.modal-body #actual code').html(filename);
+      $('#filename-warning').modal();
+      // Clear uploaded file
+      $('#discard, button#discard').on('click', () => {
+        uploadFileInput.val(null);
+        uploadFileInput.next().text('Choose a zip or file');
+      });
+    }
   });
 
   // Disable sessionStorage on this page

@@ -16,6 +16,6 @@ class ExercisesController < GradingController
 
   def assignment_params
     params.require(:exercise).permit(:name, :type, :term,
-                                       :course, :section, :description)
+                                     :course, :section, :description)
   end
 end

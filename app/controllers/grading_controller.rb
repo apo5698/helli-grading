@@ -1,5 +1,4 @@
 require 'colorize'
-require 'fileutils'
 require 'open3'
 
 class GradingController < ApplicationController
@@ -29,7 +28,7 @@ class GradingController < ApplicationController
     if @messages.blank?
       if assignment_type != 'Homework'
         assignment_path = @user_root.join(assignment_type.downcase.pluralize, @assignment.id.to_s)
-        make_subdirectories assignment_path
+        FileHelper.create dir: assignment_path.join('submissions')
       end
       flash[:success] = "#{@assignment.name} has been successfully created."
     else
@@ -58,13 +57,13 @@ class GradingController < ApplicationController
       cp_path << ":#{@public_lib_path.join('junit', '*')}" if params[:compile][:options][:junit].to_i == 1
 
       files.each do |file|
-        ret = exec('javac',
-                   '-d',
-                   @bin_path,
-                   '-cp',
-                   cp_path,
-                   file,
-                   params[:compile][:arg])
+        ret = GradingHelper.exec('javac',
+                                 '-d',
+                                 @bin_path,
+                                 '-cp',
+                                 cp_path,
+                                 file,
+                                 params[:compile][:arg])
         exec_ret[0] << (ret[0] + "\n\n") unless ret[0].empty?
         exec_ret[1] << (ret[1] + "\n\n") unless ret[1].empty?
       end
@@ -98,12 +97,12 @@ class GradingController < ApplicationController
         junit_pkg = 'org.junit.runner.JUnitCore'
       end
 
-      exec_ret = exec('java',
-                      '-cp',
-                      cp_path,
-                      junit_pkg,
-                      file.gsub('.class', ''),
-                      params[:run][:arg])
+      exec_ret = GradingHelper.exec('java',
+                                    '-cp',
+                                    cp_path,
+                                    junit_pkg,
+                                    file.gsub('.class', ''),
+                                    params[:run][:arg])
       if exec_ret[1].empty?
         flash.now[:success] = 'Run successfully.'
       else
@@ -130,7 +129,7 @@ class GradingController < ApplicationController
       filename = f[0]
       file_type = !filename.end_with?('Test.java') ? @src_path : @test_path
       filepath = file_type.join(File.basename(filename))
-      stdout = exec(cs_path, filepath)[0].split("\n")
+      stdout = GradingHelper.exec(cs_path, filepath)[0].split("\n")
 
       stdout = stdout.grep(/#{filename}:.+/)
       options = params[:checkstyle][:options]
@@ -152,36 +151,29 @@ class GradingController < ApplicationController
       flash[:error] = 'No file selected.'
     else
       uploaded_file = params[:upload][:file]
-      byte = uploaded_file.read
-      if byte.empty?
-        flash[:error] = 'File cannot be empty.'
-      else
-        filename = uploaded_file.original_filename
-        upload_to = !filename.end_with?('Test.java') ? @src_path : @test_path
-        File.open(upload_to.join(filename), 'wb') do |f|
-          f.write(byte)
-          flash[:success] = 'Upload successfully.'
-        end
+      begin
+        GradingHelper.upload(uploaded_file, @upload_root)
+        flash[:success] = 'Upload successfully.'
+      rescue StandardError => e
+        flash[:error] = e.message
       end
+      filename = uploaded_file.original_filename
+      GradingHelper.unzip(@upload_root.join(filename), @upload_root.join('submissions')) if filename.match(/.+\.zip/)
     end
+
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
   end
 
   def delete_upload
-    delete_files = params[:delete_upload]
-    if delete_files.values.all? { |v| v.to_i.zero? }
-      flash[:error] = 'Nothing to delete.'
-    else
-      delete_files.each do |filename, checked|
-        next if checked.to_i.zero?
-
-        delete_from = !filename.end_with?('Test.java') ? @src_path : @test_path
-        filepath = delete_from.join(filename)
-        File.open(delete_from.join(filepath), 'r') do |f|
-          File.delete(f)
-        end
-      end
-      flash[:success] = 'File(s) deleted.'
+    delete_files = params[:delete_upload].select { |_, v| v.to_i == 1 }
+                                         .keys
+                                         .map! { |f| File.join(@user_root, f) }
+    delete_files = delete_files.first if delete_files.length == 1
+    GradingHelper.delete!(delete_files)
+    begin
+      flash[:success] = 'Delete successfully.'
+    rescue StandardError => e
+      flash[:error] = e.message
     end
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
   end
@@ -244,29 +236,7 @@ class GradingController < ApplicationController
     @lib_path = @upload_root&.join('lib')
   end
 
-  def exec(cmd, *args)
-    args = args.join(' ')
-    puts "#{'exec>'.bold} #{cmd.green} #{args}"
-
-    full_cmd = "#{cmd} #{args}"
-    output = []
-    Open3.popen3(full_cmd) do |_, stdout, stderr, _|
-      output = [stdout.read.gsub(%r{[/\w]+/}, '').strip,
-                stderr.read.gsub(%r{[/\w]+/}, '').strip]
-    end
-    puts "  #{'stdout:'.magenta.bold} #{output[0].gsub("\n", "\n#{' ' * 10}")}"
-    puts "  #{'stderr:'.magenta.bold} #{output[1].gsub("\n", "\n#{' ' * 10}")}"
-    output
-  end
-
-  def make_subdirectories(base_path)
-    FileUtils.mkdir_p base_path.join('bin')
-    FileUtils.mkdir_p base_path.join('src')
-    FileUtils.mkdir_p base_path.join('test')
-    FileUtils.mkdir_p base_path.join('test_files')
-  end
-
   def remove_subdirectories(base_path)
-    FileUtils.rm_rf base_path
+    FileHelper.remove base_path
   end
 end
