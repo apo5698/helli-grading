@@ -35,6 +35,13 @@ module FileHelper
     FileUtils.remove_entry_secure path
   end
 
+  # Returns an array of filenames under +path+
+  # +path+ shall be a regular file, a directory, or something.
+  # If +path+ is a directory, remove it recursively.
+  def self.filenames(path)
+    Dir.glob(path.join('**')).map { |f| File.basename(f) }.sort
+  end
+
   # +Error+ class contains several runtime errors related to file.
   class Error
     # Raised when a file to be created is empty (contains zero byte).

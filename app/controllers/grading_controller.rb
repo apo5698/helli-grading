@@ -3,7 +3,7 @@ require 'open3'
 
 class GradingController < ApplicationController
   before_action :set_variables
-  before_action :set_paths
+  before_action :set_students, only: %w[prepare compile run checkstyle summary]
 
   def index(the_class)
     @assignments = the_class.all
@@ -213,6 +213,7 @@ class GradingController < ApplicationController
     @assignment_type = params[:controller]
     @id = params[@assignment_type.singularize + '_id']
     @action = params[:action]
+    set_paths
   end
 
   def set_paths
@@ -224,6 +225,10 @@ class GradingController < ApplicationController
     @test_path = @upload_root&.join('test')
     @bin_path = @upload_root&.join('bin')
     @lib_path = @upload_root&.join('lib')
+  end
+
+  def set_students
+    @students = FileHelper.filenames(@upload_root&.join('submissions'))
   end
 
   def remove_subdirectories(base_path)
