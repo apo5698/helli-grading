@@ -2,44 +2,33 @@ require 'colorize'
 require 'open3'
 
 class GradingController < ApplicationController
-  before_action :set_variables
-  before_action :set_students, only: %w[prepare compile run checkstyle summary]
+  before_action :set_for_assignments
+  before_action :set_for_assignment, only: %w[prepare compile run checkstyle summary]
 
-  def index(the_class)
-    @assignments = the_class.all
-    if flash[:modal_error]
-      @assignment = Assignment.find_by(id: params[:assignment_id])
-      @assignment = the_class.new unless @assignment
-      @assignment.assign_attributes(assignment_params)
-    end
-  end
-
-  def new(the_class)
-    @assignment = the_class.new
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
-  def create
-    @assignment = Assignment.create(assignment_params)
-    @messages = @assignment.errors.full_messages
-    assignment_type = assignment_params[:type].downcase
-    if @messages.blank?
-      if assignment_type != 'Homework'
-        assignment_path = @user_root.join(assignment_type.downcase.pluralize, @assignment.id.to_s)
-        FileHelper.create dir: assignment_path.join('submissions')
-      end
-      flash[:success] = "#{@assignment.name} has been successfully created."
-    else
-      flash[:modal_error] = @messages.uniq.reject(&:blank?).join(".\n") << '.'
-    end
-    redirect_to action: 'index', assignment_type => assignment_params.to_h
-  end
-
-  def prepare
+  def checkstyle
     render '/grading/show'
+  end
+
+  def checkstyle_run
+    cs_path = '~/cs-checkstyle/checkstyle'
+    @cs_count = {}
+    params[:checkstyle][:files]&.each do |f|
+      next if f[1].to_i.zero?
+
+      filename = f[0]
+      file_type = !filename.end_with?('Test.java') ? @src_path : @test_path
+      filepath = file_type.join(File.basename(filename))
+      stdout = GradingHelper.exec(cs_path, filepath)[0].split("\n")
+
+      stdout = stdout.grep(/#{filename}:.+/)
+      options = params[:checkstyle][:options]
+      stdout = stdout.grep_v(/is a magic number/) if options[:ignore_magic_numbers].to_i == 1
+      stdout = stdout.grep_v(/Missing a Javadoc comment/) if options[:ignore_javadoc].to_i == 1
+      @cs_count[:"#{filename}"] = stdout.count
+    end
+    flash.now[:error] = 'No file selected.' if @cs_count.empty?
+    @action = 'checkstyle'
+    checkstyle
   end
 
   def compile
@@ -80,6 +69,74 @@ class GradingController < ApplicationController
     compile
   end
 
+  def create
+    @assignment = Assignment.create(assignment_params)
+    @messages = @assignment.errors.full_messages
+    assignment_type = assignment_params[:type].downcase
+    if @messages.blank?
+      if assignment_type != 'Homework'
+        assignment_path = @user_root.join(assignment_type.downcase.pluralize, @assignment.id.to_s)
+        FileHelper.create dir: assignment_path.join('submissions')
+      end
+      flash[:success] = "#{@assignment.name} has been successfully created."
+    else
+      flash[:modal_error] = @messages.uniq.reject(&:blank?).join(".\n") << '.'
+    end
+    redirect_to action: 'index', assignment_type => assignment_params.to_h
+  end
+
+  def delete_upload
+    delete_files = params[:delete_upload].select { |_, v| v.to_i == 1 }
+                       .keys
+                       .map! { |f| File.join(@upload_root, f) }
+    delete_files = delete_files.first if delete_files.length == 1
+    GradingHelper.delete!(delete_files)
+    begin
+      flash[:success] = 'Delete successfully.'
+    rescue StandardError => e
+      flash[:error] = e.message
+    end
+    redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
+  end
+
+  def destroy
+    assignment = Assignment.find(params[:id])
+    name = assignment.name
+    @id = assignment.id
+    assignment.destroy
+    flash[:success] = "#{name} has been successfully deleted"
+    redirect_to action: 'index'
+  end
+
+  def edit
+    @assignment = Assignment.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def index(the_class)
+    @assignments = the_class.all
+    if flash[:modal_error]
+      @assignment = Assignment.find_by(id: params[:assignment_id])
+      @assignment = the_class.new unless @assignment
+      @assignment.assign_attributes(assignment_params)
+    end
+  end
+
+  def new(the_class)
+    @assignment = the_class.new
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def prepare
+    render '/grading/show'
+  end
+
   def run
     render '/grading/show'
   end
@@ -115,34 +172,21 @@ class GradingController < ApplicationController
     run
   end
 
-  def checkstyle
-    render '/grading/show'
-  end
-
-  def checkstyle_run
-    cs_path = '~/cs-checkstyle/checkstyle'
-    @cs_count = {}
-    params[:checkstyle][:files]&.each do |f|
-      next if f[1].to_i.zero?
-
-      filename = f[0]
-      file_type = !filename.end_with?('Test.java') ? @src_path : @test_path
-      filepath = file_type.join(File.basename(filename))
-      stdout = GradingHelper.exec(cs_path, filepath)[0].split("\n")
-
-      stdout = stdout.grep(/#{filename}:.+/)
-      options = params[:checkstyle][:options]
-      stdout = stdout.grep_v(/is a magic number/) if options[:ignore_magic_numbers].to_i == 1
-      stdout = stdout.grep_v(/Missing a Javadoc comment/) if options[:ignore_javadoc].to_i == 1
-      @cs_count[:"#{filename}"] = stdout.count
-    end
-    flash.now[:error] = 'No file selected.' if @cs_count.empty?
-    @action = 'checkstyle'
-    checkstyle
-  end
-
   def summary
     render '/grading/show'
+  end
+
+  def update
+    @assignment = Assignment.find(params[:id])
+    @assignment.update_attributes(assignment_params)
+    assignment_type = assignment_params[:type].downcase
+    messages = @assignment.errors.full_messages
+    if messages.blank?
+      flash[:success] = "#{@assignment.name} has been successfully updated."
+    else
+      flash[:modal_error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
+    end
+    redirect_to action: 'index', assignment_type => assignment_params, assignment_id: params[:id]
   end
 
   def upload
@@ -166,75 +210,32 @@ class GradingController < ApplicationController
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
   end
 
-  def delete_upload
-    delete_files = params[:delete_upload].select { |_, v| v.to_i == 1 }
-                                         .keys
-                                         .map! { |f| File.join(@upload_root, f) }
-    delete_files = delete_files.first if delete_files.length == 1
-    GradingHelper.delete!(delete_files)
-    begin
-      flash[:success] = 'Delete successfully.'
-    rescue StandardError => e
-      flash[:error] = e.message
-    end
-    redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
-  end
-
-  def destroy
-    assignment = Assignment.find(params[:id])
-    name = assignment.name
-    @id = assignment.id
-    assignment.destroy
-    flash[:success] = "#{name} has been successfully deleted"
-    redirect_to action: 'index'
-  end
-
-  def edit
-    @assignment = Assignment.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
-  def update
-    @assignment = Assignment.find(params[:id])
-    @assignment.update_attributes(assignment_params)
-    assignment_type = assignment_params[:type].downcase
-    messages = @assignment.errors.full_messages
-    if messages.blank?
-      flash[:success] = "#{@assignment.name} has been successfully updated."
-    else
-      flash[:modal_error] = messages.uniq.reject(&:blank?).join(".\n") << '.'
-    end
-    redirect_to action: 'index', assignment_type => assignment_params, assignment_id: params[:id]
-  end
-
   private
 
-  def set_variables
-    @assignment_type = params[:controller]
+  def remove_subdirectories(base_path)
+    FileHelper.remove base_path
+  end
+
+  def set_for_assignment
     @id = params[@assignment_type.singularize + '_id']
-    @action = params[:action]
     set_paths
+
+    @students = FileHelper.filenames(@upload_root.join('submissions'))
+  end
+
+  def set_for_assignments
+    @assignment_type = params[:controller]
+    @action = params[:action]
   end
 
   def set_paths
     public_path = Rails.root.join('public')
     @public_lib_path = public_path.join('lib')
     @user_root = public_path.join('uploads', 'users', session[:user].email)
-    @upload_root = @user_root.join(@assignment_type, @id) if @id
-    @src_path = @upload_root&.join('src')
-    @test_path = @upload_root&.join('test')
-    @bin_path = @upload_root&.join('bin')
-    @lib_path = @upload_root&.join('lib')
-  end
-
-  def set_students
-    @students = FileHelper.filenames(@upload_root&.join('submissions'))
-  end
-
-  def remove_subdirectories(base_path)
-    FileHelper.remove base_path
+    @upload_root = @user_root.join(@assignment_type, @id)
+    @src_path = @upload_root.join('src')
+    @test_path = @upload_root.join('test')
+    @bin_path = @upload_root.join('bin')
+    @lib_path = @upload_root.join('lib')
   end
 end
