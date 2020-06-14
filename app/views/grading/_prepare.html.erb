@@ -4,8 +4,8 @@
       <div class="form-group">
         <div class="input-group">
           <div class="custom-file">
-            <%= f.file_field 'file', class: 'custom-file-input' %>
-            <%= f.label :file, 'Choose a zip or file', class: 'custom-file-label' %>
+            <%= f.file_field 'file', class: 'custom-file-input', multiple: true %>
+            <%= f.label :file, 'Select files', class: 'custom-file-label' %>
           </div>
           <div class="input-group-append">
             <%= f.submit 'Upload', class: 'input-group-text' %>
@@ -80,7 +80,8 @@
   let uploadFileInput = $('input:file');
   uploadFileInput.on('change', () => {
     let filename = uploadFileInput.val().replace('C:\\fakepath\\', '');
-    if (!filename.match(/\w+\s\d+\s\(\d+\)\s\w+\s\d+-\w+\s*\d+-\d+\.zip/)) {
+    const moodleFilenamePattern = /(\w+\s\d+\s\(\d+\)\s\w+\s\d+-\w+\s*\d+-\d+\.zip|Grades-\w+\s\d+\s\(\d+\)\s\w+\s\d+-\w+\s\d+-\d+.csv)/;
+    if (!filename.match(moodleFilenamePattern) && filename.length !== 0) {
       $('.modal-body #actual code').html(filename);
       $('#filename-warning').modal();
       // Clear uploaded file

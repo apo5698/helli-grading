@@ -150,14 +150,17 @@ class GradingController < ApplicationController
       flash[:error] = 'No file selected.'
     else
       uploaded_file = params[:upload][:file]
+      uploaded_file = uploaded_file.first if uploaded_file.length == 1
       begin
         GradingHelper.upload(uploaded_file, @upload_root)
         flash[:success] = 'Upload successfully.'
       rescue StandardError => e
         flash[:error] = e.message
       end
-      filename = uploaded_file.original_filename
-      GradingHelper.unzip(@upload_root.join(filename), @upload_root.join('submissions')) if filename.match(/.+\.zip/)
+      uploaded_file.each do |f|
+        filename = f.original_filename
+        GradingHelper.unzip(@upload_root.join(filename), @upload_root.join('submissions')) if filename.match(/.+\.zip/)
+      end
     end
 
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"
