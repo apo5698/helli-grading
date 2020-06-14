@@ -1,0 +1,19 @@
+<h4 class="ml-1">Students</h4>
+<% if @students.empty? %>
+  <div class="text-center mt-5">
+    <div><i class="far fa-question-circle" style="font-size: 64px"></i></div>
+    <div class="mt-2">Not available</div>
+  </div>
+<% else %>
+  <ul class="list-group">
+    <% @students.each do |student| %>
+      <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <%= student %>
+        <div class="custom-control custom-radio">
+          <%= radio_button_tag "student", student, false, class: 'custom-control-input' %>
+          <%= label_tag :"student_#{student}", '', class: 'custom-control-label', style: 'display: none' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

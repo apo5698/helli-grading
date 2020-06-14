@@ -3,7 +3,7 @@ require 'open3'
 
 class GradingController < ApplicationController
   before_action :set_for_assignments
-  before_action :set_for_assignment, only: %w[prepare compile run checkstyle summary]
+  before_action :set_for_assignment, only: %w[prepare compile compile_all run run_selected checkstyle checkstyle_run summary upload delete_upload]
 
   def checkstyle
     render '/grading/show'
@@ -87,8 +87,8 @@ class GradingController < ApplicationController
 
   def delete_upload
     delete_files = params[:delete_upload].select { |_, v| v.to_i == 1 }
-                       .keys
-                       .map! { |f| File.join(@upload_root, f) }
+                                         .keys
+                                         .map! { |f| File.join(@upload_root, f) }
     delete_files = delete_files.first if delete_files.length == 1
     GradingHelper.delete!(delete_files)
     begin
@@ -194,7 +194,8 @@ class GradingController < ApplicationController
       flash[:error] = 'No file selected.'
     else
       uploaded_file = params[:upload][:file]
-      uploaded_file = uploaded_file.first if uploaded_file.length == 1
+      # Why add this line?
+      # uploaded_file = uploaded_file.first if uploaded_file.length == 1
       begin
         GradingHelper.upload(uploaded_file, @upload_root)
         flash[:success] = 'Upload successfully.'
@@ -218,6 +219,7 @@ class GradingController < ApplicationController
 
   def set_for_assignment
     @id = params[@assignment_type.singularize + '_id']
+    @assignment = Assignment.find(@id)
     set_paths
 
     @students = FileHelper.filenames(@upload_root.join('submissions'))

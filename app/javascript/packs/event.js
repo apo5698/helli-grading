@@ -17,12 +17,26 @@ $(document).ready(() => {
 });
 
 // Expand checkboxes and radio buttons
-// $(document).ready(() => {
-//   $('li[class*="list-group-item-action"]').on('click', function () {
-//     let input = $(this).find('input');
-//     input.prop('checked', !input.is(':checked'));
-//   });
-// });
+$(document).ready(() => {
+  $('li[class*="list-group-item-action"]').on('click', function (e) {
+    if (e.target !== this)
+      return;
+
+    let input = $(this).find('input');
+    input.prop('checked', input.attr('type') === 'radio' ? true : !input.is(':checked'));
+  });
+});
+
+// make radio button active
+$(document).ready(() => {
+  $('li[class*="list-group-item-action"]').on('click', function () {
+    let input = $(this).find('input');
+    if (input.attr('type') === 'radio') {
+      $(this).parent().find('li[class*="active"]').removeClass('active');
+      $(this).addClass('active');
+    }
+  });
+});
 
 // Keep input values on page reload until session expires
 if (window.sessionStorage) {
