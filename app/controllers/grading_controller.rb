@@ -156,8 +156,10 @@ class GradingController < ApplicationController
       rescue StandardError => e
         flash[:error] = e.message
       end
-      filename = uploaded_file.original_filename
-      GradingHelper.unzip(@upload_root.join(filename), @upload_root.join('submissions')) if filename.match(/.+\.zip/)
+      uploaded_file.each do |f|
+        filename = f.original_filename
+        GradingHelper.unzip(@upload_root.join(filename), @upload_root.join('submissions')) if filename.match(/.+\.zip/)
+      end
     end
 
     redirect_to "/grading/#{@assignment_type}/#{@id}/prepare"

@@ -5,6 +5,7 @@ module UploadHelper
   def self.upload(files, dest)
     raise FileHelper::NoFileSelectedError if files.nil?
 
+    files = files.first if files.is_a?(Enumerable) && files.length == 1
     if files.is_a? Enumerable
       puts 'FileHelper::upload(multiple)'.magenta.bold
       files.each do |f|
