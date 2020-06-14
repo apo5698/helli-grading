@@ -46,8 +46,8 @@
   </div>
 </div>
 <div class="row mb-4">
-  <div class="col-auto" style="min-width: 400px">
-    <h3>Uploaded files</h3>
+  <div class="col-lg">
+    <h3>Uploaded Files</h3>
     <% uploaded_files = Dir[@upload_root.join('**', '*')].select { |e| File.file?(e) } %>
     <% if uploaded_files.empty? %>
       None
@@ -56,8 +56,28 @@
         <div class="form-group">
           <ul class="list-group code">
             <% uploaded_files.sort.each do |filepath| %>
-              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                <%= filename = filepath.gsub(@user_root.to_s, '') %>
+              <li class="list-group-item list-group-item-action d-flex align-items-center">
+                <div class="mr-auto">
+                  <%= filename = filepath.gsub(@upload_root.to_s, '') %>
+                </div>
+                <% ext_color = case File.extname(filename)
+                               when '.csv'
+                                 'badge-success'
+                               when '.doc'
+                                 'badge-info'
+                               when '.docx'
+                                 'badge-info'
+                               when '.java'
+                                 'badge-danger'
+                               when '.pdf'
+                                 'badge-primary'
+                               when '.zip'
+                                 'badge-warning'
+                               else
+                                 'badge-dark'
+                               end
+                %>
+                <span class="badge <%= ext_color %> mr-3"><%= File.extname filename %></span>
                 <div class="custom-control custom-checkbox">
                   <%= f.check_box :"#{filename}", class: 'custom-control-input' %>
                   <%= f.label :"#{filename}", 0.chr, class: "custom-control-label" %>

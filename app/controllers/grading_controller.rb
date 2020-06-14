@@ -169,7 +169,7 @@ class GradingController < ApplicationController
   def delete_upload
     delete_files = params[:delete_upload].select { |_, v| v.to_i == 1 }
                                          .keys
-                                         .map! { |f| File.join(@user_root, f) }
+                                         .map! { |f| File.join(@upload_root, f) }
     delete_files = delete_files.first if delete_files.length == 1
     GradingHelper.delete!(delete_files)
     begin
