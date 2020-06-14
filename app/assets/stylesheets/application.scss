@@ -11,51 +11,8 @@
  * It is generally better to create a new file per style scope.
  */
 
-#transparent-table {
-  tr, td {
-    background-color: transparent !important;
-    border-color: transparent;
-    text-align: center;
-  }
-}
-
-.terminal {
-  // window
-  background-color: #282c34;
-  border-radius: 5px;
-  height: 350px;
-  padding: 2em;
-  overflow: auto;
-  // font
-  color: #d8d8d8;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-size: 12px;
-  white-space: pre;
-}
-
-.code {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-.center {
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-label.required:after {
-  content: " *";
-  color: #dc3545;
-}
-
-.new-line {
-  white-space: pre;
-}
-
+@import "ags_custom";
 @import "bootswatch/dist/simplex/variables";
 @import "bootstrap/scss/bootstrap";
 @import "bootswatch/dist/simplex/bootswatch";
-
-code {
-  font-size: 13px;
-}
+@import "bootstrap_custom";

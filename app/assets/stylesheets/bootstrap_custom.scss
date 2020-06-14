@@ -1,0 +1,13 @@
+/*
+ * This file overrides styles in Bootstrap.
+ */
+
+code {
+  font-size: 13px;
+}
+
+.tooltip-inner {
+  max-width: none;
+  text-align: left;
+  white-space: pre-line;
+}

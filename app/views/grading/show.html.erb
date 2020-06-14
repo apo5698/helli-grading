@@ -7,14 +7,19 @@
     <tr class="table-light">
       <% current_action_index = actions.index(@action) %>
       <% actions.each_with_index do |act, i| %>
-        <% if i <= current_action_index %>
-          <% if i > 0 %>
-            <td><i class="fas fa-chevron-right"></i></td>
-          <% end %>
-          <td><a href="/grading/<%= @assignment_type %>/<%= @id %>/<%= act %>"><%= act.capitalize %></a></td>
-        <% else %>
+        <td>
+          <a href="/grading/<%= @assignment_type %>/<%= @id %>/<%= act %>">
+            <% if act == @action %>
+              <b><%= act.capitalize %></b>
+            <% else %>
+              <%= act.capitalize %>
+            <% end %>
+          </a>
+        </td>
+        <% if i < current_action_index %>
+          <td><i class="fas fa-chevron-right"></i></td>
+        <% elsif i < actions.length - 1 %>
           <td class="text-muted"><i class="fas fa-chevron-right"></i></td>
-          <td class="text-muted"><%= act.capitalize %></td>
         <% end %>
       <% end %>
     </tr>

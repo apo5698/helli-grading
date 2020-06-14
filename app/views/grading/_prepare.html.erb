@@ -47,8 +47,8 @@
 </div>
 <div class="row mb-4">
   <div class="col-lg">
-    <h3>Uploaded Files</h3>
     <% uploaded_files = Dir[@upload_root.join('**', '*')].select { |e| File.file?(e) } %>
+    <h3>Uploaded Files<span class="badge badge-dark ml-2"><%= uploaded_files.length %></span></h3>
     <% if uploaded_files.empty? %>
       None
     <% else %>
@@ -56,27 +56,33 @@
         <div class="form-group">
           <ul class="list-group code">
             <% uploaded_files.sort.each do |filepath| %>
-              <li class="list-group-item list-group-item-action d-flex align-items-center">
+              <% filename = filepath.gsub(@upload_root.to_s, '') %>
+              <% file_size = "Size: #{number_to_human_size(File.size(filepath))}" %>
+              <% file_mtime = "Last modified: #{File.mtime(filepath).strftime("%x %X")}" %>
+              <% file_info = "#{File.basename(filename)}\n#{file_size}\n#{file_mtime}" %>
+              <% ext_color = case File.extname(filename)
+                             when '.csv'
+                               'badge-success'
+                             when '.doc'
+                               'badge-info'
+                             when '.docx'
+                               'badge-info'
+                             when '.java'
+                               'badge-danger'
+                             when '.pdf'
+                               'badge-primary'
+                             when '.zip'
+                               'badge-warning'
+                             else
+                               'badge-dark'
+                             end
+              %>
+              <li class="list-group-item list-group-item-action d-flex align-items-center" id="<%= filename %>">
                 <div class="mr-auto">
-                  <%= filename = filepath.gsub(@upload_root.to_s, '') %>
+                  <span data-toggle="tooltip" data-placement="right" title="<%= file_info %>">
+                    <%= filename %>
+                  </span>
                 </div>
-                <% ext_color = case File.extname(filename)
-                               when '.csv'
-                                 'badge-success'
-                               when '.doc'
-                                 'badge-info'
-                               when '.docx'
-                                 'badge-info'
-                               when '.java'
-                                 'badge-danger'
-                               when '.pdf'
-                                 'badge-primary'
-                               when '.zip'
-                                 'badge-warning'
-                               else
-                                 'badge-dark'
-                               end
-                %>
                 <span class="badge <%= ext_color %> mr-3"><%= File.extname filename %></span>
                 <div class="custom-control custom-checkbox">
                   <%= f.check_box :"#{filename}", class: 'custom-control-input' %>
@@ -86,11 +92,11 @@
             <% end %>
           </ul>
         </div>
-        <div class="float-left">
-          <button type="button" class="btn btn-secondary" id="toggle-all">Select/Deselect all</button>
-        </div>
-        <div class="form-group float-right">
+        <div class="form-group float-left">
           <%= f.submit 'Delete', class: 'btn btn-outline-primary' %>
+        </div>
+        <div class="float-right">
+          <button type="button" class="btn btn-secondary" id="toggle-all">Select/Deselect all</button>
         </div>
       <% end %>
     <% end %>

@@ -1,0 +1,40 @@
+label.required:after {
+  content: " *";
+  color: #dc3545;
+}
+
+.code {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-line {
+  white-space: pre;
+}
+
+.terminal {
+  // window
+  height: 350px;
+  padding: 2em;
+  background-color: #282c34;
+  border-radius: 5px;
+  overflow: auto;
+  // font
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12px;
+  color: #d8d8d8;
+  white-space: pre;
+}
+
+#transparent-table {
+  tr, td {
+    background-color: transparent !important;
+    border-color: transparent;
+    text-align: center;
+  }
+}
