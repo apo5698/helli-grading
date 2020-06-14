@@ -14,8 +14,10 @@ module FileHelper
         f.write content
       end
     elsif dir && file.nil? && dest.nil?
+      return if Dir.exist?(dir)
+
       ApplicationHelper.log_action action: 'create', from: dir
-      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+      FileUtils.mkdir_p(dir)
     else
       raise NoFileSelectedError
     end

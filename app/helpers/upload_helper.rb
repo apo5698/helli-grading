@@ -41,7 +41,9 @@ module UploadHelper
       puts 'FileHelper::delete!(multiple directories)'.magenta.bold
       files.each do |filepath|
         dirname = File.dirname(filepath)
-        FileHelper.remove dirname if Dir.empty?(dirname)
+        next unless Dir.exist?(dirname)
+
+        FileHelper.remove(dirname) if Dir.empty?(dirname)
       end
     elsif Dir.empty? File.dirname(files)
       puts 'FileHelper::delete!(single directory)'.magenta.bold
@@ -61,9 +63,8 @@ module UploadHelper
     Zip::File.open(zip) do |zip_file|
       zip_file.each do |f|
         file_path = File.join(dest, f.name)
-        if FileHelper.create dir: File.dirname(file_path)
-          ApplicationHelper.log_action action: 'extract', from: File.basename(f.name), to: File.dirname(file_path)
-        end
+        FileHelper.create dir: File.dirname(file_path)
+        ApplicationHelper.log_action action: 'extract', from: File.basename(f.name), to: File.dirname(file_path)
         zip_file.extract(f, file_path) unless File.exist?(file_path)
       end
     end
