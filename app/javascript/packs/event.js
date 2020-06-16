@@ -7,7 +7,14 @@ $(document).ready(() => {
   // Select/Deselect all checkboxes
   $('button#toggle-all').on('click', () => {
     let checkboxes = $('input:checkbox');
-    checkboxes.prop('checked', !checkboxes.prop('checked'));
+    let checked = checkboxes.prop('checked');
+    if (checked) {
+      checkboxes.prop('checked', false);
+      $('.collapse').collapse('hide')
+    } else {
+      checkboxes.prop('checked', true);
+      $('.collapse').collapse('show')
+    }
   });
 
   // File upload
