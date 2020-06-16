@@ -220,7 +220,12 @@ class GradingController < ApplicationController
   def set_for_assignment
     @id = params[@assignment_type.singularize + '_id']
     @assignment = Assignment.find(@id)
-    set_paths
+
+    @upload_root = @user_root.join(@assignment_type, @id)
+    @src_path = @upload_root.join('src')
+    @test_path = @upload_root.join('test')
+    @bin_path = @upload_root.join('bin')
+    @lib_path = @upload_root.join('lib')
 
     @students = FileHelper.dir_names(@upload_root.join('submissions'))
   end
@@ -228,16 +233,9 @@ class GradingController < ApplicationController
   def set_for_assignments
     @assignment_type = params[:controller]
     @action = params[:action]
-  end
 
-  def set_paths
     public_path = Rails.root.join('public')
     @public_lib_path = public_path.join('lib')
     @user_root = public_path.join('uploads', 'users', session[:user].email)
-    @upload_root = @user_root.join(@assignment_type, @id)
-    @src_path = @upload_root.join('src')
-    @test_path = @upload_root.join('test')
-    @bin_path = @upload_root.join('bin')
-    @lib_path = @upload_root.join('lib')
   end
 end
