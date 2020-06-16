@@ -47,55 +47,62 @@
 </div>
 <div class="row mb-4">
   <div class="col-lg">
-    <% uploaded_files = FileHelper.tree(@upload_root, depth: 3) %>
-    <h3>Uploaded Files<span class="badge badge-dark ml-2"><%= uploaded_files.length %></span></h3>
+    <% uploaded_files, length = FileHelper.tree(@upload_root, depth: 3) %>
+    <h3>Uploaded Files<span class="badge badge-dark ml-2"><%= length %></span></h3>
     <% if uploaded_files.empty? %>
       None
     <% else %>
       <%= form_for :delete_upload, url: { action: 'delete_upload' } do |f| %>
         <div class="form-group">
           <ul class="list-group code">
-            <%# uploaded_files.sort.each do |filepath| %>
             <% uploaded_files.each do |k0, v0| %>
-              <li class="list-group-item d-flex align-items-center disabled" id="<%= k0 %>">
+              <% dt1 = k0.tr(' /', 'r') %>
+              <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center diretory-1" data-toggle="collapse" data-target="#<%= dt1 %>">
                 <%= k0 %>
+                <i class="fas fa-sort-down"></i>
               </li>
-              <% v0.each do |v1| %>
-                <% if v1.is_a? Enumerable %>
-                  <% v1.each do |k2, v2| %>
-                    <li class="list-group-item d-flex align-items-center disabled" id="<%= k2 %>">
-                      &nbsp;&nbsp;&nbsp;&nbsp;<%= k2 %>
-                    </li>
-                    <% v2.each do |v3| %>
-                      <li class="list-group-item list-group-item-action d-flex align-items-center" id="<%= v3 %>">
-                        <div class="mr-auto">
-                          <span data-toggle="tooltip" data-placement="right" title="<%= UploadHelper.fileinfo(File.join(@upload_root, v3)) %>">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= v3 %>
-                          </span>
-                        </div>
-                        <span class="badge badge-<%= UploadHelper.file_ext_color(v3) %> mr-3"><%= File.extname(v3) %></span>
-                        <div class="custom-control custom-checkbox">
-                          <%= f.check_box :"#{v3}", class: 'custom-control-input' %>
-                          <%= f.label :"#{v3}", 0.chr, class: "custom-control-label" %>
-                        </div>
+              <div class="collapse" id="<%= dt1 %>">
+                <% v0.each do |v1| %>
+                  <% if v1.is_a? Enumerable %>
+                    <% v1.each do |k2, v2| %>
+                      <% dt2 = k2.tr(' /', 'r') %>
+                      <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center pl-md-4 diretory-2" data-toggle="collapse" data-target="#<%= dt2 %>">
+                        <%= k2 %>
+                        <i class="fas fa-sort-down"></i>
                       </li>
+                      <div class="collapse" id="<%= dt2 %>">
+                        <% v2.each do |v3| %>
+                          <li class="list-group-item list-group-item-action d-flex align-items-center pl-md-5" id="<%= v3 %>">
+                            <div class="mr-auto">
+                          <span data-toggle="tooltip" data-placement="right" title="<%= UploadHelper.fileinfo(File.join(@upload_root, v3)) %>">
+                            <%= v3 %>
+                          </span>
+                            </div>
+                            <span class="badge badge-<%= UploadHelper.file_ext_color(v3) %> mr-3"><%= File.extname(v3) %></span>
+                            <div class="custom-control custom-checkbox">
+                              <%= f.check_box :"#{v3}", class: 'custom-control-input' %>
+                              <%= f.label :"#{v3}", 0.chr, class: "custom-control-label" %>
+                            </div>
+                          </li>
+                        <% end %>
+                      </div>
                     <% end %>
+                  <% else %>
+                    <li class="list-group-item list-group-item-action d-flex align-items-center pl-md-5" id="<%= v1 %>">
+                      <div class="mr-auto">
+                        <span data-toggle="tooltip" data-placement="right" title="<%= UploadHelper.fileinfo(File.join(@upload_root, v1)) %>">
+                          <%= v1 %>
+                        </span>
+                      </div>
+                      <span class="badge badge-<%= UploadHelper.file_ext_color(v1) %> mr-3"><%= File.extname(v1) %></span>
+                      <div class="custom-control custom-checkbox">
+                        <%= f.check_box :"#{v1}", class: 'custom-control-input' %>
+                        <%= f.label :"#{v1}", 0.chr, class: "custom-control-label" %>
+                      </div>
+                    </li>
                   <% end %>
-                <% else %>
-                  <li class="list-group-item list-group-item-action d-flex align-items-center" id="<%= v1 %>">
-                    <div class="mr-auto">
-                    <span data-toggle="tooltip" data-placement="right" title="<%= UploadHelper.fileinfo(File.join(@upload_root, v1)) %>">
-                      &nbsp;&nbsp;&nbsp;&nbsp;<%= v1 %>
-                    </span>
-                    </div>
-                    <span class="badge badge-<%= UploadHelper.file_ext_color(v1) %> mr-3"><%= File.extname(v1) %></span>
-                    <div class="custom-control custom-checkbox">
-                      <%= f.check_box :"#{v1}", class: 'custom-control-input' %>
-                      <%= f.label :"#{v1}", 0.chr, class: "custom-control-label" %>
-                    </div>
-                  </li>
                 <% end %>
-              <% end %>
+              </div>
             <% end %>
           </ul>
         </div>

@@ -66,6 +66,7 @@ module FileHelper
   #   }
   def self.tree(dir, depth:)
     tree = {}
+    length = Dir[File.join(dir, '**', '*')].select { |e| File.file?(e) }.length
 
     case depth
     when 1
@@ -91,7 +92,7 @@ module FileHelper
       raise ArgumentError, 'Allowed depth range: 1-3' if depth < 1 || depth > 3
     end
     # puts tree.to_json
-    tree
+    [tree, length]
   end
 
 
