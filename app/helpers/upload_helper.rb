@@ -7,12 +7,12 @@ module UploadHelper
 
     files = files.first if files.is_a?(Enumerable) && files.length == 1
     if files.is_a? Enumerable
-      puts 'FileHelper::upload(multiple)'.magenta.bold
+      puts 'UploadHelper::upload(multiple)'.magenta.bold
       files.each do |f|
         FileHelper.create file: f, dest: dest
       end
     else
-      puts 'FileHelper::upload(single)'.magenta.bold
+      puts 'UploadHelper::upload(single)'.magenta.bold
       FileHelper.create file: files, dest: dest
     end
   end
@@ -22,12 +22,12 @@ module UploadHelper
     raise FileHelper::NoFileSelectedError if files.nil? || files.empty?
 
     if files.is_a? Enumerable
-      puts 'FileHelper::delete(multiple)'.magenta.bold
+      puts 'UploadHelper::delete(multiple)'.magenta.bold
       files.each do |f|
         FileHelper.remove f
       end
     else
-      puts 'FileHelper::delete(single)'.magenta.bold
+      puts 'UploadHelper::delete(single)'.magenta.bold
       FileHelper.remove files
     end
   end
@@ -38,7 +38,7 @@ module UploadHelper
     delete files
 
     if files.is_a? Enumerable
-      puts 'FileHelper::delete!(multiple directories)'.magenta.bold
+      puts 'UploadHelper::delete!(multiple directories)'.magenta.bold
       files.each do |filepath|
         dirname = File.dirname(filepath)
         next unless Dir.exist?(dirname)
@@ -46,9 +46,43 @@ module UploadHelper
         FileHelper.remove(dirname) if Dir.empty?(dirname)
       end
     elsif Dir.empty? File.dirname(files)
-      puts 'FileHelper::delete!(single directory)'.magenta.bold
-      FileHelper.remove files
+      puts 'UploadHelper::delete!(single directory)'.magenta.bold
+      FileHelper.remove File.dirname(files)
     end
+  end
+
+  # Returns a Bootstrap color representing the type of given file.
+  def self.file_ext_color(file)
+    case File.extname(file)
+    when '.csv'
+      'success' # Green
+    when '.doc'
+      'info' # Blue
+    when '.docx'
+      'info' # Blue
+    when '.java'
+      'danger' # Orange
+    when '.jpg'
+      'warning' # Purple
+    when '.pdf'
+      'primary' # Red
+    when '.txt'
+      'success' # Green
+    when '.zip'
+      'warning' # Purple
+    else
+      'dark' # Black
+    end
+  end
+
+  # Returns a string containing the information of a file. For example:
+  #
+  # HelloWorld.java
+  # Size: 128 KB
+  # Last modified: 6/15/2020 17:56:24
+  def self.fileinfo(file)
+    info = FileHelper.info(file)
+    "#{info[0]}\nSize: #{info[1]}\nLast modified: #{info[2]}"
   end
 
   # Extracts a zip file to destination directory. If +from_moodle+ is set
@@ -57,7 +91,7 @@ module UploadHelper
   # to
   #   <first_name> <last_name>
   def self.unzip(zip, dest, from_moodle: false)
-    puts 'FileHelper::unzip'.magenta.bold
+    puts 'UploadHelper::unzip'.magenta.bold
     FileHelper.create dir: dest
 
     Zip::File.open(zip) do |zip_file|
@@ -71,7 +105,7 @@ module UploadHelper
 
     return unless from_moodle
 
-    puts 'FileHelper::unzip(from_moodle)'.magenta.bold
+    puts 'UploadHelper::unzip(from_moodle)'.magenta.bold
     Dir.glob(dest.join('**')) do |path|
       name = File.basename(path).split('__')[0].split(' ')
       name[0], name[1] = name[1], name[0]

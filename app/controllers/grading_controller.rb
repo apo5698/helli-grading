@@ -222,7 +222,7 @@ class GradingController < ApplicationController
     @assignment = Assignment.find(@id)
     set_paths
 
-    @students = FileHelper.filenames(@upload_root.join('submissions'))
+    @students = FileHelper.dir_names(@upload_root.join('submissions'))
   end
 
   def set_for_assignments
