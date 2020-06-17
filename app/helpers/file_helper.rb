@@ -55,7 +55,9 @@ module FileHelper
     FileUtils.remove_entry_secure path
   end
 
-  # Returns a hash which keys contain directory name and values contain contents.
+  # Returns a hash and count of all its values in an Array [tree, length].
+  # The keys of this hash contain directory name and values contain contents.
+  # Returns +[nil,0]+ if given directory is empty.
   # For example:
   #   {"/"=>["exercise1.zip",
   #          "grade.csv",
@@ -92,7 +94,7 @@ module FileHelper
       raise ArgumentError, 'Allowed depth range: 1-3' if depth < 1 || depth > 3
     end
     # puts tree.to_json
-    [tree, length]
+    [tree == { '/' => [] } ? nil : tree, length]
   end
 
 
