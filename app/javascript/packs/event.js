@@ -7,8 +7,7 @@ $(document).ready(() => {
   // Select/Deselect all checkboxes
   $('button#toggle-all').on('click', () => {
     let checkboxes = $('input:checkbox');
-    let checked = checkboxes.prop('checked');
-    if (checked) {
+    if (checkboxes.prop('checked')) {
       checkboxes.prop('checked', false);
       $('.collapse').collapse('hide')
     } else {
@@ -21,10 +20,8 @@ $(document).ready(() => {
   $('input:file').on('change', function () {
     $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
   });
-});
 
-// Expand checkboxes and radio buttons
-$(document).ready(() => {
+  // Expand checkboxes and radio buttons
   $('li[class*="list-group-item-action"]').on('click', function (e) {
     if (e.target !== this)
       return;
@@ -32,15 +29,27 @@ $(document).ready(() => {
     let input = $(this).find('input');
     input.prop('checked', input.attr('type') === 'radio' ? true : !input.is(':checked'));
   });
-});
 
-// make radio button active
-$(document).ready(() => {
+  // make radio button active
   $('li[class*="list-group-item-action"]').on('click', function () {
     let input = $(this).find('input');
     if (input.attr('type') === 'radio') {
       $(this).parent().find('li[class*="active"]').removeClass('active');
       $(this).addClass('active');
+
+      let selected_id = '_submissions_' + $(this).attr('id');
+      let selected_div = $('#' + selected_id);
+
+      $("div[id^='_submissions_'][id!='" + selected_id + "']").collapse('hide');
+      $("#_submissions").collapse('show');
+
+      if (!selected_div.hasClass('show')) {
+        selected_div.collapse('show');
+      }
+
+      $('html, body').animate({
+        scrollTop: selected_div.offset().top - 200
+      }, 500);
     }
   });
 });

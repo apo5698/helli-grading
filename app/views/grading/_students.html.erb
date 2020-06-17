@@ -7,7 +7,7 @@
 <% else %>
   <ul class="list-group" id="students">
     <% @students.each do |student| %>
-      <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="<%= student %>">
+      <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="<%= student.tr(' ', '_') %>">
         <%= student %>
         <div class="custom-control custom-radio">
           <%= radio_button_tag "student", student, false, class: 'custom-control-input' %>
