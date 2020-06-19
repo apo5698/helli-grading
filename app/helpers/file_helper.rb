@@ -9,7 +9,7 @@ module FileHelper
       ApplicationHelper.log_action action: 'create', from: file.original_filename, to: dest
       File.open(File.join(dest, file.original_filename), 'wb') do |f|
         content = file.read
-        raise EmptyFileError if content.nil?
+        raise Error::EmptyFileError if content.nil?
 
         f.write content
       end
@@ -19,7 +19,7 @@ module FileHelper
       ApplicationHelper.log_action action: 'create', from: dir
       FileUtils.mkdir_p(dir)
     else
-      raise NoFileSelectedError
+      raise Error::NoFileSelectedError
     end
   end
 
@@ -55,6 +55,14 @@ module FileHelper
     FileUtils.remove_entry_secure path
   end
 
+  # Removes an *empty* directory.
+  def self.remove_dir(path)
+    ApplicationHelper.log_action action: 'delete diretory', from: path
+    return unless Dir.empty? path
+
+    FileUtils.rmdir path
+  end
+
   # Returns a hash and count of all its values in an Array [tree, length].
   # The keys of this hash contain directory name and values contain contents.
   # Returns +[nil,0]+ if given directory is empty.
@@ -66,7 +74,7 @@ module FileHelper
   #                            "student2"=>["Test.java"]}]}
   #         ]
   #   }
-  def self.tree(dir, depth:)
+  def self.tree(dir, depth:, type: '')
     tree = {}
     length = Dir[File.join(dir, '**', '*')].select { |e| File.file?(e) }.length
 
@@ -77,7 +85,8 @@ module FileHelper
       d1 = Dir[File.join(dir, '**')].sort
       tree['/'] = d1.select { |e| File.file?(e) }.map { |e| e.sub(dir.to_s, '') }
       d1.select { |e| File.directory?(e) }.each do |f|
-        tree['/' + File.basename(f)] = Dir[File.join(f, '**')].map { |e| e.sub(dir.to_s, '') }
+        tree['/' + File.basename(f)] = Dir[File.join(f, '**')].select { |e| e.end_with?(type) }
+                                                              .map { |e| e.sub(dir.to_s, '') }
       end
     when 3
       d1 = Dir[File.join(dir, '**')].sort
@@ -87,7 +96,7 @@ module FileHelper
         tree['/' + File.basename(f)] = d2.select { |e| File.file?(e) }.map { |e| e.sub(dir.to_s, '') }
         d2.select { |e| File.directory?(e) }.each do |g|
           tree['/' + File.basename(f)] << { "/#{File.basename(f)}/#{File.basename(g)}" =>
-                                              Dir[File.join(g, '**')].map { |e| e.sub(dir.to_s, '') }.sort }
+                                              Dir[File.join(g, '**')].select { |e| e.end_with?(type) }.map { |e| e.sub(dir.to_s, '') }.sort }
         end
       end
     else

@@ -1,31 +1,41 @@
 <div class="row mb-4">
-  <div class="col-auto" style="min-width: 400px">
+  <div class="col-lg-8">
     <h3>Source Files</h3>
-    <% source_files = Dir.glob(@upload_root.join('**', '*.java')) %>
-    <% if source_files.empty? %>
+    <% source_files = FileHelper.tree(@upload_root.join('submissions'), depth: 2, type: '.java')[0] %>
+    <% if source_files.nil? %>
       None
     <% else %>
+      <% source_files.except!('/') %>
       <%= form_for :compile do |f| %>
-        <div class="form-group">
-          <ul class="list-group code">
-            <% source_files.sort.each do |filepath| %>
-              <li class="list-group-item d-flex justify-content-between align-items-center code">
-                <%= File.basename(filepath) %>
-                <% if Dir.glob(filepath.gsub('src', 'bin').gsub('.java', '.class')).empty? %>
-                  <% span_class = 'badge badge-danger' %>
-                  <% tooltip_title = 'Not yet compiled' %>
-                  <% icon_class = 'fas fa-question' %>
-                <% else %>
-                  <% span_class = 'badge badge-success' %>
-                  <% tooltip_title = 'Compiled' %>
-                  <% icon_class = 'fas fa-check' %>
+        <div class="tab-content form-group">
+          <% source_files.sort.each do |k, v| %>
+            <div class="tab-pane fade" id="<%= k.tr('/', '').tr(' ', '_') %>" role="tabpanel">
+              <ul class="list-group code">
+                <% v.each do |file| %>
+                  <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div class="mr-auto">
+                      <span data-toggle="tooltip" data-placement="right"
+                            title="<%= UploadHelper.fileinfo(File.join(@upload_root, 'submissions', file)) %>">
+                        <%= File.basename(file) %>
+                      </span>
+                    </div>
+                    <% if GradingHelper.is_compiled?(File.join(@upload_root, 'submissions', file)) %>
+                      <% badge = ['badge badge-pill badge-success', 'Compiled', 'fas fa-check'] %>
+                    <% else %>
+                      <% badge = ['badge badge-pill badge-danger', 'Not yet compiled', 'fas fa-question'] %>
+                    <% end %>
+                    <span class="<%= badge[0] %>" data-toggle="tooltip" data-placement="right" title="<%= badge[1] %>">
+                      <i class="<%= badge[2] %>"></i>
+                    </span>
+                    <div class="custom-control custom-checkbox ml-3">
+                      <%= f.check_box :"#{file}", class: 'custom-control-input' %>
+                      <%= f.label :"#{file}", 0.chr, class: "custom-control-label" %>
+                    </div>
+                  </li>
                 <% end %>
-                <span class="<%= span_class %>" data-toggle="tooltip" data-placement="right" title="<%= tooltip_title %>">
-                  <i class="<%= icon_class %>"></i>
-                </span>
-              </li>
-            <% end %>
-          </ul>
+              </ul>
+            </div>
+          <% end %>
         </div>
         <div class="form-group">
           <div class="custom-control custom-checkbox">

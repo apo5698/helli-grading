@@ -1,9 +1,10 @@
 require 'colorize'
+require 'json'
 require 'open3'
 
 class GradingController < ApplicationController
   before_action :set_for_assignments
-  before_action :set_for_assignment, only: %w[prepare compile compile_all run run_selected checkstyle checkstyle_run summary upload delete_upload]
+  before_action :set_for_assignment, only: %w[prepare compile compile_selected run run_selected checkstyle checkstyle_run summary upload delete_upload]
 
   def checkstyle
     render '/grading/show'
@@ -35,34 +36,27 @@ class GradingController < ApplicationController
     render 'grading/show'
   end
 
-  def compile_all
-    exec_ret = Array.new(2, '')
-    files = Dir.glob(@src_path.join('*.java'))
-    if files.empty?
-      flash[:error] = 'No file found.'
-    else
-      cp_path = @bin_path.to_s
-      cp_path << ":#{@public_lib_path.join('junit', '*')}" if params[:compile][:options][:junit].to_i == 1
-
-      files.each do |file|
-        ret = GradingHelper.exec('javac',
-                                 '-d',
-                                 @bin_path,
-                                 '-cp',
-                                 cp_path,
-                                 file,
-                                 params[:compile][:arg])
-        exec_ret[0] << (ret[0] + "\n\n") unless ret[0].empty?
-        exec_ret[1] << (ret[1] + "\n\n") unless ret[1].empty?
-      end
-      if exec_ret[1].empty?
+  def compile_selected
+    files = params[:compile].except('options')
+                            .except('arg')
+                            .select { |_, v| v.to_i == 1 }
+                            .keys
+                            .map { |f| File.join(@upload_root, 'submissions', f) }
+    files = files.first if files.one?
+    begin
+      @console_output = GradingHelper.compile(files,
+                                              to: '.',
+                                              lib: @public_lib_path,
+                                              options: params[:compile][:options],
+                                              args: params[:compile][:arg])[:stderr]
+      puts @console_output
+      if @console_output.empty?
         flash.now[:success] = 'Compile successfully.'
-        @console_output = 'Nothing wrong happened.'
       else
-        flash.now[:error] = 'Error occurs during compilation. '\
-                            'Please check the console output.'
-        @console_output = exec_ret[1]
+        flash.now[:error] = 'Compile failed. Please check console output below.'
       end
+    rescue StandardError => e
+      flash.now[:error] = e.message
     end
 
     @action = 'compile'
@@ -86,12 +80,13 @@ class GradingController < ApplicationController
   end
 
   def delete_upload
-    delete_files = params[:delete_upload].select { |_, v| v.to_i == 1 }
-                                         .keys
-                                         .map! { |f| File.join(@upload_root, f) }
-    delete_files = delete_files.first if delete_files.length == 1
-    GradingHelper.delete!(delete_files)
+    files = params[:delete_upload].select { |_, v| v.to_i == 1 }
+                                  .keys
+                                  .map { |f| File.join(@upload_root, f) }
+    files = files.first if files.one?
     begin
+      GradingHelper.delete! files
+      FileHelper.remove_dir @upload_root.join('submissions')
       flash[:success] = 'Delete successfully.'
     rescue StandardError => e
       flash[:error] = e.message

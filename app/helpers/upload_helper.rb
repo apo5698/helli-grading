@@ -3,7 +3,7 @@ require 'zip'
 module UploadHelper
   # Uploads a single file or multiple files.
   def self.upload(files, dest)
-    raise FileHelper::NoFileSelectedError if files.nil?
+    raise FileHelper::Error::NoFileSelectedError if files.nil?
 
     files = files.first if files.is_a?(Enumerable) && files.length == 1
     if files.is_a? Enumerable
@@ -19,7 +19,7 @@ module UploadHelper
 
   # Deletes a single file or multiple files.
   def self.delete(files)
-    raise FileHelper::NoFileSelectedError if files.nil? || files.empty?
+    raise FileHelper::Error::NoFileSelectedError if files.nil? || files.empty?
 
     if files.is_a? Enumerable
       puts 'UploadHelper::delete(multiple)'.magenta.bold

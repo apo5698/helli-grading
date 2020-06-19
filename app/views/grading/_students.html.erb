@@ -5,9 +5,10 @@
     <div class="mt-2">Not available</div>
   </div>
 <% else %>
-  <ul class="list-group" id="students">
+  <div class="list-group" id="students" role="tablist">
     <% @students.each do |student| %>
-      <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" id="<%= student.tr(' ', '_') %>">
+      <li class="list-group-item list-group-item-action d-flex student" data-toggle="list" data-target="#<%= student.tr(' ', '_') %>"
+          role="tab">
         <%= student %>
         <div class="custom-control custom-radio">
           <%= radio_button_tag "student", student, false, class: 'custom-control-input' %>
@@ -15,5 +16,5 @@
         </div>
       </li>
     <% end %>
-  </ul>
+  </div>
 <% end %>
