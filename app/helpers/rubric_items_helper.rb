@@ -1,0 +1,2 @@
+module RubricItemsHelper
+end
