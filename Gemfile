@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/apo5698/ags.git" }
+git_source(:github) { |repo| 'https://github.com/uiz_11/ags.git' }
 
 ruby '2.7.0'
 
@@ -29,7 +29,11 @@ group :development, :test do
 end
 
 group :development do
+  # BetterErrors
   gem 'better_errors'
+  gem 'binding_of_caller'
+  # Colorize console output
+  gem 'colorize'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'listen', '~> 3.2'
   gem 'web-console', '>= 3.3.0'
