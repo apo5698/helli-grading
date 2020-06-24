@@ -1,0 +1,2 @@
+class GradingItem < ApplicationRecord
+end

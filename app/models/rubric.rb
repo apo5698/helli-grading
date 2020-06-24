@@ -1,0 +1,2 @@
+class Rubric < ApplicationRecord
+end

@@ -40,7 +40,6 @@
     <orderEntry type="library" scope="PROVIDED" name="activestorage (v6.0.3.2, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v6.0.3.2, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="addressable (v2.7.0, RVM: ruby-2.7.0) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="autoprefixer-rails (v9.8.1, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bcrypt (v3.1.13, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="better_errors (v2.7.1, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bindex (v0.8.1, RVM: ruby-2.7.0) [gem]" level="application" />
@@ -54,7 +53,6 @@
     <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.1.6, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="crass (v1.0.6, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubi (v1.9.0, RVM: ruby-2.7.0) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="execjs (v2.7.0, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.13.1, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="globalid (v0.4.2, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="i18n (v1.8.3, RVM: ruby-2.7.0) [gem]" level="application" />
@@ -72,7 +70,6 @@
     <orderEntry type="library" scope="PROVIDED" name="mysql2 (v0.5.3, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nio4r (v2.5.2, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.10.9, RVM: ruby-2.7.0) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="popper_js (v1.16.0, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="public_suffix (v4.0.5, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="puma (v4.3.5, RVM: ruby-2.7.0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rack (v2.2.3, RVM: ruby-2.7.0) [gem]" level="application" />
