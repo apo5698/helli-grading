@@ -45,9 +45,8 @@ Rails.application.routes.draw do
 				end
 			end
 
-			resources :stats, as: :report, only: [] do
+			resources :reports, path: :report, only: [:index] do
 				collection do
-					get '', action: :show
 					get :export
 					get :export_aggregated
 				end
