@@ -1,5 +1,8 @@
 class CoursesController < ApplicationController
-  def index; end
+  def index
+    @courses = Course.all
+  end
+
   def new; end
   def create; end
   def share; end

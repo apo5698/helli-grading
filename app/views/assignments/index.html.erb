@@ -1,0 +1,46 @@
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/courses">Home</a></li>
+  <li class="breadcrumb-item active"><%= @course.name %></li>
+</ol>
+
+<div class="pt-3">
+  <div class="row">
+    <div class="col-lg-12 pb-lg-3">
+      <h2>Assignments</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <% @assignments.each do |assignment| %>
+      <div class="col-lg-4 pb-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <% assignment_url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
+            <h4 class="card-title"><a href=<%= assignment_url %>><%= assignment.name %></a></h4>
+            <h6 class="card-subtitle mb-2 text-muted"><%= @course.name %> (<%= @course.section %>), <%= assignment.assignment_type.capitalize %></h6>
+            <p class="card-text">
+              <span class="badge badge-info"><%=  %></span>
+              <span class="badge badge-danger">no submissions</span>
+              <span class="badge badge-danger">no students</span>
+              <span class="badge badge-danger">no rubric</span>
+            </p>
+            <a href="#" class="card-link">Edit</a>
+            <a href="#" class="card-link">Delete</a>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="col-lg-4 pb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <!--center the 'plus' button-->
+          <div class="center h-100">
+            <a href="#" class=" stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
+              <i class="fas fa-plus-circle fa-4x"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

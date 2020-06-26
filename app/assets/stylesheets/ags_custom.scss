@@ -1,0 +1,10 @@
+label.required:after {
+  content: " *";
+  color: #dc3545;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

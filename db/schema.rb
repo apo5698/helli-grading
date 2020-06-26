@@ -10,14 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_24_230921) do
+ActiveRecord::Schema.define(version: 2020_06_26_001002) do
 
   create_table "assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "type"
+    t.integer "assignment_type"
     t.bigint "course_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "rubric_id"
+    t.string "name"
     t.index ["course_id"], name: "index_assignments_on_course_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
   end
