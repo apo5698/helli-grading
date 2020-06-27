@@ -14,10 +14,10 @@
 <body>
 <%= render partial: '/layouts/header' %>
 <div class="container">
+  <%= render partial: '/layouts/flash' %>
   <%= yield %>
   <%= render partial: '/layouts/footer' %>
 </div>
-
-
+<%= render partial: '/layouts/modal' %>
 </body>
 </html>

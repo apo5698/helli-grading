@@ -1,13 +1,13 @@
 <ol class="breadcrumb">
   <li class="breadcrumb-item"><a href="/courses">Home</a></li>
   <% url = "/courses/#{@course.id}/assignments/" %>
-  <li class="breadcrumb-item"><a href=<%= url %>><%= @course.name %></a></li>
+  <li class="breadcrumb-item"><a href=<%= url %>><%= @course.to_s %></a></li>
   <li class="breadcrumb-item active"><%= @assignment.name %></li>
 </ol>
 
 <div class="pt-3">
   <div class="row">
-    <div class="col-lg-12 pb-lg-3">
+    <div class="col-lg-12 pb-3">
       <h2><%= @assignment.name %></h2>
     </div>
   </div>

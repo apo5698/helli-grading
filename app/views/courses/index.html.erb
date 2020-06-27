@@ -4,7 +4,7 @@
 
 <div class="pt-3">
   <div class="row">
-    <div class="col-lg-12 pb-lg-3">
+    <div class="col-lg-12 pb-3">
       <h2>Courses</h2>
     </div>
   </div>
@@ -16,15 +16,17 @@
           <div style="height: 100px; width: 100%; display: block; background-color: #CCCCCC"></div>
           <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted"><%= course.term %></h6>
-            <h4 class="card-title"><a href="/courses/<%= course.id %>/assignments"><%= course.name %> (<%= course.section %>)</a></h4>
+            <h4 class="card-title"><a href="/courses/<%= course.id %>/assignments"><%= course.to_s %></a></h4>
             <div class="progress">
               <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                 <span class="text-white">25%</span>
               </div>
             </div>
-            <a href="#" class="card-link">Edit</a>
+            <% url = "/courses/#{course.id}/edit" %>
+            <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
             <a href="#" class="card-link">Share</a>
-            <a href="#" class="card-link">Delete</a>
+            <% url = "/courses/#{course.id}" %>
+            <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
           </div>
         </div>
       </div>
@@ -34,7 +36,7 @@
         <div class="card-body">
           <!--center the 'plus' button-->
           <div class="center h-100">
-            <a href="#" class=" stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
+            <a href="/courses/new" class=" stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
               <i class="fas fa-plus-circle fa-4x"></i>
             </a>
           </div>
