@@ -45,3 +45,17 @@
     </div>
   </div>
 </div>
+
+<script>
+  <% if flash[:modal_error] %>
+    $("#modal-window").find(".modal-content").html("<%= j render partial: 'courses/edit' %>");
+    $("#modal-window").removeClass('fade');
+    $("#modal-window").modal('show');
+  <% end %>
+
+  $(document).ready(function() {
+    $("#modal-window").on("hidden.bs.modal", function() {
+      $(this).addClass('fade');
+    });
+  });
+</script>

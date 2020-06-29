@@ -2,9 +2,16 @@ class AssignmentsController < ApplicationController
   def index
     @course = Course.find(params[:course_id])
     @assignments = @course.assignments
+    return unless flash[:modal_error]
+
+    @assignment = Assignment.find_by(id: params[:course_id])
+    @assignment ||= Assignment.new
+    @assignment.assign_attributes(assignment_params)
   end
 
-  def new; end
+  def new
+    @assignment = Assignment.new
+  end
 
   def create
     assignment = Assignment.create(assignment_params.merge(course_id: params[:course_id]))
@@ -14,7 +21,7 @@ class AssignmentsController < ApplicationController
     else
       flash[:modal_error] = flash_errors(messages)
     end
-    redirect_to "/courses/#{params[:course_id]}/assignments"
+    redirect_to action: index, assignment: assignment_params, id: assignment.id
   end
 
   def show
@@ -36,7 +43,7 @@ class AssignmentsController < ApplicationController
     else
       flash[:modal_error] = flash_errors(messages)
     end
-    redirect_to "/courses/#{params[:course_id]}/assignments"
+    redirect_to action: index, assignment: assignment_params, id: assignment.id
   end
 
   def destroy

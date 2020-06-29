@@ -1,9 +1,16 @@
 class CoursesController < ApplicationController
   def index
     @courses = Course.all
+    return unless flash[:modal_error]
+
+    @course = Course.find_by(id: params[:course_id])
+    @course ||= Course.new
+    @course.assign_attributes(course_params)
   end
 
-  def new; end
+  def new
+    @course = Course.new
+  end
 
   def create
     course = Course.create(course_params)
@@ -13,7 +20,7 @@ class CoursesController < ApplicationController
     else
       flash[:modal_error] = flash_errors(messages)
     end
-    redirect_to '/courses'
+    redirect_to action: index, course: course_params, course_id: course.id
   end
 
   def share; end
@@ -32,7 +39,7 @@ class CoursesController < ApplicationController
     else
       flash[:modal_error] = flash_errors(messages)
     end
-    redirect_to '/courses'
+    redirect_to action: index, course: course_params, course_id: course.id
   end
 
   def destroy

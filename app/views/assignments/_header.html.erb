@@ -2,7 +2,7 @@
   <li class="breadcrumb-item"><a href="/courses">Home</a></li>
   <% url = "/courses/#{@course.id}/assignments/" %>
   <li class="breadcrumb-item"><a href=<%= url %>><%= @course.to_s %></a></li>
-  <li class="breadcrumb-item active"><%= @assignment.name %></li>
+  <%= html %>
 </ol>
 
 <div class="pt-3">

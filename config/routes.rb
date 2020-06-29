@@ -38,13 +38,6 @@ Rails.application.routes.draw do
 				end
 			end
 
-			resources :students, only: [:index, :create, :update, :destroy] do
-				collection do
-					post :load_students
-					delete :destroy_selected
-				end
-			end
-
 			resources :reports, path: :report, only: [:index] do
 				collection do
 					get :export

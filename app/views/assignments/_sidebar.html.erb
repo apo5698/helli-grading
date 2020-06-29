@@ -1,52 +1,41 @@
-<div class="row">
-  <div class="col-lg-3">
-    <ul class="list-group pb-3">
-      <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
-      <a href="<%= url %>" class="list-group-item list-group-item-action">
-        <li class="d-flex justify-content-between align-items-center">
-          Overview
-        </li>
-      </a>
-      <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/students" %>
-      <a href="<%= url %>" class="list-group-item list-group-item-action">
-        <li class="d-flex justify-content-between align-items-center">
-          Students
-          <span class="badge badge-success badge-pill">✓</span>
-        </li>
-      </a>
-      <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions" %>
-      <a href="<%= url %>" class="list-group-item list-group-item-action">
-        <li class="d-flex justify-content-between align-items-center">
-          Submissions
-          <span class="badge badge-danger badge-pill">!</span>
-        </li>
-      </a>
-      <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/rubric" %>
-      <a href="<%= url %>" class="list-group-item list-group-item-action">
-        <li class="d-flex justify-content-between align-items-center">
-          Rubric
-          <span class="badge badge-danger badge-pill">!</span>
-        </li>
-      </a>
-    </ul>
+<ul class="list-group pb-3">
+  <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
+  <a href="<%= url %>" class="list-group-item list-group-item-action">
+    <li class="d-flex justify-content-between align-items-center">
+      Overview
+    </li>
+  </a>
+  <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions" %>
+  <a href="<%= url %>" class="list-group-item list-group-item-action">
+    <li class="d-flex justify-content-between align-items-center">
+      Submissions
+      <span class="badge badge-danger badge-pill">!</span>
+    </li>
+  </a>
+  <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/rubric" %>
+  <a href="<%= url %>" class="list-group-item list-group-item-action">
+    <li class="d-flex justify-content-between align-items-center">
+      Rubric
+      <span class="badge badge-danger badge-pill">!</span>
+    </li>
+  </a>
+</ul>
 
-    <ul class="list-group pb-3">
-      <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/grading" %>
-      <a href="<%= url %>" class="list-group-item list-group-item-action">
-        <li class="d-flex justify-content-between align-items-center">
-          Run automated grading
-          <span class="badge badge-primary badge-pill">x</span>
-        </li>
-      </a>
-    </ul>
+<ul class="list-group pb-3">
+  <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/grading" %>
+  <a href="<%= url %>" class="list-group-item list-group-item-action">
+    <li class="d-flex justify-content-between align-items-center">
+      Run automated grading
+      <span class="badge badge-primary badge-pill">x</span>
+    </li>
+  </a>
+</ul>
 
-    <ul class="list-group">
-      <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/report" %>
-      <a href="<%= url %>" class="list-group-item list-group-item-action">
-        <li class="d-flex justify-content-between align-items-center">
-          Report
-        </li>
-      </a>
-    </ul>
-  </div>
-</div>
+<ul class="list-group">
+  <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/report" %>
+  <a href="<%= url %>" class="list-group-item list-group-item-action">
+    <li class="d-flex justify-content-between align-items-center">
+      Report
+    </li>
+  </a>
+</ul>

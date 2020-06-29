@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_27_013737) do
+ActiveRecord::Schema.define(version: 2020_06_28_032325) do
 
   create_table "assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "assignment_type"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2020_06_27_013737) do
     t.bigint "rubric_id"
     t.string "name"
     t.text "description"
+    t.index ["course_id", "name"], name: "index_assignments_on_course_id_and_name", unique: true
     t.index ["course_id"], name: "index_assignments_on_course_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
   end
@@ -40,6 +41,7 @@ ActiveRecord::Schema.define(version: 2020_06_27_013737) do
     t.string "section"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["name", "term", "section"], name: "index_courses_on_name_and_term_and_section", unique: true
   end
 
   create_table "grading_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|

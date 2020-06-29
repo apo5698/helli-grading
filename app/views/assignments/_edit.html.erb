@@ -1,11 +1,17 @@
+<% if @assignment.id %>
+  <% title = "Edit #{@assignment.name}" %>
+<% else %>
+  <% title = 'Add a new assignment' %>
+<% end %>
 <div class="modal-header">
-  <h5 class="modal-title">Edit <%= @assignment.name %></h5>
+  <h5 class="modal-title"><%= title %></h5>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <%= form_with model: [@course, @assignment] do |f| %>
   <div class="modal-body">
+    <%= render partial: '/layouts/modal_flash' %>
     <fieldset>
       <div class="form-group">
         <%= f.label :name, 'Name' %>

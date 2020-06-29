@@ -1,2 +1,12 @@
-<%= render partial: '/assignments/header' %>
-<%= render partial: '/assignments/sidebar' %>
+<% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
+<% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Submissions</li>".html_safe %>
+<%= render partial: '/assignments/header', locals: {html: html} %>
+
+<div class="row">
+  <div class="col-lg-3">
+    <%= render partial: '/assignments/sidebar' %>
+  </div>
+  <div class="col-lg-9">
+    <%= render partial: '/submissions/table' %>
+  </div>
+</div>

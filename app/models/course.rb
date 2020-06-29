@@ -1,9 +1,10 @@
 class Course < ApplicationRecord
   has_many :assignments
 
-  def unique_course
-    Assignment.where(name: name, section: section).count <= 1
-  end
+  validates :name, presence: true
+  validates :term, presence: true
+  validates :section, presence: true
+  validates :section, uniqueness: { scope: %i[name term] }
 
   def to_s
     name + ' (' + section + ')'

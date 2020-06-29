@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </div>
+</div>
+<div class="row">
+  <table class="table table-hover">
+    <thead>
+    <tr class="table-active">
+      <th scope="col">Select</th>
+      <th scope="col">First name / Last name</th>
+      <th scope="col">Status</th>
+      <th scope="col">Grade</th>
+      <th scope="col">File submissions</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @submissions.each do |submission| %>
+      <tr>
+        <th scope="row">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck1">
+            <label class="custom-control-label" for="customCheck1"></label>
+          </div>
+        </th>
+        <% student = submission.student %>
+        <td><%= student.first_name %> <%= student.last_name %></td>
+        <td><%= submission.status %></td>
+        <td>
+          <button type="button" class="btn btn-outline-primary btn-sm">Grade</button>
+          <br />
+          0 / 100
+        </td>
+        <td>
+          <%= submission.file_submissions %>
+        </td>
+        <td>
+          <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="fas fa-plus-square fa-2x"></i></a>
+          <a href="#" data-toggle="tooltip" data-original-title="Delete submission"><i class="fas fa-minus-square fa-2x"></i></a>
+        </td>
+
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="row justify-content-between">
+  <div>
+    <button type="button" class="btn btn-secondary">Select / deselect all</button>
+  </div>
+  <div class="form-group float-right">
+    <button type="submit" class="btn btn-outline-primary">Grade</button>
+    <button type="submit" class="btn btn-primary">Download</button>
+    <button type="submit" class="btn btn-primary">Delete</button>
+  </div>
+</div>
