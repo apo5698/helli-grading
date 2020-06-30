@@ -7,5 +7,15 @@
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
+    <div id="sortable">
+      <%= render partial: '/rubric_items/compile' %>
+      <%= render partial: '/rubric_items/compile' %>
+      <%= render partial: '/rubric_items/compile' %>
+    </div>
   </div>
 </div>
+
+<script>
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+</script>
