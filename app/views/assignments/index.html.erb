@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/courses">Home</a></li>
+  <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
   <li class="breadcrumb-item active"><%= @course.to_s %></li>
 </ol>
 
@@ -17,7 +17,7 @@
           <div class="card-body">
             <% assignment_url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
             <h4 class="card-title"><a href=<%= assignment_url %>><%= assignment.name %></a></h4>
-            <h6 class="card-subtitle mb-2 text-muted"><%= @course.to_s %>, <%= assignment.assignment_type %></h6>
+            <h6 class="card-subtitle mb-2 text-muted"><%= assignment.assignment_type %></h6>
             <p class="card-text">
               <%= assignment.description %>
             </p>
@@ -49,13 +49,13 @@
 
 <script>
   <% if flash[:modal_error] %>
-    $("#modal-window").find(".modal-content").html("<%= j render partial: 'assignments/edit' %>");
-    $("#modal-window").removeClass('fade');
-    $("#modal-window").modal('show');
+  $("#modal-window").find(".modal-content").html("<%= j render partial: 'assignments/edit' %>");
+  $("#modal-window").removeClass('fade');
+  $("#modal-window").modal('show');
   <% end %>
 
-  $(document).ready(function() {
-    $("#modal-window").on("hidden.bs.modal", function() {
+  $(document).ready(function () {
+    $("#modal-window").on("hidden.bs.modal", function () {
       $(this).addClass('fade');
     });
   });

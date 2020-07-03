@@ -3,6 +3,7 @@ class HomeController < ApplicationController
 
   def index
     if session[:user_id]
+      @user_email = User.find(session[:user_id]).email
     else
       redirect_to '/sessions/new'
     end

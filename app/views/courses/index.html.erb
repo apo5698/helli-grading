@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
-  <li class="breadcrumb-item active">Home</li>
+  <li class="breadcrumb-item active">Courses</li>
 </ol>
 
 <div class="pt-3">
@@ -16,10 +16,12 @@
           <div style="height: 100px; width: 100%; display: block; background-color: #CCCCCC"></div>
           <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted"><%= course.term %></h6>
-            <h4 class="card-title"><a href="/courses/<%= course.id %>/assignments"><%= course.to_s %></a></h4>
+            <h4 class="card-title">
+              <a href="/courses/<%= course.id %>/assignments"><%= course.to_s %></a></h4>
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                <span class="text-white">25%</span>
+              <% progress = 60 %>
+              <div class="progress-bar" role="progressbar" style="width: <%= progress %>%;" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
+                <span class="text-white"><%= progress %>%</span>
               </div>
             </div>
             <% url = "/courses/#{course.id}/edit" %>
@@ -47,14 +49,15 @@
 </div>
 
 <script>
+  let modalWindow = $('#modal-window');
   <% if flash[:modal_error] %>
-    $("#modal-window").find(".modal-content").html("<%= j render partial: 'courses/edit' %>");
-    $("#modal-window").removeClass('fade');
-    $("#modal-window").modal('show');
+  modalWindow.find('.modal-content').html("<%= j render partial: 'courses/edit' %>");
+  modalWindow.removeClass('fade');
+  modalWindow.modal('show');
   <% end %>
 
-  $(document).ready(function() {
-    $("#modal-window").on("hidden.bs.modal", function() {
+  $(document).ready(function () {
+    modalWindow.on('hidden.bs.modal', function () {
       $(this).addClass('fade');
     });
   });

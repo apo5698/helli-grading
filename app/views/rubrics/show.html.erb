@@ -1,6 +1,6 @@
 <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
 <% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Rubric</li>".html_safe %>
-<%= render partial: '/assignments/header', locals: {html: html} %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
 
 <div class="row">
   <div class="col-lg-3">
@@ -16,6 +16,6 @@
 </div>
 
 <script>
-  $( "#sortable" ).sortable();
-  $( "#sortable" ).disableSelection();
+  $("#sortable").sortable();
+  $("#sortable").disableSelection();
 </script>

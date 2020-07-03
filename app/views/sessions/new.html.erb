@@ -12,7 +12,7 @@
         <%= form.label 'password', 'Password' %>
         <%= form.password_field 'password', class: "form-control" %>
       </div>
-      <%= link_to 'Forgot your password?', '#', data: { target: '#modal-window', toggle: 'modal' }%>
+      <%= link_to 'Forgot your password?', '#', data: { target: '#modal-window', toggle: 'modal' } %>
       <%= form.submit "Login", class: "btn btn-primary float-right" %>
     </fieldset>
   <% end %>
@@ -54,8 +54,8 @@
 
 <script>
   <% if flash[:modal_error] %>
-    $('#modal-window').removeClass("fade");
-    $("#modal-window").modal('show');
+  $('#modal-window').removeClass("fade");
+  $("#modal-window").modal('show');
   <% end %>
   $('button#modal-close').on('click', () => {
     $('#modal-window').addClass('fade');
