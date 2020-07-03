@@ -1,21 +1,28 @@
 <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
 <% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Rubric</li>".html_safe %>
-<%= render partial: '/assignments/header', locals: { html: html } %>
+<%= render partial: '/assignments/header', locals: {html: html} %>
 
 <div class="row">
   <div class="col-lg-3">
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
-    <div id="sortable">
-      <%= render partial: '/rubric_items/compile' %>
-      <%= render partial: '/rubric_items/compile' %>
-      <%= render partial: '/rubric_items/compile' %>
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div id="sortable">
+          <div>
+            <%= render partial: 'rubric_items/wce', locals: {seq: 1} %>
+          </div>
+          <div>
+            <%= render partial: '/rubric_items/code', locals: {seq: 2} %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  $("#sortable").sortable();
-  $("#sortable").disableSelection();
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
 </script>

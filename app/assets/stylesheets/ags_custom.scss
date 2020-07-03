@@ -16,3 +16,12 @@ th {
 .fa-150 {
   font-size: 150%;
 }
+
+.table thead th.bootstrap-overrides {
+  vertical-align: bottom;
+  border-bottom: 1px solid #ccc;
+}
+
+.border-in-light {
+  border: 1px solid #ccc;
+}

@@ -1,0 +1,58 @@
+<p class="card-text">
+  <b>Instruction: </b><%= instruction %>
+</p>
+<div class="row">
+  <div class="col-lg-3">
+    <% if required_items.include?('input_file') %>
+      <div class="form-group">
+        <label for="exampleSelect1">Input file</label>
+        <select class="form-control" id="exampleSelect1">
+          <option></option>
+          <option>Hello.java</option>
+          <option>Goodbye.java</option>
+        </select>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-lg-3">
+    <% if required_items.include?('oracle_file') %>
+      <div class="form-group">
+        <label for="exampleSelect1">Oracle file</label>
+        <select class="form-control" id="exampleSelect1" >
+          <option></option>
+          <option>Hello.java</option>
+          <option>Goodbye.java</option>
+          <option>HelloTest.java</option>
+          <option>GoodbyeTest.java</option>
+        </select>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-lg-4">
+  </div>
+  <div class="col-lg-2">
+    <%# if required_items.include?('points') %>
+<!--      <div class="form-group">-->
+<!--        <label for="exampleInputEmail1">Points</label>-->
+<!--        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">-->
+<!--      </div>-->
+    <%# end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <% if required_items.include?('description') %>
+      <div class="form-group">
+        <label for="exampleTextarea">Description <span class="text-muted">(optional)</span></label>
+        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <%= render partial: '/rubric_items/table' %>
+  </div>
+</div>
+<a href="#" class="card-link">Save</a>
+<a href="#" class="card-link">Delete</a>

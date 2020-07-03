@@ -1,0 +1,10 @@
+<div class="list-group-item-action d-flex card-header" id="headingOne"  data-toggle="collapse" data-target="#collapseOne">
+  <span id="seq"><%= seq %><span>. Write/Compile/Execute
+</div>
+<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+  <div class="card-body">
+    <%= render partial: '/rubric_items/item', locals: {instruction: 'This step compiles and executes the selected input file.
+The student receives full points if the selected input file compiles and executes without error, and 0 if it does not.',
+                                                       required_items: %w(input_file points description)} %>
+  </div>
+</div>

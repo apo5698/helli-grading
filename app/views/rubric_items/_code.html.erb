@@ -1,0 +1,10 @@
+<div class="list-group-item-action d-flex card-header" id="headingThree"  data-toggle="collapse" data-target="#collapseThree">
+  <span id="seq"><%= seq %></span>. Code inspection
+</div>
+<div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
+  <div class="card-body">
+    <%= render partial: '/rubric_items/item', locals: {instruction: 'This step renders the selected input file.
+The student is given full points by default, and deducted accordingly for each checked item.',
+                                                       required_items: %w(input_file points description)} %>
+  </div>
+</div>
