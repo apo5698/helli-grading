@@ -1,2 +1,0 @@
-class ChecklistItem < ApplicationRecord
-end

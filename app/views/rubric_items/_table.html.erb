@@ -1,113 +1,63 @@
-<table class="table table-hover">
+<table class="table table-sm table-hover">
   <thead>
   <tr class="table-active">
-    <th scope="col" class="bootstrap-overrides" style="width: 10%">Points</th>
-    <th scope="col" class="bootstrap-overrides" style="width: 40%">Criteria</th>
-    <th scope="col" class="bootstrap-overrides" style="width: 50%">Response to student</th>
+    <% if required_items.include?('type') %>
+      <th scope="col" class="bootstrap-overrides">Type</th>
+    <% end %>
+    <% if required_items.include?('points') %>
+      <th scope="col" class="bootstrap-overrides">Points</th>
+    <% end %>
+    <% if required_items.include?('criterion') %>
+      <th scope="col" class="bootstrap-overrides" style="width: 50%">Criterion</th>
+    <% end %>
+    <% if required_items.include?('response') %>
+      <th scope="col" class="bootstrap-overrides" style="width: 40%">Response to student</th>
+    <% end %>
+    <th scope="col" class="bootstrap-overrides">Action</th>
   </tr>
   </thead>
   <tbody>
-  <tr>
-    <td>
-      <input type="text" class="border-in-light" style="width: 50px" value="1"/>
-    </td>
-    <td>
-      <div class="d-flex">
-        <select id="exampleSelect1" class="border-in-light flex-fill">
-          <option value="1" selected>File is named '[filename]'</option>
-          <option value="2">Class is named '[class_name]'</option>
-          <option value="3">Program complies</option>
-          <option value="4">Program executes</option>
-        </select>
-      </div>
-    </td>
-    <td>
-      <div class="d-flex">
-        <input type="text" class="border-in-light flex-fill" value="File is not named '[filename]'"/>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="text" class="border-in-light" style="width: 50px" value="1"/>
-    </td>
-    <td>
-      <div class="d-flex">
-        <select id="exampleSelect1" class="border-in-light flex-fill">
-          <option value="1">File is named '[filename]'</option>
-          <option value="2" selected>Class is named '[class_name]'</option>
-          <option value="3">Program complies</option>
-          <option value="4">Program executes</option>
-        </select>
-      </div>
-    </td>
-    <td>
-      <div class="d-flex">
-        <input type="text" class="border-in-light flex-fill" value="Class is not named '[class_name]'"/>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="text" class="border-in-light" style="width: 50px" value="3"/>
-    </td>
-    <td>
-      <div class="d-flex">
-        <select id="exampleSelect1" class="border-in-light flex-fill">
-          <option value="1">File is named '[filename]'</option>
-          <option value="2">Class is named '[class_name]'</option>
-          <option value="3" selected>Program complies</option>
-          <option value="4">Program executes</option>
-        </select>
-      </div>
-    </td>
-    <td>
-      <div class="d-flex">
-        <input type="text" class="border-in-light flex-fill" value="Program does not compile"/>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="text" class="border-in-light" style="width: 50px" value="1"/>
-    </td>
-    <td>
-      <div class="d-flex">
-        <select id="exampleSelect1" class="border-in-light flex-fill">
-          <option value="1">File is named '[filename]'</option>
-          <option value="2">Class is named '[class_name]'</option>
-          <option value="3">Program complies</option>
-          <option value="4" selected>Program executes</option>
-        </select>
-      </div>
-    </td>
-    <td>
-      <div class="d-flex">
-        <input type="text" class="border-in-light flex-fill" value="Program does not execute"/>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="text" class="border-in-light" style="width: 50px"/>
-    </td>
-    <td>
-      <div class="d-flex">
-        <input type="text" class="border-in-light flex-fill"/>
-      </div>
-    </td>
-    <td>
-      <div class="d-flex">
-        <input type="text" class="border-in-light flex-fill"/>
-      </div>
-    </td>
-  </tr>
+  <% criterion_types = Criterion.criterion_types.keys %>
+  <% criteria = default_set.map { |c| c[:criterion] } %>
+  <% default_set.each do |criterion| %>
+    <tr>
+      <% if required_items.include?('type') %>
+        <td>
+          <div class="d-flex">
+            <%= select :rubric_item, :criterion_type, criterion_types, {selected: criterion[:criterion_type]}, class: 'borderless flex-fill' %>
+          </div>
+        </td>
+      <% end %>
+      <% if required_items.include?('points') %>
+        <td>
+          <div class="d-flex">
+            <%= text_field :rubric_item, :item_type, value: criterion[:points], class: "borderless", style: "width: 50px" %>
+          </div>
+        </td>
+      <% end %>
+      <% if required_items.include?('criterion') %>
+        <td>
+          <div class="d-flex">
+            <%= select :rubric_item, :item_type, criteria, {selected: criterion[:criterion]}, class: 'borderless flex-fill', style: "width: 50%" %>
+          </div>
+        </td>
+      <% end %>
+      <% if required_items.include?('response') %>
+        <td>
+          <div class="d-flex">
+            <%= text_field :rubric_item, :item_type, value: criterion[:response], class: "borderless flex-fill", style: "width: 40%" %>
+          </div>
+        </td>
+      <% end %>
+      <td class="align-middle">
+        <a href="#" class="text-body"><i class="fas fa-minus"></i></a>
+      </td>
+    </tr>
+  <% end %>
   <tr class="text-muted">
-    <td>
+    <td colspan="6">
       + New
     </td>
-    <td></td>
-    <td></td>
   </tr>
   </tbody>
 </table>

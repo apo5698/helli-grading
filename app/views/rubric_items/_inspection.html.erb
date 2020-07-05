@@ -1,0 +1,11 @@
+<div class="list-group-item-action d-flex card-header" id="heading_<%= seq %>" data-toggle="collapse" data-target="#collapse_<%= seq %>">
+  <span id="seq"><%= seq %></span>. Inspection
+</div>
+<div id="collapse_<%= seq %>" class="collapse" aria-labelledby="heading_<%= seq %>" data-parent="#rubric_items_accordion">
+  <div class="card-body">
+    <%= render partial: '/rubric_items/item', locals: {usage: 'This step renders the selected input file.',
+                                                       required_items: %w(input_file description type points criterion response),
+                                                       default_set: RubricItem.default_set(:inspection),
+                                                       default_description: RubricItem.default_description(:inspection)} %>
+  </div>
+</div>

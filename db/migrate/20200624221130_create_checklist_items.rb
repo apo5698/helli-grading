@@ -4,7 +4,7 @@ class CreateChecklistItems < ActiveRecord::Migration[6.0]
       t.references :rubric_item
       t.decimal :points
       t.boolean :checked
-      t.text :description
+      t.text :criterion
       t.timestamps
     end
   end

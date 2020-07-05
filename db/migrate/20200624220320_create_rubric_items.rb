@@ -8,7 +8,7 @@ class CreateRubricItems < ActiveRecord::Migration[6.0]
       t.decimal :points
       t.string :file_from_student
       t.string :file_from_ts
-      t.text :description
+      t.text :criterion
       t.timestamps
     end
   end

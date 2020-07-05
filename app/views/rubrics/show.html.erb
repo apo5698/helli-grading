@@ -7,14 +7,43 @@
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
-    <div class="accordion" id="accordionExample">
+    <div class="accordion" id="rubric_items_accordion">
       <div class="card">
         <div id="sortable">
           <div>
             <%= render partial: 'rubric_items/wce', locals: {seq: 1} %>
           </div>
           <div>
-            <%= render partial: '/rubric_items/code', locals: {seq: 2} %>
+            <%= render partial: 'rubric_items/inspection', locals: {seq: 2} %>
+          </div>
+          <div>
+            <%= render partial: 'rubric_items/checkstyle', locals: {seq: 3} %>
+          </div>
+          <div>
+            <%= render partial: 'rubric_items/javadoc', locals: {seq: 4} %>
+          </div>
+          <div>
+            <%= render partial: 'rubric_items/ts_bbt', locals: {seq: 5} %>
+          </div>
+          <div>
+            <%= render partial: 'rubric_items/student_bbt', locals: {seq: 6} %>
+          </div>
+          <div>
+            <%= render partial: 'rubric_items/ts_wbt', locals: {seq: 7} %>
+          </div>
+          <div>
+            <%= render partial: 'rubric_items/student_wbt', locals: {seq: 8} %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center" style="padding: 0.75rem 1.25rem">
+      <div class="col-lg-4">
+        <div class="input-group">
+          <% rubric_item_types = RubricItem.rubric_item_types.keys %>
+          <%= select :rubric_item, :rubric_item_type, rubric_item_types, {}, class: "custom-select" %>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">+ New</button>
           </div>
         </div>
       </div>
@@ -23,6 +52,6 @@
 </div>
 
 <script>
-  $( "#sortable" ).sortable();
-  $( "#sortable" ).disableSelection();
+  $('#sortable').sortable();
+  $('#sortable').disableSelection();
 </script>

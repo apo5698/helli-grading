@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_01_174906) do
+ActiveRecord::Schema.define(version: 2020_07_05_013803) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -46,16 +46,6 @@ ActiveRecord::Schema.define(version: 2020_07_01_174906) do
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
   end
 
-  create_table "checklist_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "rubric_item_id"
-    t.decimal "points", precision: 10
-    t.boolean "checked"
-    t.text "description"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["rubric_item_id"], name: "index_checklist_items_on_rubric_item_id"
-  end
-
   create_table "courses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "term"
@@ -63,6 +53,17 @@ ActiveRecord::Schema.define(version: 2020_07_01_174906) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name", "term", "section"], name: "index_courses_on_name_and_term_and_section", unique: true
+  end
+
+  create_table "criterions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "rubric_item_id"
+    t.decimal "points", precision: 10
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "criterion_type"
+    t.string "criterion"
+    t.string "response"
+    t.index ["rubric_item_id"], name: "index_criterions_on_rubric_item_id"
   end
 
   create_table "grading_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -79,15 +80,15 @@ ActiveRecord::Schema.define(version: 2020_07_01_174906) do
 
   create_table "rubric_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "rubric_id"
-    t.integer "type"
+    t.integer "rubric_item_type"
     t.integer "graded_by"
     t.integer "seq"
-    t.decimal "points", precision: 10
-    t.string "file_from_student"
-    t.string "file_from_ts"
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "primary_file"
+    t.string "secondary_file"
+    t.string "tertiary_file"
     t.index ["rubric_id"], name: "index_rubric_items_on_rubric_id"
   end
 
