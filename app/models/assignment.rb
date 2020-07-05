@@ -6,4 +6,8 @@ class Assignment < ApplicationRecord
   validates :name, presence: true
   validates :course_id, presence: true
   validates :name, uniqueness: { scope: %i[course_id] }
+
+  def to_s
+    name
+  end
 end

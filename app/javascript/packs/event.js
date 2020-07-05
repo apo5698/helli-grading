@@ -3,8 +3,20 @@ $(() => {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-$(document).ready(() => {
+$(document).on('turbolinks:load', () => {
+  // File upload
   $('input:file').on('change', function () {
-    $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
+    const filename = $(this).val().split('\\').pop();
+    $(this).siblings('label').html(filename);
+  });
+
+  // Select/deselect all
+  $('input#select-all').on('click', () => {
+    let checkboxes = $('input:checkbox[id!="select-all"]');
+    checkboxes.prop('checked', !checkboxes.prop('checked'));
+  });
+  $('button#select-all').on('click', () => {
+    let checkboxes = $('input:checkbox');
+    checkboxes.prop('checked', !checkboxes.prop('checked'));
   });
 });

@@ -25,3 +25,18 @@ th {
 .borderless {
   border: 0
 }
+
+.toast-float {
+  position: absolute;
+  z-index: 2;
+}
+
+.btn {
+  &-primary, &-secondary {
+    background-image: none;
+
+    &:hover {
+      background-image: none;
+    }
+  }
+}

@@ -34,8 +34,9 @@ Rails.application.routes.draw do
 
       resources :submissions, only: [:index, :destroy] do
         post :upload, action: :replace
-        get '', action: :download
         collection do
+          get 'download_all'
+          post :destroy_selected
           post :upload
         end
       end

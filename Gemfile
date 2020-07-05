@@ -53,4 +53,8 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
+# AWS S3 support
 gem 'aws-sdk-s3'
+
+# ActiveRecord session store
+gem 'activerecord-session_store'

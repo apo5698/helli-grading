@@ -28,7 +28,8 @@ class Submission < ApplicationRecord
   def file_submissions
     html = []
     files.each do |file|
-      html << "<a href='#{file.service_url}'>#{file.filename}</a>"
+      url = rails_blob_path(file, disposition: 'attachment', only_path: true)
+      html << "<a href='#{url}'>#{file.filename}</a>"
     end
     html.join('<br />').html_safe
   end
