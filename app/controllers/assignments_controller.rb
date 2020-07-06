@@ -14,7 +14,9 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    assignment = Assignment.create(assignment_params.merge(course_id: params[:course_id]))
+    assignment = Assignment.new(assignment_params.merge(course_id: params[:course_id]))
+    assignment.rubric = Rubric.create(name: "#{assignment} rubric", user_id: session[:user_id], visibility: false)
+    assignment.save
     messages = assignment.errors.full_messages
     if messages.blank?
       flash[:success] = "#{assignment.name} has been successfully created."
@@ -56,6 +58,6 @@ class AssignmentsController < ApplicationController
   private
 
   def assignment_params
-    params.require(:assignment).permit(:assignment_type, :name, :criterion)
+    params.require(:assignment).permit(:assignment_type, :name, :description)
   end
 end
