@@ -7,47 +7,51 @@
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
-    <div class="accordion" id="rubric_items_accordion">
-      <div class="card">
-        <div id="sortable">
-          <div>
-            <%= render partial: 'rubric_items/wce', locals: {seq: 1} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/inspection', locals: {seq: 2} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/checkstyle', locals: {seq: 3} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/javadoc', locals: {seq: 4} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/ts_bbt', locals: {seq: 5} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/student_bbt', locals: {seq: 6} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/ts_wbt', locals: {seq: 7} %>
-          </div>
-          <div>
-            <%= render partial: 'rubric_items/student_wbt', locals: {seq: 8} %>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex justify-content-center" style="padding: 0.75rem 1.25rem">
-      <div class="col-lg-4">
-        <div class="input-group">
-          <% rubric_item_types = RubricItem.rubric_item_types.keys %>
-          <%= select :rubric_item, :rubric_item_type, rubric_item_types, {}, class: "custom-select" %>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">+ New</button>
+    <% if @rubric_items.count > 0 %>
+      <div class="accordion" id="rubric_items_accordion">
+        <div class="card">
+          <div id="sortable">
+            <% @rubric_items.each do |rubric_item| %>
+              <div>
+                <% if rubric_item.rubric_item_type == 'Checkstyle' %>
+                  <%= render partial: 'rubric_items/checkstyle', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'Inspection' %>
+                  <%= render partial: 'rubric_items/inspection', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'Javadoc' %>
+                  <%= render partial: 'rubric_items/javadoc', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'Student BBT' %>
+                  <%= render partial: 'rubric_items/student_bbt', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'Student WBT' %>
+                  <%= render partial: 'rubric_items/student_wbt', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'TS BBT' %>
+                  <%= render partial: 'rubric_items/ts_bbt', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'TS WBT' %>
+                  <%= render partial: 'rubric_items/ts_wbt', locals: {rubric_item: rubric_item} %>
+                <% elsif rubric_item.rubric_item_type == 'Write/Compile/Execute' %>
+                  <%= render partial: 'rubric_items/wce', locals: {rubric_item: rubric_item} %>
+                <% end %>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
-    </div>
+    <% else %>
+      You have not added any rubric items yet.
+    <% end %>
+    <%= form_with model: [@course, @assignment, RubricItem.new] do |f| %>
+      <%= f.hidden_field :seq, value: @rubric_items.count + 1 %>
+      <div class="row d-flex justify-content-center" style="padding: 0.75rem 1.25rem">
+        <div class="col-lg-4">
+          <div class="input-group">
+            <% rubric_item_types = RubricItem.rubric_item_types.keys %>
+            <%= f.select :rubric_item_type, rubric_item_types, {}, class: "custom-select" %>
+            <div class="input-group-append">
+              <%= f.submit '+ New', class: "btn btn-outline-secondary", data: {toggle: "tooltip", title: "Be sure you have all items saved before creating new ones."} %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
 

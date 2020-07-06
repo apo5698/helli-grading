@@ -1,5 +1,6 @@
 class Assignment < ApplicationRecord
   has_many :submissions, dependent: :destroy
+  belongs_to :rubric, dependent: :destroy
 
   enum assignment_type: %i[Exercise Project Homework]
 

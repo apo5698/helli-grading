@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       resources :rubrics, path: :rubric, only: [] do
         collection do
           get '', action: :show
-          resources :rubric_items, only: [:create] do
+          resources :rubric_items, only: [:create, :update] do
             collection do
               delete :destroy_selected
             end
