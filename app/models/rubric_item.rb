@@ -1,5 +1,6 @@
 class RubricItem < ApplicationRecord
   extend RubricItemsHelper
+  has_many :criterions, dependent: :destroy
 
   enum rubric_item_type: ['Checkstyle', 'Inspection', 'Javadoc', 'Student BBT', 'Student WBT',
                           'TS BBT', 'TS WBT', 'Write/Compile/Execute']

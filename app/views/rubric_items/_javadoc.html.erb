@@ -1,12 +1,5 @@
-<div class="list-group-item-action d-flex card-header" id="heading_<%= rubric_item.seq %>" data-toggle="collapse" data-target="#collapse_<%= rubric_item.seq %>">
-  <span id="seq"><%= rubric_item.seq %></span>. Javadoc
-</div>
-<div id="collapse_<%= rubric_item.seq %>" class="collapse" aria-labelledby="heading_<%= rubric_item.seq %>" data-parent="#rubric_items_accordion">
-  <div class="card-body">
-    <%= render partial: '/rubric_items/item', locals: {usage: 'This step checks for javadoc.',
-                                                       required_items: %w(input_file type points criterion),
-                                                       rubric_item: rubric_item,
-                                                       default_set: RubricItem.default_set(:javadoc),
-                                                       default_description: RubricItem.default_description(:javadoc)} %>
-  </div>
-</div>
+<%= render partial: '/rubric_items/item', locals: {usage: 'This step checks for javadoc.',
+                                                   required_items: %w(input_file type points criterion),
+                                                   rubric_item: rubric_item,
+                                                   default_set: RubricItem.default_set(:javadoc),
+                                                   default_description: RubricItem.default_description(:javadoc)} %>

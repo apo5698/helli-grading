@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get 'help', to: 'home#help'
   get 'about', to: 'home#about'
 
-  resources :sessions, only: [:new, :create, :destroy]
+  resources :sessions, only: %i[new create destroy]
 
   resources :users
 
@@ -16,10 +16,7 @@ Rails.application.routes.draw do
       resources :rubrics, path: :rubric, only: [] do
         collection do
           get '', action: :show
-          resources :rubric_items, only: [:create, :update] do
-            collection do
-              delete :destroy_selected
-            end
+          resources :rubric_items, only: %i[create update destroy] do
           end
         end
       end
@@ -32,7 +29,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :submissions, only: [:index, :destroy] do
+      resources :submissions, only: %i[index destroy] do
         post :upload, action: :replace
         collection do
           get 'download_all'

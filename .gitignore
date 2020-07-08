@@ -68,3 +68,4 @@ yarn-debug.log*
 
 # RubyMine
 /.idea
+/config/master.key

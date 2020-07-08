@@ -1,63 +1,55 @@
-<table class="table table-sm table-hover">
-  <thead>
-  <tr class="table-active">
-    <% if required_items.include?('type') %>
-      <th scope="col" class="bootstrap-overrides">Type</th>
-    <% end %>
-    <% if required_items.include?('points') %>
-      <th scope="col" class="bootstrap-overrides">Points</th>
-    <% end %>
-    <% if required_items.include?('criterion') %>
-      <th scope="col" class="bootstrap-overrides" style="width: 50%">Criterion</th>
-    <% end %>
-    <% if required_items.include?('response') %>
-      <th scope="col" class="bootstrap-overrides" style="width: 40%">Response to student</th>
-    <% end %>
-    <th scope="col" class="bootstrap-overrides">Action</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% criterion_types = Criterion.criterion_types.keys %>
-  <% criteria = default_set.map { |c| c[:criterion] } %>
-  <% default_set.each do |criterion| %>
-    <tr>
+<%= form.fields_for :criteria do |form| %>
+  <% count = 1 %>
+  <table class="table table-sm table-hover">
+    <thead>
+    <tr class="table-active">
       <% if required_items.include?('type') %>
-        <td>
-          <div class="d-flex">
-            <%= select :rubric_item, :criterion_type, criterion_types, {selected: criterion[:criterion_type]}, class: 'borderless flex-fill' %>
-          </div>
-        </td>
+        <th scope="col" class="bootstrap-overrides">Type</th>
       <% end %>
       <% if required_items.include?('points') %>
-        <td>
-          <div class="d-flex">
-            <%= text_field :rubric_item, :item_type, value: criterion[:points], class: "borderless", style: "width: 50px" %>
-          </div>
-        </td>
+        <th scope="col" class="bootstrap-overrides">Points</th>
       <% end %>
       <% if required_items.include?('criterion') %>
-        <td>
-          <div class="d-flex">
-            <%= select :rubric_item, :item_type, criteria, {selected: criterion[:criterion]}, class: 'borderless flex-fill', style: "width: 50%" %>
-          </div>
-        </td>
+        <th scope="col" class="bootstrap-overrides" style="width: 50%">Criterion</th>
       <% end %>
       <% if required_items.include?('response') %>
-        <td>
-          <div class="d-flex">
-            <%= text_field :rubric_item, :item_type, value: criterion[:response], class: "borderless flex-fill", style: "width: 40%" %>
-          </div>
-        </td>
+        <th scope="col" class="bootstrap-overrides" style="width: 40%">Response to student</th>
       <% end %>
-      <td class="align-middle">
-        <a href="#" class="text-body"><i class="fas fa-minus"></i></a>
+      <th scope="col" class="bootstrap-overrides">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% criterion_items = rubric_item.criterions %>
+    <% criterion_items = default_set if criterion_items.blank? %>
+
+    <% criterion_items.each do |criterion| %>
+      <%= render partial: 'rubric_items/table_row',
+                 locals: {required_items: required_items, count: count, form: form,
+                          criterion: criterion, default_set: default_set} %>
+      <% count += 1 %>
+    <% end %>
+    <tr class="text-muted" id="new_row_<%= rubric_item.seq %>">
+      <td colspan="6">
+        + New
       </td>
     </tr>
-  <% end %>
-  <tr class="text-muted">
-    <td colspan="6">
-      + New
-    </td>
-  </tr>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+  <script>
+    $(document).on('turbolinks:load', function () {
+      $('tr[id^=\'new_row_\']').unbind().on('click', function () {
+        let str = "<%= escape_javascript render partial: 'rubric_items/table_row',
+      locals: {required_items: required_items, count: count, form: form, default_set: default_set, criterion: Criterion.new} %>";
+        let count = $(this).parent('tbody').children().length;
+        let regex = new RegExp('_<%= count %>', 'g');
+        let substitute = '_' + count;
+        let replacedStr = str.replace(regex, substitute);
+        $(replacedStr).insertBefore(this);
+      });
+
+      $(document).on('click', '.a-del', function () {
+        $(this).closest('tr').remove();
+      });
+    });
+  </script>
+<% end %>
