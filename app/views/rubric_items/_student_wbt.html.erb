@@ -1,5 +1,3 @@
 <%= render partial: '/rubric_items/item', locals: {usage: 'This step runs the student\'s white box tests against both the selected input file and the oracle file.',
-                                                   required_items: %w(input_file oracle_file type points criterion response),
-                                                   rubric_item: rubric_item,
-                                                   default_set: RubricItem.default_set(:student_wbt),
-                                                   default_description: RubricItem.default_description(:student_wbt)} %>
+                                                   required_items: %w(input_file oracle_file),
+                                                   rubric_item: rubric_item} %>

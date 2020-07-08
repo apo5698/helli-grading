@@ -3,29 +3,22 @@
   <table class="table table-sm table-hover">
     <thead>
     <tr class="table-active">
-      <% if required_items.include?('type') %>
-        <th scope="col" class="bootstrap-overrides">Type</th>
-      <% end %>
-      <% if required_items.include?('points') %>
-        <th scope="col" class="bootstrap-overrides">Points</th>
-      <% end %>
-      <% if required_items.include?('criterion') %>
-        <th scope="col" class="bootstrap-overrides" style="width: 50%">Criterion</th>
-      <% end %>
-      <% if required_items.include?('response') %>
-        <th scope="col" class="bootstrap-overrides" style="width: 40%">Response to student</th>
-      <% end %>
+      <th scope="col" class="bootstrap-overrides">Type</th>
+      <th scope="col" class="bootstrap-overrides">Points</th>
+      <th scope="col" class="bootstrap-overrides" style="width: 50%">Criterion</th>
+      <th scope="col" class="bootstrap-overrides" style="width: 40%">Response to student</th>
       <th scope="col" class="bootstrap-overrides">Action</th>
     </tr>
     </thead>
     <tbody>
+    <% default_set = RubricItem.default_set(rubric_item.rubric_item_type) %>
     <% criterion_items = rubric_item.criterions %>
     <% criterion_items = default_set if criterion_items.blank? %>
 
     <% criterion_items.each do |criterion| %>
       <%= render partial: 'rubric_items/table_row',
-                 locals: {required_items: required_items, count: count, form: form,
-                          criterion: criterion, default_set: default_set} %>
+                 locals: {count: count, form: form,
+                          criterion: criterion, rubric_item: rubric_item} %>
       <% count += 1 %>
     <% end %>
     <tr class="text-muted" id="new_row_<%= rubric_item.seq %>">
@@ -39,7 +32,7 @@
     $(document).on('turbolinks:load', function () {
       $('tr[id^=\'new_row_\']').unbind().on('click', function () {
         let str = "<%= escape_javascript render partial: 'rubric_items/table_row',
-      locals: {required_items: required_items, count: count, form: form, default_set: default_set, criterion: Criterion.new} %>";
+      locals: {count: count, form: form, criterion: Criterion.new, rubric_item: rubric_item} %>";
         let count = $(this).parent('tbody').children().length;
         let regex = new RegExp('_<%= count %>', 'g');
         let substitute = '_' + count;

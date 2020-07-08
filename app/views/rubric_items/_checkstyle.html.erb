@@ -1,5 +1,3 @@
 <%= render partial: '/rubric_items/item', locals: {usage: 'This step runs the checkstyle script',
-                                                   required_items: %w(input_file type points criterion response),
-                                                   rubric_item: rubric_item,
-                                                   default_set: RubricItem.default_set(:checkstyle),
-                                                   default_description: RubricItem.default_description(:checkstyle)} %>
+                                                   required_items: %w(input_file),
+                                                   rubric_item: rubric_item} %>

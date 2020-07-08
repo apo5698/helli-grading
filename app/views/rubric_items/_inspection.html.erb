@@ -1,5 +1,3 @@
 <%= render partial: '/rubric_items/item', locals: {usage: 'This step renders the selected input file.',
-                                                   required_items: %w(input_file description type points criterion response),
-                                                   rubric_item: rubric_item,
-                                                   default_set: RubricItem.default_set(:inspection),
-                                                   default_description: RubricItem.default_description(:inspection)} %>
+                                                   required_items: %w(input_file description),
+                                                   rubric_item: rubric_item} %>

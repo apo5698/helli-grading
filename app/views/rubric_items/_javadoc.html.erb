@@ -1,5 +1,3 @@
 <%= render partial: '/rubric_items/item', locals: {usage: 'This step checks for javadoc.',
-                                                   required_items: %w(input_file type points criterion),
-                                                   rubric_item: rubric_item,
-                                                   default_set: RubricItem.default_set(:javadoc),
-                                                   default_description: RubricItem.default_description(:javadoc)} %>
+                                                   required_items: %w(input_file),
+                                                   rubric_item: rubric_item} %>

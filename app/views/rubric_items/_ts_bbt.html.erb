@@ -1,5 +1,3 @@
 <%= render partial: '/rubric_items/item', locals: {usage: 'This step grants an interactive web console for grading the teaching-staff\'s black box tests.',
-                                                   required_items: %w(input_file oracle_file bbtp description type points criterion response),
-                                                   rubric_item: rubric_item,
-                                                   default_set: RubricItem.default_set(:ts_bbt),
-                                                   default_description: RubricItem.default_description(:ts_bbt)} %>
+                                                   required_items: %w(input_file oracle_file bbtp description),
+                                                   rubric_item: rubric_item} %>

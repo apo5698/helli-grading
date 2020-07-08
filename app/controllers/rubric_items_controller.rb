@@ -9,7 +9,7 @@ class RubricItemsController < ApplicationController
     rubric_item = RubricItem.find(params[:id])
     rubric_item.update_attributes(rubric_item_params)
     Criterion.where(rubric_item_id: rubric_item.id).destroy_all
-    criteria_params.each_value { |v| Criterion.create(v.merge({rubric_item_id: rubric_item.id})) }
+    criteria_params.each_value { |v| Criterion.create(v.merge({rubric_item_id: rubric_item.id})) } if criteria_params
     flash[:success] = "Rubric item ##{rubric_item.seq} has been updated."
     redirect_back(fallback_location: '')
   end
