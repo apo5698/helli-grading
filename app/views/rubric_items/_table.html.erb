@@ -11,7 +11,7 @@
     </tr>
     </thead>
     <tbody>
-    <% default_set = RubricItem.default_set(rubric_item.rubric_item_type) %>
+    <% default_set = rubric_item.default_set %>
     <% criterion_items = rubric_item.criterions %>
     <% criterion_items = default_set if criterion_items.blank? %>
 

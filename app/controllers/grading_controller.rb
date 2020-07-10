@@ -1,9 +1,14 @@
 class GradingController < ApplicationController
-  def index; end
+  def index
+    @rubric_items = RubricItem.where(rubric_id: @assignment.rubric.id)
+  end
 
-  def run; end
+  def run;
+  end
 
-  def run_all; end
+  def run_all;
+  end
 
-  def respond; end
+  def respond;
+  end
 end

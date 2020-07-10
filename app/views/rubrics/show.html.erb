@@ -13,22 +13,25 @@
           <div id="sortable">
             <% @rubric_items.each do |rubric_item| %>
               <div>
-                <% if rubric_item.rubric_item_type == 'Checkstyle' %>
-                  <%= render partial: 'rubric_items/checkstyle', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'Inspection' %>
-                  <%= render partial: 'rubric_items/inspection', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'Javadoc' %>
-                  <%= render partial: 'rubric_items/javadoc', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'Student BBT' %>
-                  <%= render partial: 'rubric_items/student_bbt', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'Student WBT' %>
-                  <%= render partial: 'rubric_items/student_wbt', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'TS BBT' %>
-                  <%= render partial: 'rubric_items/ts_bbt', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'TS WBT' %>
-                  <%= render partial: 'rubric_items/ts_wbt', locals: {rubric_item: rubric_item} %>
-                <% elsif rubric_item.rubric_item_type == 'Write/Compile/Execute' %>
-                  <%= render partial: 'rubric_items/wce', locals: {rubric_item: rubric_item} %>
+                <% case rubric_item.rubric_item_type
+                   when 'Checkstyle' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'Inspection' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'Javadoc' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'Student BBT' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'Student WBT' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'TS BBT' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'TS WBT' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% when 'Write/Compile/Execute' %>
+                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
+                <% else %>
+                  <%= '' %>
                 <% end %>
               </div>
             <% end %>

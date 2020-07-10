@@ -1,5 +1,5 @@
 <% criterion_types = Criterion.criterion_types.keys %>
-<% default_set = RubricItem.default_set(rubric_item.rubric_item_type) %>
+<% default_set = rubric_item.default_set %>
 <% criteria = default_set.map { |c| c[:criterion] } %>
 
 <%= form.fields_for "criterion_#{count}" do |f| %>
