@@ -11,68 +11,18 @@
       <nav aria-label="Page navigation example" class="table-responsive">
         <ul class="pagination">
           <% @rubric_items.each do |rubric_item| %>
-            <li class="page-item <%= 'active' if rubric_item.seq == 1 %>">
-              <a class="page-link h-100" href="#"><%= rubric_item.rubric_item_type %></a></li>
+            <li class="page-item <%= 'active' if rubric_item.id == @rubric_item.id %>">
+              <a class="page-link h-100" href="?id=<%= rubric_item.id %>"><%= rubric_item.rubric_item_type %></a></li>
           <% end %>
         </ul>
       </nav>
     </div>
     <div class="row">
       <div class="col-lg-6">
-        <table class="table table-sm table-hover">
-          <thead>
-          <tr class="table-active">
-            <th scope="col" class="bootstrap-overrides">Student</th>
-            <th scope="col" class="bootstrap-overrides">Points received</th>
-            <th scope="col" class="bootstrap-overrides">Status</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Yulin Zhang</td>
-            <td class="text-success">1.0/1.0</td>
-            <td><span class="badge badge-success">Graded</span></td>
-          </tr>
-          <tr>
-            <td>Dingdong Yao</td>
-            <td class="text-success">0.75/1.0</td>
-            <td><span class="badge badge-success">Graded</span></td>
-          </tr>
-          <tr>
-            <td>Jiaxin Yang</td>
-            <td class="text-success">1.0/1.0</td>
-            <td><span class="badge badge-success">Graded</span></td>
-          </tr>
-          </tbody>
-        </table>
+        <%= render partial: '/grading/output_table', locals: {table_for: :graded} %>
       </div>
       <div class="col-lg-6">
-        <table class="table table-sm table-hover">
-          <thead>
-          <tr class="table-active">
-            <th scope="col" class="bootstrap-overrides">Student</th>
-            <th scope="col" class="bootstrap-overrides">Points received</th>
-            <th scope="col" class="bootstrap-overrides">Status</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Yulin Zhang</td>
-            <td class="text-primary">0.0/1.0</td>
-            <td><span class="badge badge-primary">Error occurred</span></td>
-          </tr>
-          <tr>
-            <td>Dingdong Yao</td>
-            <td class="text-danger">0.5/1.0</td>
-            <td><span class="badge badge-danger">Action needed</span></td>
-          </tr>
-          <tr>
-            <td>Jiaxin Yang</td>
-            <td class="text-danger">0.0/1.0</td>
-            <td><span class="badge badge-danger">Action needed</span></td>
-          </tr>
-          </tbody>
-        </table>
+        <%= render partial: '/grading/output_table', locals: {table_for: :other} %>
       </div>
     </div>
     <div class="float-right">

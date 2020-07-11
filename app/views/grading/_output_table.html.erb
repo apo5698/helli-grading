@@ -1,0 +1,33 @@
+<table class="table table-sm table-hover">
+  <thead>
+  <tr class="table-active">
+    <th scope="col" class="bootstrap-overrides">Student</th>
+    <th scope="col" class="bootstrap-overrides">Points received</th>
+    <th scope="col" class="bootstrap-overrides">Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if table_for == :graded %>
+    <% grading_items = @grading_items.select { |item| item.Graded? } %>
+  <% else %>
+    <% grading_items = @grading_items.reject { |item| item.Graded? } %>
+  <% end %>
+  <% grading_items.each do |grading_item| %>
+    <tr>
+      <% status = grading_item.status %>
+      <% color = if status == 'Graded' %>
+        <% 'success' %>
+      <% elsif status == 'Error occurred' %>
+        <% 'primary' %>
+      <% elsif status == 'Action needed' %>
+        <% 'danger' %>
+      <% else %>
+        <% 'secondary' %>
+      <% end %>
+      <td><%= grading_item.submission.student %></td>
+      <td class="text-<%= color %>"><%= grading_item.points_received.to_f %>/<%= @rubric_item.points %></td>
+      <td><span class="badge badge-<%= color %>"><%= grading_item.status %></span></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
