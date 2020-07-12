@@ -13,7 +13,7 @@
           <div id="sortable">
             <% @rubric_items.each do |rubric_item| %>
               <div>
-                <% case rubric_item.rubric_item_type
+                <% case rubric_item.title
                    when 'Checkstyle' %>
                   <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
                 <% when 'Inspection' %>
@@ -46,8 +46,10 @@
       <div class="row d-flex justify-content-center" style="padding: 0.75rem 1.25rem">
         <div class="col-lg-4">
           <div class="input-group">
-            <% rubric_item_types = RubricItem.rubric_item_types.keys %>
-            <%= f.select :rubric_item_type, rubric_item_types, {}, class: "custom-select" %>
+            <% subclasses = RubricItem.subclasses %>
+            <% types = Hash.new %>
+            <% subclasses.each { |subclass| types[subclass.new.title] = subclass.name } %>
+            <%= f.select :type, types, {}, class: "custom-select" %>
             <div class="input-group-append">
               <%= f.submit '+ New', class: "btn btn-outline-secondary", data: {toggle: "tooltip", title: "Be sure you have all items saved before creating new ones."} %>
             </div>

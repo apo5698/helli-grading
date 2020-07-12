@@ -6,11 +6,8 @@ class GradingItem < ApplicationRecord
   belongs_to :submission
   belongs_to :rubric_item
 
-  enum rubric_item_type: ['Checkstyle', 'Inspection', 'Javadoc', 'Student BBT', 'Student WBT',
-                          'TS BBT', 'TS WBT', 'Write/Compile/Execute']
-
   def grade
-    case rubric_item.rubric_item_type
+    case rubric_item.title
     when 'Checkstyle'
     when 'Inspection'
     when 'Javadoc'

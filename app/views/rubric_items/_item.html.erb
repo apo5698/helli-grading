@@ -1,5 +1,5 @@
 <div class="list-group-item-action d-flex card-header justify-content-between align-items-center" id="heading_<%= rubric_item.seq %>" data-toggle="collapse" data-target="#collapse_<%= rubric_item.seq %>">
-  <span id="seq"><%= "#{rubric_item.seq}. #{rubric_item.rubric_item_type}" %></span>
+  <span id="seq"><%= "#{rubric_item.seq}. #{rubric_item.title}" %></span>
   <% status, messages = rubric_item.validate %>
   <% if status == :completed %>
     <span class="badge badge-success badge-pill">✓</span>

@@ -1,9 +1,6 @@
-// Toggle tooltip
-$(() => {
-  $('[data-toggle="tooltip"]').tooltip();
-});
-
 $(document).on('turbolinks:load', () => {
+  $('[data-toggle="tooltip"]').tooltip();
+
   // File upload
   $('input:file').on('change', function () {
     const filename = $(this).val().split('\\').pop();

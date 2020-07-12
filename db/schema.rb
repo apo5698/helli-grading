@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_234751) do
+ActiveRecord::Schema.define(version: 2020_07_11_231733) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -80,7 +80,6 @@ ActiveRecord::Schema.define(version: 2020_07_10_234751) do
 
   create_table "rubric_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "rubric_id"
-    t.integer "rubric_item_type"
     t.integer "graded_by"
     t.integer "seq"
     t.text "description"
@@ -89,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_234751) do
     t.string "primary_file"
     t.string "secondary_file"
     t.string "tertiary_file"
+    t.string "type"
     t.index ["rubric_id"], name: "index_rubric_items_on_rubric_id"
   end
 

@@ -1,6 +1,6 @@
 class RubricItemsController < ApplicationController
   def create
-    RubricItem.create(rubric_id: @assignment.rubric.id, rubric_item_type: params[:rubric_item][:rubric_item_type],
+    RubricItem.create(rubric_id: @assignment.rubric.id, type: params[:rubric_item][:type],
                       seq: params[:rubric_item][:seq])
     redirect_back(fallback_location: '')
   end

@@ -12,7 +12,7 @@
         <ul class="pagination">
           <% @rubric_items.each do |rubric_item| %>
             <li class="page-item <%= 'active' if rubric_item.id == @rubric_item.id %>">
-              <a class="page-link h-100" href="?id=<%= rubric_item.id %>"><%= rubric_item.rubric_item_type %></a></li>
+              <a class="page-link h-100" href="?id=<%= rubric_item.id %>"><%= rubric_item.title %></a></li>
           <% end %>
         </ul>
       </nav>
