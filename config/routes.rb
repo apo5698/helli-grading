@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :ts_files
   root to: 'home#index'
 
   get 'help', to: 'home#help'
@@ -32,7 +33,14 @@ Rails.application.routes.draw do
       resources :submissions, only: %i[index destroy] do
         post :upload, action: :replace
         collection do
-          get 'download_all'
+          get :download_all
+          post :destroy_selected
+          post :upload
+        end
+      end
+
+      resources :ts_files, only: %i[index destroy] do
+        collection do
           post :destroy_selected
           post :upload
         end

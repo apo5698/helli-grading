@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_11_231733) do
+ActiveRecord::Schema.define(version: 2020_07_12_234517) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -127,6 +127,14 @@ ActiveRecord::Schema.define(version: 2020_07_11_231733) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["assignment_id"], name: "index_submissions_on_assignment_id"
     t.index ["student_id"], name: "index_submissions_on_student_id"
+  end
+
+  create_table "ts_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "assignments_id"
+    t.string "filename"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["assignments_id"], name: "index_ts_files_on_assignments_id"
   end
 
   create_table "user_course_maps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|

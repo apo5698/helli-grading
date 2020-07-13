@@ -24,7 +24,7 @@ class GradingController < ApplicationController
     submissions.each do |submission|
       grading_item = GradingItem.create(rubric_item_id: rubric_item.id, submission_id: submission.id,
                                         status: 'Not started yet')
-      grading_item.grade
+      flash[:info] = grading_item.grade
     end
     GradingItem.where(rubric_item_id: rubric_item.id)
   end

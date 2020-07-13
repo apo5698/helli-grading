@@ -7,17 +7,6 @@ class GradingItem < ApplicationRecord
   belongs_to :rubric_item
 
   def grade
-    case rubric_item.title
-    when 'Checkstyle'
-    when 'Inspection'
-    when 'Javadoc'
-    when 'Student BBT'
-    when 'Student WBT'
-    when 'TS BBT'
-    when 'TS WBT'
-    when 'Write/Compile/Execute'
-      grade_wce
-    else
-    end
+    rubric_item.grade(submission)
   end
 end

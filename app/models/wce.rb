@@ -17,4 +17,8 @@ class Wce < RubricItem
   def self.model_name
     RubricItem.model_name
   end
+
+  def grade(submission)
+    'halli'
+  end
 end

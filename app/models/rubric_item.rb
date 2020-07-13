@@ -42,6 +42,10 @@ class RubricItem < ApplicationRecord
   def fields
     ['input_file']
   end
+
+  def grade(submission)
+    ;
+  end
 end
 
 require_dependency('checkstyle')
