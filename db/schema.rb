@@ -130,11 +130,10 @@ ActiveRecord::Schema.define(version: 2020_07_12_234517) do
   end
 
   create_table "ts_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "assignments_id"
-    t.string "filename"
+    t.bigint "assignment_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["assignments_id"], name: "index_ts_files_on_assignments_id"
+    t.index ["assignment_id"], name: "index_ts_files_on_assignment_id"
   end
 
   create_table "user_course_maps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|

@@ -7,5 +7,34 @@
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
+    <div class="row">
+      <div class="col-lg-7">
+        <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/ts_files/upload") do |f| %>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="custom-file">
+                <%= f.file_field(:files, class: 'custom-file-input', :multiple => true, name: 'files[]') %>
+                <%= f.label(:zip, 'Choose file', class: 'custom-file-label') %>
+              </div>
+              <div class="input-group-append">
+                <%= f.submit('Upload', class: 'input-group-text') %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">Uploaded files</div>
+          <ul class="list-group list-group-flush">
+            <% @ts_files.each do |ts_file| %>
+              <li class="list-group-item"><%= ts_file.filename %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
