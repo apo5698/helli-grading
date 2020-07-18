@@ -10,9 +10,7 @@ class TsFilesController < ApplicationController
     if files.blank?
       flash[:error] = 'No file chosen.'
     else
-      files.each do |file|
-        flash[:info] = TsFilesHelper.upload(file, @assignment.id)
-      end
+      files.each { |file| TsFilesHelper.upload(file, @assignment.id) }
       flash[:success] = "Successfully uploaded #{files.count} #{'file'.pluralize(files.count)}."
     end
     redirect_back(fallback_location: '')

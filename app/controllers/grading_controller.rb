@@ -6,16 +6,14 @@ class GradingController < ApplicationController
 
     @grading_items = GradingItem.where(rubric_item_id: @rubric_item.id)
     @grading_items = generate_grading_items(@assignment, @rubric_item) if @grading_items.empty? && @rubric_item
+    @grading_items.each { |item| item.grade }
   end
 
-  def run;
-  end
+  def run; end
 
-  def run_all;
-  end
+  def run_all; end
 
-  def respond;
-  end
+  def respond; end
 
   private
 
@@ -24,8 +22,8 @@ class GradingController < ApplicationController
     submissions.each do |submission|
       grading_item = GradingItem.create(rubric_item_id: rubric_item.id, submission_id: submission.id,
                                         status: 'Not started yet')
-      flash[:info] = grading_item.grade
     end
+
     GradingItem.where(rubric_item_id: rubric_item.id)
   end
 end

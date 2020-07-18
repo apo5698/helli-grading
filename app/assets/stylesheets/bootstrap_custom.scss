@@ -1,0 +1,23 @@
+.btn {
+  &-primary, &-secondary {
+    background-image: none;
+
+    &:hover {
+      background-image: none;
+    }
+  }
+}
+
+.page-item {
+  white-space: nowrap;
+}
+
+th {
+  white-space: nowrap;
+}
+
+.tooltip-inner {
+  max-width: none;
+  text-align: left;
+  white-space: pre-line;
+}

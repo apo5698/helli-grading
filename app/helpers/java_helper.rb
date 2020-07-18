@@ -4,11 +4,8 @@ module JavaHelper
   # Execute a command with arguments. Returns a hash containing stdout, stderr,
   # and status.
   def self.exec(cmd, *args)
-    puts args
     args = args.map(&:to_s).reject(&:empty?).map { |e| "'#{e}'" }.join(' ')
     stdout, stderr, status = Open3.capture3(cmd + ' ' + args)
-    puts stdout
-    puts stderr
     { stdout: stdout, stderr: stderr, status: status }
   end
 
@@ -28,7 +25,10 @@ module JavaHelper
     dirname = File.dirname(file)
     cp = dirname
     cp += ":#{@junit_bundle}" if junit
-    exec('javac', '-d', dirname, '-cp', cp, file, opt.join(' '))
+    output = exec('javac', '-d', dirname, '-cp', cp, file, opt.join(' '))
+    output[:stdout] = output[:stdout].gsub(file, File.basename(file))
+    output[:stderr] = output[:stderr].gsub(file, File.basename(file))
+    output
   end
 
   # Runs checkstyle on a Java file (*.java).

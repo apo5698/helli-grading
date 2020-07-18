@@ -20,7 +20,7 @@
           <div class="col-lg-3">
             <div class="form-group">
               <%= form.label :primary_file, "Input file" %>
-              <%= form.select :primary_file, %w(Hello.java Goodbye.java BBTP.pdf), {include_blank: true}, class: "form-control" %>
+              <%= form.select :primary_file, TsFile.filenames(@assignment.id), { include_blank: true }, class: "form-control" %>
             </div>
           </div>
         <% end %>
@@ -28,7 +28,7 @@
           <div class="col-lg-3">
             <div class="form-group">
               <%= form.label :secondary_file, "Oracle file" %>
-              <%= form.select :secondary_file, %w(Hello.java Goodbye.java HelloTest.java GoodbyeTest.java), {include_blank: true}, class: "form-control" %>
+              <%= form.select :secondary_file, %w(Hello.java Goodbye.java HelloTest.java GoodbyeTest.java), { include_blank: true }, class: "form-control" %>
             </div>
           </div>
         <% end %>
@@ -36,7 +36,7 @@
           <div class="col-lg-3">
             <div class="form-group">
               <%= form.label :tertiary_file, "Black box test plan" %>
-              <%= form.select :tertiary_file, %w(Hello.java Goodbye.java BBTP.pdf), {include_blank: true}, class: "form-control" %>
+              <%= form.select :tertiary_file, %w(*.pdf *.docx), { include_blank: true }, class: "form-control" %>
             </div>
           </div>
         <% end %>
@@ -44,7 +44,7 @@
           <div class="col-lg-3">
             <div class="form-group">
               <%= form.label :secondary_file, "Test file" %>
-              <%= form.select :secondary_file, %w(Hello.java Goodbye.java HelloTest.java GoodbyeTest.java), {include_blank: true}, class: "form-control" %>
+              <%= form.select :secondary_file, %w(Hello.java Goodbye.java HelloTest.java GoodbyeTest.java), { include_blank: true }, class: "form-control" %>
             </div>
           </div>
         <% end %>
@@ -53,7 +53,8 @@
         <div class="col-lg-12">
           <% if required_fields.include?('description') %>
             <div class="form-group">
-              <%= form.label :description, "Description" %> <span class="text-muted">(optional)</span>
+              <%= form.label :description, "Description" %>
+              <span class="text-muted">(optional)</span>
               <% if rubric_item.description.blank? %>
                 <%= form.text_area :description, rows: 3, class: "form-control", value: rubric_item.default_description %>
               <% else %>
@@ -65,7 +66,7 @@
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <%= render partial: '/rubric_items/table', locals: {rubric_item: rubric_item, form: form} %>
+          <%= render partial: '/rubric_items/table', locals: { rubric_item: rubric_item, form: form } %>
         </div>
       </div>
       <%= form.submit "Save", class: "btn btn-link" %>

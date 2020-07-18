@@ -1,6 +1,6 @@
 <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
 <% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Rubric</li>".html_safe %>
-<%= render partial: '/assignments/header', locals: {html: html} %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
 
 <div class="row">
   <div class="col-lg-3">
@@ -12,27 +12,8 @@
         <div class="card">
           <div id="sortable">
             <% @rubric_items.each do |rubric_item| %>
-              <div>
-                <% case rubric_item.title
-                   when 'Checkstyle' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'Inspection' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'Javadoc' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'Student BBT' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'Student WBT' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'TS BBT' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'TS WBT' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% when 'Write/Compile/Execute' %>
-                  <%= render partial: 'rubric_items/item', locals: {rubric_item: rubric_item} %>
-                <% else %>
-                  <%= '' %>
-                <% end %>
+              <div id="<%= rubric_item.title %>">
+                <%= render partial: 'rubric_items/item', locals: { rubric_item: rubric_item } %>
               </div>
             <% end %>
           </div>
@@ -51,7 +32,7 @@
             <% subclasses.each { |subclass| types[subclass.new.title] = subclass.name } %>
             <%= f.select :type, types, {}, class: "custom-select" %>
             <div class="input-group-append">
-              <%= f.submit '+ New', class: "btn btn-outline-secondary", data: {toggle: "tooltip", title: "Be sure you have all items saved before creating new ones."} %>
+              <%= f.submit '+ New', class: "btn btn-outline-secondary", data: { toggle: "tooltip", title: "Be sure you have all items saved before creating new ones." } %>
             </div>
           </div>
         </div>

@@ -12,17 +12,18 @@
         <ul class="pagination">
           <% @rubric_items.each do |rubric_item| %>
             <li class="page-item <%= 'active' if rubric_item.id == @rubric_item.id %>">
-              <a class="page-link h-100" href="?id=<%= rubric_item.id %>"><%= rubric_item.title %></a></li>
+              <a class="page-link h-100" href="?id=<%= rubric_item.id %>"><%= rubric_item %></a>
+            </li>
           <% end %>
         </ul>
       </nav>
     </div>
     <div class="row">
       <div class="col-lg-6">
-        <%= render partial: '/grading/output_table', locals: {table_for: :graded} %>
+        <%= render partial: '/grading/output_table', locals: { table_for: :graded } %>
       </div>
       <div class="col-lg-6">
-        <%= render partial: '/grading/output_table', locals: {table_for: :other} %>
+        <%= render partial: '/grading/output_table', locals: { table_for: :other } %>
       </div>
     </div>
     <div class="float-right">

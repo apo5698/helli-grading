@@ -58,3 +58,6 @@ gem 'aws-sdk-s3'
 
 # ActiveRecord session store
 gem 'activerecord-session_store'
+
+# Active Job
+# gem 'sidekiq'

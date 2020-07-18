@@ -6,11 +6,15 @@ class SubmissionsController < ApplicationController
   def upload
     zip_file = params[:zip]
     if zip_file.nil?
-      flash[:error] = 'No file chosen.'
+      flash[:error] = 'Upload failed (no file chosen)'
     else
       course_id = params[:course_id]
-      SubmissionsHelper.upload(zip_file, course_id, @assignment.id)
-      flash[:success] = "Successfully uploaded #{zip_file.original_filename}."
+      begin
+        count = ActiveStorageHelper.upload(zip_file, course_id, @assignment.id).count
+        flash[:success] = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
+      rescue StandardError => e
+        flash[:error] = "Upload failed (#{e})"
+      end
     end
     redirect_back(fallback_location: '')
   end
@@ -22,7 +26,7 @@ class SubmissionsController < ApplicationController
   end
 
   def download_all
-    zip = SubmissionsHelper.download(@course, @assignment)
+    zip = ActiveStorageHelper.download(@course, @assignment)
     begin
       send_data(File.read(zip.path), filename: File.basename(zip), type: 'application/zip', disposition: 'attachment')
     ensure

@@ -2,18 +2,19 @@ class RubricItem < ApplicationRecord
   has_many :criterions, dependent: :destroy
   has_many :grading_items, dependent: :destroy
 
-  def title;
+  def title; end
+
+  def to_s
+    "#{title} (#{primary_file})"
   end
 
-  def usage;
-  end
+  def usage; end
 
   def default_set
     []
   end
 
-  def default_description;
-  end
+  def default_description; end
 
   def validate(status = :completed, messages = [])
     status, messages = validate_files(status, messages)
@@ -43,9 +44,9 @@ class RubricItem < ApplicationRecord
     ['input_file']
   end
 
-  def grade(submission)
-    ;
-  end
+  # Grades files in a submission according to the corresponding rubric item.
+  # Returns a hash: { status: status_detail }
+  def grade(submission_files) end
 end
 
 require_dependency('checkstyle')

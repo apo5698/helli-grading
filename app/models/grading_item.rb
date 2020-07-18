@@ -7,6 +7,9 @@ class GradingItem < ApplicationRecord
   belongs_to :rubric_item
 
   def grade
-    rubric_item.grade(submission)
+    result = rubric_item.grade(submission.files)
+    self.status = result.keys.first
+    self.status_detail = result.values.first
+    self.save
   end
 end

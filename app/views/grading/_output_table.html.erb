@@ -25,8 +25,14 @@
         <% 'secondary' %>
       <% end %>
       <td><%= grading_item.submission.student %></td>
-      <td class="text-<%= color %>"><%= grading_item.points_received.to_f %>/<%= @rubric_item.points %></td>
-      <td><span class="badge badge-<%= color %>"><%= grading_item.status %></span></td>
+      <td class="text-<%= color %>"><%= grading_item.points_received.to_f %>
+        /<%= @rubric_item.points %>
+      </td>
+      <td>
+        <span class="badge badge-<%= color %>" data-toggle="tooltip" data-placement="right" title="<%= grading_item.status_detail %>">
+          <%= grading_item.status %>
+        </span>
+      </td>
     </tr>
   <% end %>
   </tbody>

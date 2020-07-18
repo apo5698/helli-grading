@@ -10,7 +10,7 @@ module TsFilesHelper
   def self.upload(file, assignment_id)
     ts_file = TsFilesHelper.create(assignment_id)
     if file.path.end_with?('.zip')
-      dir = SubmissionsHelper.unzip(file)
+      dir = ActiveStorageHelper.unzip(file, assignment_id, ts: true)
       entries = Dir.glob(File.join(dir, '**', '*')).select { |f| File.file?(f) }
       entries.each do |e|
         ts_file.files.attach(io: File.open(e), filename: File.basename(e))
@@ -19,5 +19,9 @@ module TsFilesHelper
     else
       ts_file.files.attach(io: File.open(file), filename: file.original_filename)
     end
+  end
+
+  def self.has_ts_files(assignment_id)
+    !TsFile.find_by(assignment_id: assignment_id).files.empty?
   end
 end

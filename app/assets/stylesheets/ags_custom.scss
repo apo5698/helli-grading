@@ -9,10 +9,6 @@ label.required:after {
   align-items: center;
 }
 
-th {
-  white-space: nowrap;
-}
-
 .fa-150 {
   font-size: 150%;
 }
@@ -29,16 +25,6 @@ th {
 .toast-float {
   position: absolute;
   z-index: 2;
-}
-
-.btn {
-  &-primary, &-secondary {
-    background-image: none;
-
-    &:hover {
-      background-image: none;
-    }
-  }
 }
 
 .a-del {
