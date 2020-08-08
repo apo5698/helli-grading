@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_13_004715) do
+ActiveRecord::Schema.define(version: 2020_07_31_192207) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2020_07_13_004715) do
     t.bigint "rubric_id"
     t.string "name"
     t.text "description"
+    t.string "expected_input_filenames", default: ""
     t.index ["course_id", "name"], name: "index_assignments_on_course_id_and_name", unique: true
     t.index ["course_id"], name: "index_assignments_on_course_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
@@ -62,7 +63,7 @@ ActiveRecord::Schema.define(version: 2020_07_13_004715) do
     t.integer "criterion_type"
     t.string "criterion"
     t.string "response"
-    t.decimal "points", precision: 8, scale: 2, default: "0.0"
+    t.decimal "points", precision: 5, scale: 2, default: "0.0"
     t.index ["rubric_item_id"], name: "index_criterions_on_rubric_item_id"
   end
 
@@ -75,6 +76,7 @@ ActiveRecord::Schema.define(version: 2020_07_13_004715) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "points_received", precision: 8, scale: 2, default: "0.0"
     t.string "status_detail"
+    t.text "output"
     t.index ["rubric_item_id"], name: "index_grading_items_on_rubric_item_id"
     t.index ["submission_id"], name: "index_grading_items_on_submission_id"
   end

@@ -20,7 +20,7 @@
           <div class="col-lg-3">
             <div class="form-group">
               <%= form.label :primary_file, "Input file" %>
-              <%= form.select :primary_file, TsFile.filenames(@assignment.id), { include_blank: true }, class: "form-control" %>
+              <%= form.select :primary_file, Assignment.input_files(@assignment.id), { include_blank: true }, class: "form-control", required: true %>
             </div>
           </div>
         <% end %>

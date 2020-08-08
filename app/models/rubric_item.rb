@@ -33,7 +33,7 @@ class RubricItem < ApplicationRecord
   end
 
   def points
-    points = 0
+    points = 0.0
     criterions.each do |criterion|
       points += criterion.points if criterion.criterion_type == 'Award' || criterion.criterion_type == 'Self-check'
     end
@@ -45,8 +45,8 @@ class RubricItem < ApplicationRecord
   end
 
   # Grades files in a submission according to the corresponding rubric item.
-  # Returns a hash: { status: status_detail }
-  def grade(submission_files) end
+  # Returns a hash: { :status, :detail, :output, :points }
+  def grade(file, options) end
 end
 
 require_dependency('checkstyle')

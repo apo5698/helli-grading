@@ -47,18 +47,19 @@
     </div>
   </div>
 </div>
+<% content_for(:js) do %>
+  <script>
+    let modalWindow = $('#modal-window');
+    <% if flash[:modal_error] %>
+    modalWindow.find('.modal-content').html("<%= j render partial: 'courses/edit' %>");
+    modalWindow.removeClass('fade');
+    modalWindow.modal('show');
+    <% end %>
 
-<script>
-  let modalWindow = $('#modal-window');
-  <% if flash[:modal_error] %>
-  modalWindow.find('.modal-content').html("<%= j render partial: 'courses/edit' %>");
-  modalWindow.removeClass('fade');
-  modalWindow.modal('show');
-  <% end %>
-
-  $(document).ready(function () {
-    modalWindow.on('hidden.bs.modal', function () {
-      $(this).addClass('fade');
+    $(document).ready(function () {
+      modalWindow.on('hidden.bs.modal', function () {
+        $(this).addClass('fade');
+      });
     });
-  });
-</script>
+  </script>
+<% end %>

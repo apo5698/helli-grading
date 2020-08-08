@@ -1,6 +1,6 @@
 class SubmissionsController < ApplicationController
   def index
-    @submissions = Submission.where(assignment_id: params[:assignment_id]).sort_by(&:student)
+    @submissions = Submission.where(assignment_id: params[:assignment_id])
   end
 
   def upload
@@ -10,7 +10,7 @@ class SubmissionsController < ApplicationController
     else
       course_id = params[:course_id]
       begin
-        count = ActiveStorageHelper.upload(zip_file, course_id, @assignment.id).count
+        count = ActiveStorageUtil.upload(zip_file, course_id, @assignment.id).count
         flash[:success] = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
       rescue StandardError => e
         flash[:error] = "Upload failed (#{e})"
@@ -26,7 +26,7 @@ class SubmissionsController < ApplicationController
   end
 
   def download_all
-    zip = ActiveStorageHelper.download(@course, @assignment)
+    zip = ActiveStorageUtil.download_submission_zip(@course, @assignment)
     begin
       send_data(File.read(zip.path), filename: File.basename(zip), type: 'application/zip', disposition: 'attachment')
     ensure

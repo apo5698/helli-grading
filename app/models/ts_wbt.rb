@@ -8,7 +8,7 @@ class TsWbt < RubricItem
   end
 
   def default_set
-    [{criterion_type: 'Award / ea.', criterion: '# passed test[s]', response: '# failing test[s]'}]
+    [{ criterion_type: 'Award / ea.', criterion: '# passed test[s]', response: '# failing test[s]' }]
   end
 
   def validate_files(status, messages)
@@ -26,5 +26,9 @@ class TsWbt < RubricItem
 
   def self.model_name
     RubricItem.model_name
+  end
+
+  def grade(submission_files)
+    raise StandardError, 'Not yet implemented'
   end
 end

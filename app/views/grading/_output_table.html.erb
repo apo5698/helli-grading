@@ -4,34 +4,41 @@
     <th scope="col" class="bootstrap-overrides">Student</th>
     <th scope="col" class="bootstrap-overrides">Points received</th>
     <th scope="col" class="bootstrap-overrides">Status</th>
+    <th scope="col" class="bootstrap-overrides">stdout</th>
   </tr>
   </thead>
   <tbody>
-  <% if table_for == :graded %>
-    <% grading_items = @grading_items.select { |item| item.Graded? } %>
-  <% else %>
-    <% grading_items = @grading_items.reject { |item| item.Graded? } %>
-  <% end %>
-  <% grading_items.each do |grading_item| %>
+  <% @grading_items.each do |grading_item| %>
+    <% status = grading_item.status %>
+    <% color = case status
+               when GradingItem::SUCCESS
+                 'success'
+               when GradingItem::ERROR
+                 'primary'
+               when GradingItem::ACTION_NEEDED
+                 'info'
+               when GradingItem::NO_SUBMISSION
+                 'danger'
+               when GradingItem::NOT_STARTED
+                 'secondary'
+               else
+                 'warning'
+               end %>
     <tr>
-      <% status = grading_item.status %>
-      <% color = if status == 'Graded' %>
-        <% 'success' %>
-      <% elsif status == 'Error occurred' %>
-        <% 'primary' %>
-      <% elsif status == 'Action needed' %>
-        <% 'danger' %>
-      <% else %>
-        <% 'secondary' %>
-      <% end %>
-      <td><%= grading_item.submission.student %></td>
-      <td class="text-<%= color %>"><%= grading_item.points_received.to_f %>
-        /<%= @rubric_item.points %>
+      <td>
+        <%= grading_item.submission.student %>
+      </td>
+      <td>
+        <%= grading_item.points_received.to_f %> / <%= @rubric_item.points %>
       </td>
       <td>
         <span class="badge badge-<%= color %>" data-toggle="tooltip" data-placement="right" title="<%= grading_item.status_detail %>">
           <%= grading_item.status %>
         </span>
+      </td>
+      <td>
+        <% output = grading_item.output.blank? ? 'None' : grading_item.output %>
+        <a href="javascript:void(0);" data-toggle="tooltip" title="<%= output %>">View</a>
       </td>
     </tr>
   <% end %>

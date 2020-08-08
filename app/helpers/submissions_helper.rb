@@ -7,10 +7,8 @@ module SubmissionsHelper
     s || Submission.create(student_id: student_id, assignment_id: assignment_id)
   end
 
-  # Renames Moodle submission identifier to 'first_name last_name'
+  # Renames Moodle submission identifier to 'last_name first_name'
   def self.rename_moodle_id(dirname)
-    name = dirname.split('__')[0].split(' ')
-    name[0], name[1] = name[1], name[0]
-    name.join(' ')
+    dirname.split('__')[0]
   end
 end

@@ -1,9 +1,10 @@
 <%= render partial: '/assignments/header', locals: { html: "<li class='breadcrumb-item active'>#{@assignment.name}</li>".html_safe } %>
 
 <div class="row">
-  <div class="col-lg-3">
+  <div class="col-lg-3 mb-4">
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
+    <%= render partial: 'assignments/overview' %>
   </div>
 </div>

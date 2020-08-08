@@ -1,45 +1,13 @@
 <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
 <% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>TS Files</li>".html_safe %>
-<%= render partial: '/assignments/header', locals: {html: html} %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
 
 <div class="row">
   <div class="col-lg-3">
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
-    <div class="row">
-      <div class="col-lg-7">
-        <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/ts_files/upload") do |f| %>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="custom-file">
-                <%= f.file_field(:files, class: 'custom-file-input', :multiple => true, name: 'files[]') %>
-                <%= f.label(:zip, 'Choose file', class: 'custom-file-label') %>
-              </div>
-              <div class="input-group-append">
-                <%= f.submit('Upload', class: 'input-group-text') %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <!-- Uploading progress -->
-      <div class="col-lg-5">
-        <div class="toast toast-float" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
-          <div class="toast-header">
-            <strong class="mr-auto">Upload</strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="toast-body">
-            Uploading...<i class="fa fa-spinner fa-spin ml-1"></i>
-            <br/>
-            Please do not refresh the page.
-          </div>
-        </div>
-      </div>
-    </div>
+    <%= render 'upload' %>
     <% unless @ts_files.blank? %>
       <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/ts_files/destroy_selected") do |f| %>
         <div class="row">
@@ -75,12 +43,15 @@
     <% end %>
   </div>
 </div>
-<script>
-  $(document).on('turbolinks:load', () => {
-    $('input:submit').on('click', () => {
-      if ($('.custom-file-label').html().trim() !== 'Choose file') {
-        $('.toast').toast('show');
-      }
+<% content_for(:js) do %>
+  <script>
+    $(document).on('turbolinks:load', () => {
+      $('input:submit').on('click', () => {
+        if ($('.custom-file-label').html().trim() !== 'Choose file') {
+          $('.toast').toast('show');
+        }
+      });
     });
-  });
-</script>
+  </script>
+<% end %>
+

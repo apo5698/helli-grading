@@ -21,3 +21,17 @@ th {
   text-align: left;
   white-space: pre-line;
 }
+
+.d-flex[style*='display:none'], .d-flex[style*='display: none'] {
+  display: none !important;
+}
+
+.d-lg-flex[style*='display:none'], .d-lg-flex[style*='display: none'] {
+  display: none !important;
+}
+
+.input-group.is-invalid {
+  ~ .invalid-feedback {
+    display: block;
+  }
+}

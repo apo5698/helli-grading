@@ -17,6 +17,7 @@ class AssignmentsController < ApplicationController
     assignment = Assignment.new(assignment_params.merge(course_id: params[:course_id]))
     assignment.rubric = Rubric.create(name: "#{assignment} rubric", user_id: session[:user_id], visibility: false)
     assignment.save
+    TsFile.create(assignment_id: assignment.id)
     messages = assignment.errors.full_messages
     if messages.blank?
       flash[:success] = "#{assignment.name} has been successfully created."
@@ -53,6 +54,36 @@ class AssignmentsController < ApplicationController
     flash[:success] = "#{assignment.name} has been successfully deleted."
     assignment.destroy
     redirect_to "/courses/#{params[:course_id]}/assignments"
+  end
+
+  def expected_file_add
+    assignment = Assignment.find(params[:assignment_id])
+    filename = "#{params[:expected_input_filename]}.java"
+
+    saved_filenames = assignment.expected_input_filenames.split(';')
+    if saved_filenames.include?(filename)
+      flash[:error] = "#{filename} already exists."
+    else
+      saved_filenames.unshift(filename)
+      assignment.expected_input_filenames = saved_filenames.join(';')
+      assignment.save
+      flash[:info] = "#{filename} added."
+    end
+
+    redirect_back(fallback_location: '')
+  end
+
+  def expected_file_delete
+    assignment = Assignment.find(params[:assignment_id])
+    filename = params[:added_input_filenames]
+
+    saved_filenames = assignment.expected_input_filenames.split(';')
+    saved_filenames.delete(filename)
+    assignment.expected_input_filenames = saved_filenames.join(';')
+    assignment.save
+
+    flash[:info] = "#{filename} deleted."
+    redirect_back(fallback_location: '')
   end
 
   private

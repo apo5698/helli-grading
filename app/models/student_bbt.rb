@@ -8,10 +8,10 @@ class StudentBbt < RubricItem
   end
 
   def default_set
-    [{criterion_type: 'Award', criterion: 'Maximum points'},
-     {criterion_type: 'Deduction / ea.', criterion: 'for each student test case with a repeatable criterion, specific ' \
+    [{ criterion_type: 'Award', criterion: 'Maximum points' },
+     { criterion_type: 'Deduction / ea.', criterion: 'for each student test case with a repeatable criterion, specific ' \
 'and correct expected result, and a listed actual result that matches the student\'s output when running the test',
-      response: '# checkstyle error[s]'}]
+       response: '# checkstyle error[s]' }]
   end
 
   def default_description

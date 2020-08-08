@@ -17,8 +17,7 @@
 
     <% criterion_items.each do |criterion| %>
       <%= render partial: 'rubric_items/table_row',
-                 locals: {count: count, form: form,
-                          criterion: criterion, rubric_item: rubric_item} %>
+                 locals: { count: count, form: form, criterion: criterion, rubric_item: rubric_item } %>
       <% count += 1 %>
     <% end %>
     <tr class="text-muted" id="new_row_<%= rubric_item.seq %>">
@@ -28,21 +27,23 @@
     </tr>
     </tbody>
   </table>
-  <script>
-    $(document).on('turbolinks:load', function () {
-      $('tr[id^=\'new_row_\']').unbind().on('click', function () {
-        let str = "<%= escape_javascript render partial: 'rubric_items/table_row',
+  <% content_for(:js) do %>
+    <script>
+      $(document).on('turbolinks:load', function () {
+        $('tr[id^=\'new_row_\']').unbind().on('click', function () {
+          let str = "<%= escape_javascript render partial: 'rubric_items/table_row',
       locals: {count: count, form: form, criterion: Criterion.new, rubric_item: rubric_item} %>";
-        let count = $(this).parent('tbody').children().length;
-        let regex = new RegExp('_<%= count %>', 'g');
-        let substitute = '_' + count;
-        let replacedStr = str.replace(regex, substitute);
-        $(replacedStr).insertBefore(this);
-      });
+          let count = $(this).parent('tbody').children().length;
+          let regex = new RegExp('_<%= count %>', 'g');
+          let substitute = '_' + count;
+          let replacedStr = str.replace(regex, substitute).replace('text-hide', '');
+          $(replacedStr).insertBefore(this);
+        });
 
-      $(document).on('click', '.a-del', function () {
-        $(this).closest('tr').remove();
+        $(document).on('click', '.a-del', function () {
+          $(this).closest('tr').remove();
+        });
       });
-    });
-  </script>
+    </script>
+  <% end %>
 <% end %>

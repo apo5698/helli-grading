@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :catch_denied_access, except: %i[new create]
+
   def new
     render layout: 'pre_application'
   end

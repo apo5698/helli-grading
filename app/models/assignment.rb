@@ -1,4 +1,5 @@
 class Assignment < ApplicationRecord
+  has_one_attached :csv
   has_many :submissions, dependent: :destroy
   belongs_to :rubric, dependent: :destroy
 
@@ -10,5 +11,9 @@ class Assignment < ApplicationRecord
 
   def to_s
     name
+  end
+
+  def self.input_files(assignment_id)
+    find(assignment_id).expected_input_filenames.split(';')
   end
 end

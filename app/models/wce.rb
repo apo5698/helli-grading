@@ -1,4 +1,9 @@
 class Wce < RubricItem
+  enum wce_criterion_type: [FILENAME_OK = "File is named '[filename]'",
+                            CLASSNAME_OK = "Class is named '[classname]'",
+                            COMPILE_OK = 'Program compiles',
+                            RUN_OK = 'Program runs']
+
   def title
     'Write/Compile/Execute'
   end
@@ -8,36 +13,48 @@ class Wce < RubricItem
   end
 
   def default_set
-    [{ criterion_type: 'Award', criterion: 'File is named \'[filename]\'', response: 'File is not named \'[filename]\'' },
-     { criterion_type: 'Award', criterion: 'Class is named \'[class_name]\'', response: 'Class is not named \'[class_name]\'' },
-     { criterion_type: 'Award', criterion: 'Program compiles', response: 'Program compiles' },
-     { criterion_type: 'Award', criterion: 'Program executes', response: 'Program executes' }]
+    [{ criterion_type: Criterion::AWARD, criterion: FILENAME_OK, response: FILENAME_OK },
+     { criterion_type: Criterion::AWARD, criterion: CLASSNAME_OK, response: CLASSNAME_OK },
+     { criterion_type: Criterion::AWARD, criterion: COMPILE_OK, response: COMPILE_OK },
+     { criterion_type: Criterion::AWARD, criterion: RUN_OK, response: RUN_OK }]
   end
 
   def self.model_name
     RubricItem.model_name
   end
 
-  def grade(submission_files)
-    if submission_files.length.zero?
-      { 'Error occurred': "No submission.\n(0 file submitted)" }
-    elsif !submission_files.map { |e| e.filename }.include?(primary_file)
-      { 'Error occurred': "No submission.\n(File '#{primary_file}' not found)" }
+  def grade(file, options)
+    captures_javac = ProcessUtil.javac(file: file)
+    filename = File.basename(file)
+    output = "[#{filename}] - Compile\n"\
+                  "[stdout]\n#{captures_javac[:stdout]}"\
+                  "[stderr]\n#{captures_javac[:stderr]}"\
+                  "[exit status] #{captures_javac[:status].exitstatus}\n\n"
+    captures_java = ProcessUtil.java(file: file)
+    output << "[#{filename}] - Run\n"\
+                  "[stdout]\n#{captures_java[:stdout]}"\
+                  "[stderr]\n#{captures_java[:stderr]}"\
+                  "[exit status] #{captures_java[:status].exitstatus}"
+    output.strip!
+
+    can_compile = captures_java[:status].exitstatus.zero?
+    can_run = captures_javac[:status].exitstatus.zero?
+
+    _points = 0
+    _points += criterions.find_by(criterion: FILENAME_OK).points if File.exist?(File.join(File.dirname(file), primary_file))
+    _points += criterions.find_by(criterion: CLASSNAME_OK).points unless output.include?('ClassNotFoundException')
+    _points += criterions.find_by(criterion: COMPILE_OK).points if can_compile
+    _points += criterions.find_by(criterion: RUN_OK).points if can_run
+
+    success = can_compile && can_run
+    if success
+      _status = GradingItem::SUCCESS
+      _detail = ''
     else
-      result = ''
-      tmpdir = Dir.tmpdir
-      submission_files.select { |f| f.filename.to_s.end_with?('.java') }.each do |f|
-        path = File.join(tmpdir, f.id.to_s, f.filename.to_s)
-        FileUtils.mkdir_p(File.dirname(path))
-        File.open(path, 'wb') { |g| g.write(f.download) }
-
-        exec_output = JavaHelper.javac(file: path)
-        result << "[#{f.filename.to_s}]\n#{exec_output[:stderr]}\n" unless exec_output[:status].exitstatus.zero?
-
-        FileUtils.remove_entry_secure(File.dirname(path))
-      end
-
-      result.empty? ? { 'Graded': 'No issue found' } : { 'Error occurred': result }
+      _status = GradingItem::ERROR
+      _detail = 'Error occurred while compiling/running.'
     end
+
+    { status: _status, detail: _detail, output: output, points: _points }
   end
 end

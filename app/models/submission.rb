@@ -2,6 +2,7 @@ class Submission < ApplicationRecord
   include Rails.application.routes.url_helpers
   belongs_to :student
   has_many_attached :files
+  has_many :grading_items, dependent: :destroy
 
   def status
     stat = 0

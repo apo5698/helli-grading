@@ -1,6 +1,6 @@
 <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
 <% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Grading</li>".html_safe %>
-<%= render partial: '/assignments/header', locals: {html: html} %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
 
 <div class="row">
   <div class="col-lg-3">
@@ -18,17 +18,10 @@
         </ul>
       </nav>
     </div>
-    <div class="row">
-      <div class="col-lg-6">
-        <%= render partial: '/grading/output_table', locals: { table_for: :graded } %>
-      </div>
-      <div class="col-lg-6">
-        <%= render partial: '/grading/output_table', locals: { table_for: :other } %>
-      </div>
-    </div>
+    <%= render partial: 'grading/options' %>
+    <%= render partial: '/grading/output_table' %>
     <div class="float-right">
-      <button class="btn btn-primary">Grade all</button>
-      <button class="btn btn-secondary">Next</button>
+      <%= link_to 'Reset grading status', { controller: 'grading', action: 'reset', rubric_id: @rubric_item.id }, method: :delete %>
     </div>
   </div>
 </div>

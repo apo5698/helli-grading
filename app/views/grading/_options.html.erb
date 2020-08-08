@@ -1,0 +1,157 @@
+<%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/grading/run?id=#{@rubric_item.id}") do |f| %>
+  <% type = @rubric_item.type %>
+  <div class="form-group">
+    <% case type %>
+    <% when 'Wce' %>
+      <!-- TODO: implement -->
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[wce][stdin]', class: 'custom-control-input', disabled: true) %>
+        <label class="custom-control-label" for="options[wce][stdin]">
+          Keyboard input
+          <span data-toggle="tooltip" title="Read input from stdin (System.in).">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <!-- TODO: implement -->
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[wce][parameter]', class: 'custom-control-input', disabled: true) %>
+        <label class="custom-control-label" for="options[wce][parameter]">
+          Argument(s)
+          <span data-toggle="tooltip" title="Using command line arguments.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <!-- TODO: implement -->
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[wce][match]', class: 'custom-control-input', disabled: true) %>
+        <label class="custom-control-label" for="options[wce][match]">
+          Output matching
+          <span data-toggle="tooltip" title="Match actual output with expected.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+        <div class="d-lg-flex" id="matching-level-slider" style="display: none">
+          <%= f.range_field('options[wce][match-level]', class: 'custom-range', min: 1, max: 3, step: 1, list: 'level') %>
+          <div class="col-lg-6">
+            <%= f.label('options[wce][match-level]', 'Match text only', class: 'mr-2 mb-0') %>
+            <a href="/help" target="_blank" data-toggle="tooltip" title="What is this?">
+              <i class="far fa-question-circle"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    <% when 'Checkstyle' %>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][magic]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][magic]">
+          Magic number
+          <span data-toggle="tooltip" title="Avoid magic numbers.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][javadoc]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][javadoc]">
+          Javadoc comment
+          <span data-toggle="tooltip" title="Document each instance variable, constant, method, and class with Javadoc style comments.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][indentation]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][indentation]">
+          Indentation level
+          <span data-toggle="tooltip" title="Indent using 4 spaces.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][length]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][length]">
+          Line length
+          <span data-toggle="tooltip" title="Keep lines under 100 characters in length.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][pattern]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][pattern]">
+          Variable name
+          <span data-toggle="tooltip" title="Begin variable and method names with lowercase letters and do not use underscores.
+                                             Pattern: '^[a-z][a-zA-Z0-9]*$'">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][tab]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][tab]">
+          Tab character
+          <span data-toggle="tooltip" title="Use spaces instead of tabs for indentation.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label></div>
+      <div class="custom-control custom-checkbox">
+        <%= f.check_box('options[checkstyle][whitespace]', class: 'custom-control-input', checked: true) %>
+        <label class="custom-control-label" for="options[checkstyle][whitespace]">
+          Whitespace
+          <span data-toggle="tooltip" title="Embed white space between operators and operands in arithmetic and logic expressions.">
+            <i class="far fa-question-circle"></i>
+          </span>
+        </label>
+      </div>
+      <div class="custom-control mt-2">
+        <a href="https://pages.github.ncsu.edu/engr-csc116-staff/CSC116-Materials/course-resources/style-guidelines/formatting-code.html">
+          <u>CSC 116 Java Style Guidelines</u>
+        </a>
+      </div>
+    <% else
+         ''
+       end %>
+  </div>
+  <div class="form-group d-flex align-items-center">
+    <% spinner = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>' %>
+    <%= f.button('Run', class: 'btn btn-primary', data: { disable_with: "#{spinner} Running..." }) %>
+    <span class="ml-2" id="error"></span>
+  </div>
+<% end %>
+<% content_for(:js) do %>
+  <script>
+    $(document).on('turbolinks:load', () => {
+      $('input[id="options[wce][match]"]').on('click', function () {
+        if ($(this).prop('checked'))
+          $('div#matching-level-slider').show();
+        else
+          $('div#matching-level-slider').hide();
+      });
+
+      const matchingLevel = val => {
+        val = parseInt(val);
+        switch (val) {
+          case 1:
+            return 'Allow differences';
+          case 2:
+            return 'Match text only';
+          case 3:
+            return 'Strict match';
+          default:
+            return '';
+        }
+      };
+
+      $('input[id="options[wce][match-level]"]').on('change', function () {
+        $('label[for="options[wce][match-level]"]').html(matchingLevel($(this).val()));
+      });
+    });
+
+    $(document).on('ajax:error', () => {
+      $('#error').html('Error occurred during grading. Please rerun.');
+    });
+  </script>
+<% end %>
