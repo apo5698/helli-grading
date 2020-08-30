@@ -2,19 +2,26 @@ class GradingController < ApplicationController
   def index
     if @rubric_item.nil?
       flash[:error] = 'No rubric specified.'
-      redirect_to("/courses/#{@course.id}/assignments/#{@assignment.id}/rubric")
+      redirect_to(controller: :rubrics, action: :show)
+    end
+
+    @submissions = Submission.where(assignment_id: params[:assignment_id])
+    if @submissions.empty?
+      flash[:error] = 'No submission uploaded.'
+      redirect_to(controller: :submissions)
     end
   end
 
   def run
-    if @grading_items.nil?
-      flash[:error] = 'No input file specified.'
+    if @grading_items.empty?
+      flash[:error] = 'No submission uploaded.'
+      redirect_to(controller: :submissions)
     else
       options = params.require(:options).permit!.to_h
       @grading_items.each { |item| item.grade(options) }
-      flash[:success] = "Grading complete."
+      flash[:success] = "Grading #{RubricItem.find(params[:id])} complete."
+      redirect_back(fallback_location: '')
     end
-    redirect_back(fallback_location: '')
   end
 
   def run_all; end

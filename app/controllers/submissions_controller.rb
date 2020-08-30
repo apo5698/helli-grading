@@ -1,7 +1,5 @@
 class SubmissionsController < ApplicationController
-  def index
-    @submissions = Submission.where(assignment_id: params[:assignment_id])
-  end
+  def index; end
 
   def upload
     zip_file = params[:zip]
@@ -46,5 +44,10 @@ class SubmissionsController < ApplicationController
       flash[:success] = 'Selected submission(s) deleted.'
     end
     redirect_back(fallback_location: '')
+  end
+
+  private def set_variables
+    super
+    @submissions = Submission.where(assignment_id: params[:assignment_id])
   end
 end

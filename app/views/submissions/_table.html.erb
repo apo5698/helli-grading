@@ -21,7 +21,7 @@
           <tr>
             <th scope="row">
               <div class="custom-control custom-checkbox">
-                <%= f.check_box("submissions[#{submission.id}]", class: 'custom-control-input', required: true) %>
+                <%= f.check_box("submissions[#{submission.id}]", class: 'custom-control-input') %>
                 <%= f.label("submissions[#{submission.id}]", 0.chr, class: 'custom-control-label') %>
               </div>
             </th>
@@ -51,19 +51,19 @@
     <div class="col-lg-12">
       <button type="button" class="btn btn-secondary" id="select-all">Select / deselect all</button>
       <div class="form-group float-right">
-        <%= f.submit('Delete', class: 'btn btn-primary') %>
+        <%= f.submit('Delete', data: { disable_with: 'Deleting...' }, class: 'btn btn-primary') %>
       </div>
     </div>
   </div>
 <% end %>
-<% content_for(:js) do %>
-  <script>
-    $(document).on('turbolinks:load', () => {
-      $('input:submit').on('click', () => {
-        if ($('.custom-file-label').html().trim() !== 'Choose file') {
-          $('.toast').toast('show');
-        }
-      });
-    });
-  </script>
-<% end %>
+<%# content_for(:js) do %>
+<!--  <script>-->
+<!--    $(document).on('turbolinks:load', () => {-->
+<!--      $('input:submit').on('click', () => {-->
+<!--        if ($('.custom-file-label').html().trim() !== 'Choose file') {-->
+<!--          $('.toast').toast('show');-->
+<!--        }-->
+<!--      });-->
+<!--    });-->
+<!--  </script>-->
+<%# end %>

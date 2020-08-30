@@ -20,8 +20,8 @@ Rails.application.routes.draw do
     put :share, action: :share
 
     resources :assignments do
-      post 'expected_file_add'
-      delete 'expected_file_delete'
+      post :expected_file_add
+      delete :expected_file_delete
 
       resources :rubrics, path: :rubric, only: [] do
         collection do
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
       resources :submissions, only: %i[index destroy] do
         post :upload, action: :replace
         collection do
-          get :download_multiple
+          get :download_all
           post :destroy_selected
           post :upload
         end
@@ -58,9 +58,9 @@ Rails.application.routes.draw do
 
       resources :reports, path: :report, only: [:index] do
         collection do
-          get :export
-          get :export_aggregated
+          post :export
           post :upload
+          delete :delete
         end
       end
     end

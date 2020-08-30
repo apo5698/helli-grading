@@ -34,6 +34,7 @@ class GradingItem < ApplicationRecord
     self.status_detail = result[:detail]
     self.output = result[:output]
     self.points_received = result[:points]
+    self.error_count = result[:error_count]
     self.save
   end
 end

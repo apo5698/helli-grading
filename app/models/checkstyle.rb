@@ -16,15 +16,16 @@ class Checkstyle < RubricItem
     RubricItem.model_name
   end
 
-  def grade(file, options)
-    captures = ProcessUtil.checkstyle(file)
-    filename = file.filename
+  def grade(path, options)
+    captures = ProcessUtil.checkstyle(path)
+    filename = File.basename(path)
     output = "[#{filename}] - Checkstyle\n"\
              "[stdout]\n" << captures[:stdout]
     output.strip!
 
+
     options = options[:checkstyle].transform_values(&:to_i)
-    errors = output.split("\n").grep(/#{filename.to_s}:.+/)
+    errors = output.split("\n").grep(/#{filename}:.+/)
     if errors.count > 0
       errors = errors.grep_v(/magic number/) if options[:magic].zero?
       errors = errors.grep_v(/Javadoc/) if options[:javadoc].zero?
@@ -35,19 +36,19 @@ class Checkstyle < RubricItem
       errors = errors.grep_v(/whitespace/) if options[:whitespace].zero?
     end
 
-    count = errors.count
-    _detail = "#{count} checkstyle error"
-    if count.zero?
-      _status = GradingItem::SUCCESS
+    error_count = errors.count
+    detail = "#{error_count} checkstyle error"
+    if error_count.zero?
+      status = GradingItem::SUCCESS
     else
-      _status = GradingItem::ERROR
-      _detail << 's' if count > 1
+      status = GradingItem::ERROR
+      detail << 's' if error_count > 1
     end
 
-    _points = criterions.where(criterion_type: Criterion::AWARD).pluck(:points).sum
-    _points -= criterions.where(criterion_type: Criterion::DEDUCTION_EACH).pluck(:points).sum * count
-    _points = 0 if _points < 0
+    points = criterions.where(criterion_type: Criterion::AWARD).pluck(:points).sum
+    points -= criterions.where(criterion_type: Criterion::DEDUCTION_EACH).pluck(:points).sum * error_count
+    points = 0 if points < 0
 
-    { status: _status, detail: _detail, output: errors.join("\n"), points: _points }
+    { status: status, detail: detail, output: output, points: points, error_count: error_count }
   end
 end

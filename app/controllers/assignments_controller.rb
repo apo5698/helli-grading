@@ -67,7 +67,7 @@ class AssignmentsController < ApplicationController
       saved_filenames.unshift(filename)
       assignment.expected_input_filenames = saved_filenames.join(';')
       assignment.save
-      flash[:info] = "#{filename} added."
+      flash[:success] = "#{filename} added."
     end
 
     redirect_back(fallback_location: '')
@@ -82,7 +82,7 @@ class AssignmentsController < ApplicationController
     assignment.expected_input_filenames = saved_filenames.join(';')
     assignment.save
 
-    flash[:info] = "#{filename} deleted."
+    flash[:success] = "#{filename} deleted."
     redirect_back(fallback_location: '')
   end
 

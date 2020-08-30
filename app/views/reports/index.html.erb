@@ -7,6 +7,24 @@
     <%= render partial: '/assignments/sidebar' %>
   </div>
   <div class="col-lg-9">
-    <%= render 'upload' %>
+    <div class="row mb-3">
+      <div class="col-lg-8">
+        <%= render 'upload' %>
+      </div>
+    </div>
+    <% unless @csv_in.nil? %>
+      <div class="row mb-3">
+        <div class="col">
+          <%= render 'settings' %>
+        </div>
+      </div>
+    <% end %>
+    <% unless @csv_out.nil? %>
+      <div class="row mb-3">
+        <div class="col">
+          <%= render 'preview' %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

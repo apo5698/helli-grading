@@ -1,6 +1,7 @@
 class Assignment < ApplicationRecord
-  has_one_attached :csv
+  has_one_attached :gradesheet
   has_many :submissions, dependent: :destroy
+  has_many :ts_files, dependent: :destroy
   belongs_to :rubric, dependent: :destroy
 
   enum assignment_type: %i[Exercise Project Homework]

@@ -76,7 +76,7 @@ module ActiveStorageUtil
 
   # Returns the path of where the attachment will be downloaded.
   def self.download_dir(attachment_id)
-    File.join(Dir.tmpdir, 'ags_temp', attachment_id.to_s)
+    Rails.root.join('tmp', 'storage', attachment_id.to_s)
   end
 
   # Downloads one attachment to temp directory and returns its path.
@@ -96,6 +96,8 @@ module ActiveStorageUtil
       path = download_dir(a.id)
       FileUtils.mkdir_p(path)
       file_path = File.join(path, a.filename.to_s)
+      next if File.exist?(file_path)
+
       File.open(file_path, 'wb') do |f|
         f.write(a.download)
       end

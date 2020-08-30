@@ -69,3 +69,6 @@ yarn-debug.log*
 # RubyMine
 /.idea
 /config/master.key
+
+# API
+/public/api

@@ -35,6 +35,9 @@
         <span class="badge badge-<%= color %>" data-toggle="tooltip" data-placement="right" title="<%= grading_item.status_detail %>">
           <%= grading_item.status %>
         </span>
+        <% if grading_item.status == GradingItem::ERROR %>
+          <span class="badge badge-primary"><%= grading_item.error_count %></span>
+        <% end %>
       </td>
       <td>
         <% output = grading_item.output.blank? ? 'None' : grading_item.output %>

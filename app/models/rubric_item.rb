@@ -46,7 +46,7 @@ class RubricItem < ApplicationRecord
 
   # Grades files in a submission according to the corresponding rubric item.
   # Returns a hash: { :status, :detail, :output, :points }
-  def grade(file, options) end
+  def grade(path, options) end
 end
 
 require_dependency('checkstyle')
