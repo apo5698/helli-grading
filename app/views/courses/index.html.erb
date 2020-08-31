@@ -1,0 +1,65 @@
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active">Courses</li>
+</ol>
+
+<div class="pt-3">
+  <div class="row">
+    <div class="col-lg-12 pb-3">
+      <h2>Courses</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <% @courses.each do |course| %>
+      <div class="col-lg-4 pb-3">
+        <div class="card h-100">
+          <div style="height: 100px; width: 100%; display: block; background-color: #CCCCCC"></div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted"><%= course.term %></h6>
+            <h4 class="card-title">
+              <a href="/courses/<%= course.id %>/assignments"><%= course.to_s %></a></h4>
+            <div class="progress">
+              <% progress = 60 %>
+              <div class="progress-bar" role="progressbar" style="width: <%= progress %>%;" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
+                <span class="text-white"><%= progress %>%</span>
+              </div>
+            </div>
+            <% url = "/courses/#{course.id}/edit" %>
+            <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
+            <a href="#" class="card-link">Share</a>
+            <% url = "/courses/#{course.id}" %>
+            <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="col-lg-4 pb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <!--center the 'plus' button-->
+          <div class="center h-100">
+            <a href="/courses/new" class=" stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
+              <i class="fas fa-plus-circle fa-4x"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% content_for(:js) do %>
+  <script>
+    let modalWindow = $('#modal-window');
+    <% if flash[:modal_error] %>
+    modalWindow.find('.modal-content').html("<%= j render partial: 'courses/edit' %>");
+    modalWindow.removeClass('fade');
+    modalWindow.modal('show');
+    <% end %>
+
+    $(document).ready(function () {
+      modalWindow.on('hidden.bs.modal', function () {
+        $(this).addClass('fade');
+      });
+    });
+  </script>
+<% end %>

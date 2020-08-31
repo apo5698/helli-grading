@@ -65,3 +65,10 @@ yarn-debug.log*
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep
+
+# RubyMine
+/.idea
+/config/master.key
+
+# API
+/public/api

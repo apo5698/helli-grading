@@ -1,0 +1,14 @@
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+  <% url = "/courses/#{@course.id}/assignments/" %>
+  <li class="breadcrumb-item"><a href=<%= url %>><%= @course.to_s %></a></li>
+  <%= html %>
+</ol>
+
+<div class="pt-3">
+  <div class="row">
+    <div class="col-lg-12 pb-3">
+      <h1><%= @assignment.name %></h1>
+    </div>
+  </div>
+</div>

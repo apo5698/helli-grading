@@ -1,0 +1,69 @@
+<%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/destroy_selected", id: 'submissions_table') do |f| %>
+  <div class="row">
+    <div class="col-lg-12">
+      <table class="table table-hover">
+        <thead>
+        <tr class="table-active">
+          <th scope="col" class="bootstrap-overrides">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="select-all">
+              <label class="custom-control-label" for="select-all"></label>
+            </div>
+          </th>
+          <th scope="col" class="bootstrap-overrides">Last / first name</th>
+          <th scope="col" class="bootstrap-overrides">Grade</th>
+          <th scope="col" class="bootstrap-overrides">File submissions</th>
+          <th scope="col" class="bootstrap-overrides">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @submissions.each do |submission| %>
+          <tr>
+            <th scope="row">
+              <div class="custom-control custom-checkbox">
+                <%= f.check_box("submissions[#{submission.id}]", class: 'custom-control-input') %>
+                <%= f.label("submissions[#{submission.id}]", 0.chr, class: 'custom-control-label') %>
+              </div>
+            </th>
+            <td>
+              <%= submission.status %> <%= submission.student %>
+            </td>
+            <td>
+              <button type="button" class="btn btn-outline-primary btn-sm">Grade</button>
+              <br/>
+              0 / 100
+            </td>
+            <td><%= submission.file_submissions %></td>
+            <td>
+              <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a>
+              <% delete_url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/#{submission.id}" %>
+              <a href="<%= delete_url %>" data-method="delete" data-toggle="tooltip" data-original-title="Delete submission">
+                <i class="far fa-trash-alt fa-150"></i>
+              </a>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <button type="button" class="btn btn-secondary" id="select-all">Select / deselect all</button>
+      <div class="form-group float-right">
+        <%= f.submit('Delete', data: { disable_with: 'Deleting...' }, class: 'btn btn-primary') %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%# content_for(:js) do %>
+<!--  <script>-->
+<!--    $(document).on('turbolinks:load', () => {-->
+<!--      $('input:submit').on('click', () => {-->
+<!--        if ($('.custom-file-label').html().trim() !== 'Choose file') {-->
+<!--          $('.toast').toast('show');-->
+<!--        }-->
+<!--      });-->
+<!--    });-->
+<!--  </script>-->
+<%# end %>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AGS</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= render partial: '/layouts/bootstrap' %>
+</head>
+
+<body>
+<div class="container">
+  <%= render partial: "/layouts/flash" %>
+  <div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+      <div class="center pb-3">
+        <i class="fas fa-toilet-paper fa-6x"></i>
+      </div>
+      <div class="card">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

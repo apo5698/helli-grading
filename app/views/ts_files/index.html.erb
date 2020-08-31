@@ -1,0 +1,57 @@
+<% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
+<% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>TS Files</li>".html_safe %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
+
+<div class="row">
+  <div class="col-lg-3">
+    <%= render partial: '/assignments/sidebar' %>
+  </div>
+  <div class="col-lg-9">
+    <%= render 'upload' %>
+    <% unless @ts_files.blank? %>
+      <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/ts_files/destroy_selected") do |f| %>
+        <div class="row">
+          <div class="col-lg-12 mb-3">
+            <div class="card">
+              <div class="card-header">
+                Uploaded files
+              </div>
+              <ul class="list-group list-group-flush">
+                <% @ts_files.each do |ts_file| %>
+                  <li class="list-group-item justify-content-between">
+                    <div class="custom-control custom-checkbox">
+                      <%= f.check_box("files[#{ts_file.id}]", class: 'custom-control-input') %>
+                      <%= f.label("files[#{ts_file.id}]", ts_file.filename, class: 'custom-control-label') %>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <button type="button" class="btn btn-secondary" id="select-all">Select / deselect all</button>
+            <div class="form-group float-right">
+              <%= f.submit('Delete', class: 'btn btn-primary') %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      You have not uploaded any files yet.
+    <% end %>
+  </div>
+</div>
+<% content_for(:js) do %>
+  <script>
+    $(document).on('turbolinks:load', () => {
+      $('input:submit').on('click', () => {
+        if ($('.custom-file-label').html().trim() !== 'Choose file') {
+          $('.toast').toast('show');
+        }
+      });
+    });
+  </script>
+<% end %>
+

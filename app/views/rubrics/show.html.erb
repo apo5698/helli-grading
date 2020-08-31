@@ -1,0 +1,47 @@
+<% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
+<% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Rubric</li>".html_safe %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
+
+<div class="row">
+  <div class="col-lg-3">
+    <%= render partial: '/assignments/sidebar' %>
+  </div>
+  <div class="col-lg-9">
+    <% if @rubric_items.count > 0 %>
+      <div class="accordion" id="rubric_items_accordion">
+        <div class="card">
+          <div id="sortable">
+            <% @rubric_items.each do |rubric_item| %>
+              <div id="<%= rubric_item.title %>">
+                <%= render partial: 'rubric_items/item', locals: { rubric_item: rubric_item } %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      You have not added any rubric items yet.
+    <% end %>
+    <%= form_with model: [@course, @assignment, RubricItem.new] do |f| %>
+      <%= f.hidden_field :seq, value: @rubric_items.count + 1 %>
+      <div class="row d-flex justify-content-center" style="padding: 0.75rem 1.25rem">
+        <div class="col-lg-4">
+          <div class="input-group">
+            <% subclasses = RubricItem.subclasses %>
+            <% types = Hash.new %>
+            <% subclasses.each { |subclass| types[subclass.new.title] = subclass.name } %>
+            <%= f.select :type, types, {}, class: "custom-select" %>
+            <div class="input-group-append">
+              <%= f.submit '+ New', class: "btn btn-outline-secondary", data: { toggle: "tooltip", title: "Be sure you have all items saved before creating new ones." } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  $('#sortable').sortable();
+  $('#sortable').disableSelection();
+</script>

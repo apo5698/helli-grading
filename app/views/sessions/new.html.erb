@@ -1,0 +1,64 @@
+<div class="card-body">
+  <%= form_with url: '/sessions' do |form| %>
+    <fieldset>
+      <legend>Sign in</legend>
+      <div class="form-group">
+        <%= form.label 'email', 'Email' %>
+        <%= form.text_field 'email', class: "form-control" %>
+        <small id="email-help" class="form-text text-muted">We'll share your email and your password with everyone
+          else.</small>
+      </div>
+      <div class="form-group">
+        <%= form.label 'password', 'Password' %>
+        <%= form.password_field 'password', class: "form-control" %>
+      </div>
+      <%= link_to 'Forgot your password?', '#', data: { target: '#modal-window', toggle: 'modal' } %>
+      <%= form.submit "Login", class: "btn btn-primary float-right" %>
+    </fieldset>
+  <% end %>
+</div>
+<div class="card-footer center">
+  Don't have an account?&nbsp;
+  <strong><a href="/users/new">Sign up!</a></strong>
+</div>
+
+<!-- Modal for inputting email-->
+<div class="modal hide fade" id="modal-window" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= form_with url: "/users/reset_password", method: "get", local: true do |form| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="assignmentModalLabel">Forgot your password?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= render partial: "/layouts/modal_flash" %>
+          <div class="form-group">
+            Please enter your email address below and we'll email you a temporary password.
+          </div>
+          <div class="form-group">
+            <%= form.label :recovery_email, "Email" %>
+            <%= form.email_field :recovery_email, class: "form-control", value: @recovery_email %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modal-close">Close</button>
+          <%= form.submit "Reset my password", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% content_for(:js) do %>
+  <script>
+    <% if flash[:modal_error] %>
+    $('#modal-window').removeClass("fade");
+    $("#modal-window").modal('show');
+    <% end %>
+    $('button#modal-close').on('click', () => {
+      $('#modal-window').addClass('fade');
+    });
+  </script>
+<% end %>

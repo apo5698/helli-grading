@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-lg-6">
+    <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/expected_file_add", class: 'mb-3') do |f| %>
+      <div class="form-group">
+        <%= f.label(:expected_input_filename, 'Enter a input filename') %>
+        <div class="d-flex align-items-start">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            <% input_pattern = 'Filename uses CamelCase and does not need to include ".java" at the end. Pattern: ^[A-Z0-9]\w*$' %>
+            <%= f.text_field(:expected_input_filename, class: 'form-control', placeholder: 'HelloWorld', pattern: '^[A-Z0-9]\w*$', title: input_pattern, required: true) %>
+            <div class="input-group-append">
+              <span class="input-group-text rounded-right mr-2">.java</span>
+            </div>
+          </div>
+          <%= f.submit('Add', class: 'btn btn-primary') %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-6">
+    <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/expected_file_delete", method: :delete) do |f| %>
+      <div class="form-group">
+        <%= f.label(:added_input_filenames, 'Added input files') %>
+        <div class="d-flex">
+          <%= f.select(:added_input_filenames, @assignment.expected_input_filenames.split(';'), {}, { class: 'form-control mr-2', required: true }) %>
+          <%= f.submit('Delete', class: 'btn btn-secondary') %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AGS</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <%= render partial: '/layouts/bootstrap' %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= yield :js %>
+</head>
+
+<body>
+<%= render partial: '/layouts/header' %>
+<div class="container">
+  <%= render partial: '/layouts/flash' %>
+  <%= yield %>
+  <%= render partial: '/layouts/footer' %>
+</div>
+<%= render partial: '/layouts/modal' %>
+</body>
+</html>

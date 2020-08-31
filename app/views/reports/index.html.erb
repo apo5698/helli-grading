@@ -1,0 +1,30 @@
+<% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
+<% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Report</li>".html_safe %>
+<%= render partial: '/assignments/header', locals: { html: html } %>
+
+<div class="row">
+  <div class="col-lg-3 mb-5">
+    <%= render partial: '/assignments/sidebar' %>
+  </div>
+  <div class="col-lg-9">
+    <div class="row mb-3">
+      <div class="col-lg-8">
+        <%= render 'upload' %>
+      </div>
+    </div>
+    <% unless @csv_in.nil? %>
+      <div class="row mb-3">
+        <div class="col">
+          <%= render 'settings' %>
+        </div>
+      </div>
+    <% end %>
+    <% unless @csv_out.nil? %>
+      <div class="row mb-3">
+        <div class="col">
+          <%= render 'preview' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
