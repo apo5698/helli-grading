@@ -1,0 +1,68 @@
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][magic]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][magic]">
+    Magic number
+    <span data-toggle="tooltip" title="Avoid magic numbers.">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label>
+</div>
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][javadoc]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][javadoc]">
+    Javadoc comment
+    <span data-toggle="tooltip" title="Document each instance variable, constant, method, and class with Javadoc style comments.">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label>
+</div>
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][indentation]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][indentation]">
+    Indentation level
+    <span data-toggle="tooltip" title="Indent using 4 spaces.">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label>
+</div>
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][length]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][length]">
+    Line length
+    <span data-toggle="tooltip" title="Keep lines under 100 characters in length.">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label>
+</div>
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][pattern]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][pattern]">
+    Variable name
+    <span data-toggle="tooltip" title="Begin variable and method names with lowercase letters and do not use underscores.
+                                       Pattern: '^[a-z][a-zA-Z0-9]*$'">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label>
+</div>
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][tab]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][tab]">
+    Tab character
+    <span data-toggle="tooltip" title="Use spaces instead of tabs for indentation.">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label></div>
+<div class="custom-control custom-checkbox">
+  <%= form.check_box('options[checkstyle][whitespace]', class: 'custom-control-input', checked: true) %>
+  <label class="custom-control-label" for="options[checkstyle][whitespace]">
+    Whitespace
+    <span data-toggle="tooltip" title="Embed white space between operators and operands in arithmetic and logic expressions.">
+      <i class="far fa-question-circle"></i>
+    </span>
+  </label>
+</div>
+<div class="custom-control mt-2">
+  <a href="https://pages.github.ncsu.edu/engr-csc116-staff/CSC116-Materials/course-resources/style-guidelines/formatting-code.html">
+    <u>CSC 116 Java Style Guidelines</u>
+  </a>
+</div>
