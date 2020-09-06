@@ -26,16 +26,18 @@ module DependenciesUtil
   # Returns the absolute path of a dependency; +nil+ if given dependency does not exist.
   # If +version+ is specified and it exists, returns the absolute path at the given version;
   # otherwise returns it with the version declared in dependencies.yml.
-  # Version should be an empty string if it uses git.
-  def self.path(lib, version = nil)
+  def self.path(lib, version: nil)
     info = lib_info(lib)
     return nil if info.nil?
 
-    current = info['version']
-    version ||= current
-    lib_path = @lib_root.join(lib)
-    ver_path = lib_path.join(version.to_s)
-    File.exist?(ver_path) ? ver_path : lib_path.join(current.to_s)
+    current_version = info['version']
+    type = info['type']
+    version ||= current_version
+
+    path = @lib_root.join(type, lib)
+    path = path.join(version.to_s) if type != 'git'
+    path = path.join(info['executable'] || '')
+    path.to_s
   end
 
   private
