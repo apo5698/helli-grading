@@ -24,15 +24,13 @@ class Wce < RubricItem
   end
 
   def grade(path, options)
-    options = options[:wce]
-
-    captures_javac = ProcessUtil.javac(file: path, args: options[:argument_data_javac])
+    captures_javac = ProcessUtil.javac(file: path)
     filename = File.basename(path)
     output = "[#{filename}] - Compile\n"\
                   "[stdout]\n#{captures_javac[:stdout]}\n"\
                   "[stderr]\n#{captures_javac[:stderr]}\n"\
                   "[exit status] #{captures_javac[:status].exitstatus}\n\n"
-    captures_java = ProcessUtil.java(file: path, args: options[:argument_data_java], stdin: options[:stdin_data])
+    captures_java = ProcessUtil.java(file: path)
     output << "[#{filename}] - Run\n"\
                   "[stdout]\n#{captures_java[:stdout]}\n"\
                   "[stderr]\n#{captures_java[:stderr]}\n"\

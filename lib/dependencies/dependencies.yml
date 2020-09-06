@@ -1,11 +1,10 @@
 cs-checkstyle:
   name: cs-checkstyle
   description: An automated style checker.
-  version: 16
+  version: 15
   website: https://github.ncsu.edu/engr-csc116-staff/cs-checkstyle
   source: https://github.ncsu.edu/engr-csc116-staff/cs-checkstyle
   type: git
-  executable: checkstyle
 drawing-panel:
   name: DrawingPanel
   description: Simplified Java drawing window class to accompany Building Java Programs textbook and associated materials.

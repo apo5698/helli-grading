@@ -3,7 +3,6 @@ class GradingController < ApplicationController
     if @rubric_item.nil?
       flash[:error] = 'No rubric specified.'
       redirect_to(controller: :rubrics, action: :show)
-      return
     end
 
     @submissions = Submission.where(assignment_id: params[:assignment_id])

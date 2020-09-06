@@ -72,4 +72,4 @@ yarn-debug.log*
 
 # API
 /public/api
-/lib/dependencies/direct
+/lib/dependencies
