@@ -35,7 +35,7 @@ module ProcessUtil
 
   # Runs checkstyle on a Java file (*.java). checkstyle does not generate errors to stderr but stdout.
   def self.checkstyle(file)
-    path = DependenciesUtil.path('cs-checkstyle', '').join('checkstyle').to_s
+    path = DependenciesUtil.path('cs-checkstyle')
     output = exec(path, file)
     output[:stdout] = output[:stdout].gsub(file, File.basename(file))
     output
