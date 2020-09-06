@@ -2,6 +2,7 @@
   <thead>
   <tr class="table-active">
     <th scope="col" class="bootstrap-overrides">Student</th>
+    <th scope="col" class="bootstrap-overrides">Filename</th>
     <th scope="col" class="bootstrap-overrides">Points received</th>
     <th scope="col" class="bootstrap-overrides">Status</th>
     <th scope="col" class="bootstrap-overrides">stdout</th>
@@ -29,6 +30,12 @@
         <%= grading_item.submission.student %>
       </td>
       <td>
+        <% content = grading_item.file_content || 'None' %>
+        <a href="javascript:void(0);" data-toggle="tooltip" data-type="code" title="<%= content %>">
+          <%= grading_item.filename %>
+        </a>
+      </td>
+      <td>
         <%= grading_item.points_received.to_f %> / <%= @rubric_item.points %>
       </td>
       <td>
@@ -47,3 +54,8 @@
   <% end %>
   </tbody>
 </table>
+<style>
+  .tooltip-inner {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+</style>

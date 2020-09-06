@@ -28,6 +28,9 @@ class GradingItem < ApplicationRecord
     else
       file_path = ActiveStorageUtil.download_one(attachment)
       result = rubric_item.grade(file_path, options)
+
+      self.filename = File.basename(file_path)
+      self.file_content = File.read(file_path)
     end
 
     self.status = result[:status]
