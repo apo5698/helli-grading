@@ -11,6 +11,8 @@ module ReportsHelper
   end
 
   def self.export(assignment, csv, col_name, col_grade, col_feedback)
+    raise NotImplementedError
+
     # TODO: implement
     # filename = assignment.gradesheet.filename.to_s.sub('.csv', '_export.csv')
     # grading_items = GradingItem.where(rubric_item_id: RubricItem.find_by(rubric_id: assignment.rubric_id))
