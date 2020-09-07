@@ -19,23 +19,21 @@
     <%= render partial: 'settings/dependencies' %>
   </div>
 </div>
-<% content_for(:js) do %>
-  <script>
-    $(document).on('turbolinks:load', () => {
-      $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-        localStorage.setItem('settingsActiveTab', $(this).attr('href'));
-      });
-
-      let tab = localStorage.getItem('settingsActiveTab');
-      if (tab) {
-        $('a[href="' + tab + '"]').tab('show');
-      } else {
-        $('a[href="#general"]').tab('show');
-      }
+<script>
+  $(document).on('turbolinks:load', () => {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+      localStorage.setItem('settingsActiveTab', $(this).attr('href'));
     });
 
-    $(window).on('beforeunload', () => {
-      localStorage.removeItem('settingsActiveTab');
-    });
-  </script>
-<% end %>
+    let tab = localStorage.getItem('settingsActiveTab');
+    if (tab) {
+      $('a[href="' + tab + '"]').tab('show');
+    } else {
+      $('a[href="#general"]').tab('show');
+    }
+  });
+
+  $(window).on('beforeunload', () => {
+    localStorage.removeItem('settingsActiveTab');
+  });
+</script>

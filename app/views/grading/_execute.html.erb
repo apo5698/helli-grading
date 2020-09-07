@@ -1,4 +1,3 @@
-<!-- TODO: implement -->
 <div class="custom-control custom-checkbox mb-1">
   <%= form.check_box('options[wce][stdin]', class: 'custom-control-input') %>
   <label class="custom-control-label d-inline" for="options[wce][stdin]" aria-describedby="options-wce-stdin-help">
@@ -12,7 +11,6 @@
     <small id="stdin-help" class="form-text text-muted">Separated by newlines</small>
   </div>
 </div>
-<!-- TODO: implement -->
 <div class="custom-control custom-checkbox mb-1">
   <%= form.check_box('options[wce][argument]', class: 'custom-control-input') %>
   <label class="custom-control-label" for="options[wce][argument]" aria-describedby="options-wce-argument-help">
@@ -52,47 +50,45 @@
     </div>
   </div>
 </div>
-<% content_for(:js) do %>
-  <script>
-    $(document).on('turbolinks:load', () => {
-      $('input[name="options[wce][stdin]"]').change(function () {
-        if ($(this).prop('checked'))
-          $('div#stdin-data').show();
-        else
-          $('div#stdin-data').hide();
-      });
-
-      $('input[name="options[wce][argument]"]').change(function () {
-        if ($(this).prop('checked'))
-          $('div#argument-data').show();
-        else
-          $('div#argument-data').hide();
-      });
-
-      $('input[name="options[wce][match]"]').change(function () {
-        if ($(this).prop('checked'))
-          $('div#matching-level-slider').show();
-        else
-          $('div#matching-level-slider').hide();
-      });
-
-      const matchingLevel = val => {
-        val = parseInt(val);
-        switch (val) {
-          case 1:
-            return 'Allow differences';
-          case 2:
-            return 'Match text only';
-          case 3:
-            return 'Strict match';
-          default:
-            return '';
-        }
-      };
-
-      $('input[id="options[wce][match-level]"]').on('change', function () {
-        $('label[for="options[wce][match-level]"]').html(matchingLevel($(this).val()));
-      });
+<script>
+  $(document).on('turbolinks:load', () => {
+    $('input[name="options[wce][stdin]"]').change(function () {
+      if ($(this).prop('checked'))
+        $('div#stdin-data').show();
+      else
+        $('div#stdin-data').hide();
     });
-  </script>
-<% end %>
+
+    $('input[name="options[wce][argument]"]').change(function () {
+      if ($(this).prop('checked'))
+        $('div#argument-data').show();
+      else
+        $('div#argument-data').hide();
+    });
+
+    $('input[name="options[wce][match]"]').change(function () {
+      if ($(this).prop('checked'))
+        $('div#matching-level-slider').show();
+      else
+        $('div#matching-level-slider').hide();
+    });
+
+    const matchingLevel = val => {
+      val = parseInt(val);
+      switch (val) {
+        case 1:
+          return 'Allow differences';
+        case 2:
+          return 'Match text only';
+        case 3:
+          return 'Strict match';
+        default:
+          return '';
+      }
+    };
+
+    $('input[id="options[wce][match_level]"]').on('change', function () {
+      $('label[for="options[wce][match_level]"]').html(matchingLevel($(this).val()));
+    });
+  });
+</script>

@@ -51,14 +51,12 @@
     </div>
   </div>
 </div>
-<% content_for(:js) do %>
-  <script>
-    <% if flash[:modal_error] %>
-    $('#modal-window').removeClass("fade");
-    $("#modal-window").modal('show');
-    <% end %>
-    $('button#modal-close').on('click', () => {
-      $('#modal-window').addClass('fade');
-    });
-  </script>
-<% end %>
+<script>
+  <% if flash[:modal_error] %>
+  $('#modal-window').removeClass("fade");
+  $("#modal-window").modal('show');
+  <% end %>
+  $('button#modal-close').on('click', () => {
+    $('#modal-window').addClass('fade');
+  });
+</script>

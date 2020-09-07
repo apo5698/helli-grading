@@ -16,10 +16,8 @@
     <span class="ml-2" id="error"></span>
   </div>
 <% end %>
-<% content_for(:js) do %>
-  <script>
-    $(document).on('ajax:error', () => {
-      $('#error').html('Error occurred during grading. Please rerun.');
-    });
-  </script>
-<% end %>
+<script>
+  $(document).on('ajax:error', () => {
+    $('#error').html('Error occurred during grading.');
+  });
+</script>
