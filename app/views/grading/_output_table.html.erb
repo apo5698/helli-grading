@@ -31,7 +31,7 @@
       </td>
       <td>
         <% content = grading_item.file_content || 'None' %>
-        <a href="javascript:void(0);" data-toggle="tooltip" data-type="code" title="<%= content %>">
+        <a href="javascript:void(0);" data-toggle="tooltip" title="<%= content %>">
           <%= grading_item.filename %>
         </a>
       </td>
@@ -39,7 +39,7 @@
         <%= grading_item.points_received.to_f %> / <%= @rubric_item.points %>
       </td>
       <td>
-        <span class="badge badge-<%= color %>" data-toggle="tooltip" data-placement="right" title="<%= grading_item.status_detail %>">
+        <span class="badge badge-<%= color %>" data-toggle="tooltip" title="<%= grading_item.status_detail %>">
           <%= grading_item.status %>
         </span>
         <% if grading_item.status == GradingItem::ERROR %>
