@@ -1,17 +1,4 @@
 <div class="custom-control custom-checkbox mb-1">
-  <%= form.check_box('options[wce][stdin]', class: 'custom-control-input') %>
-  <label class="custom-control-label d-inline" for="options[wce][stdin]" aria-describedby="options-wce-stdin-help">
-    Keyboard input
-  </label>
-  <small id="options-wce-stdin-help" class="form-text text-muted mt-0">
-    Read input from keyboard (<span class="code">Scanner(System.in)</span>)
-  </small>
-  <div class="mt-2 mb-2 w-50" id="stdin-data" style="display: none">
-    <%= form.text_area('options[wce][stdin_data]', class: 'form-control', 'aria-describedby': 'stdin-help') %>
-    <small id="stdin-help" class="form-text text-muted">Separated by newlines</small>
-  </div>
-</div>
-<div class="custom-control custom-checkbox mb-1">
   <%= form.check_box('options[wce][argument]', class: 'custom-control-input') %>
   <label class="custom-control-label" for="options[wce][argument]" aria-describedby="options-wce-argument-help">
     Argument(s)
@@ -33,6 +20,21 @@
     </div>
   </div>
 </div>
+
+<div class="custom-control custom-checkbox mb-1">
+  <%= form.check_box('options[wce][stdin]', class: 'custom-control-input') %>
+  <label class="custom-control-label d-inline" for="options[wce][stdin]" aria-describedby="options-wce-stdin-help">
+    Keyboard input
+  </label>
+  <small id="options-wce-stdin-help" class="form-text text-muted mt-0">
+    Read input from keyboard (<span class="code">Scanner(System.in)</span>)
+  </small>
+  <div class="mt-2 mb-2 w-50" id="stdin-data" style="display: none">
+    <%= form.text_area('options[wce][stdin_data]', class: 'form-control', 'aria-describedby': 'stdin-help') %>
+    <small id="stdin-help" class="form-text text-muted">Separated by newlines</small>
+  </div>
+</div>
+
 <!-- TODO: implement -->
 <div class="custom-control custom-checkbox mb-1">
   <%= form.check_box('options[wce][match]', class: 'custom-control-input', disabled: true) %>
@@ -50,6 +52,7 @@
     </div>
   </div>
 </div>
+
 <script>
   $(document).on('turbolinks:load', () => {
     $('input[name="options[wce][stdin]"]').change(function () {
