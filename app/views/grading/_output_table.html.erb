@@ -30,10 +30,11 @@
         <%= grading_item.submission.student %>
       </td>
       <td>
-        <% content = grading_item.file_content || 'None' %>
-        <a href="javascript:void(0);" data-toggle="tooltip" title="<%= content %>">
-          <%= grading_item.filename %>
-        </a>
+        <% unless grading_item.file_content.nil? %>
+          <a href="javascript:void(0);" data-toggle="tooltip" title="<%= grading_item.file_content %>">
+            <%= grading_item.filename %>
+          </a>
+        <% end %>
       </td>
       <td>
         <%= grading_item.points_received.to_f %> / <%= @rubric_item.points %>
@@ -47,8 +48,9 @@
         <% end %>
       </td>
       <td>
-        <% output = grading_item.output.blank? ? 'None' : grading_item.output %>
-        <a href="javascript:void(0);" data-toggle="tooltip" title="<%= output %>">View</a>
+        <% unless grading_item.output.blank? %>
+          <a href="javascript:void(0);" data-toggle="tooltip" title="<%= grading_item.output %>">View</a>
+        <% end %>
       </td>
     </tr>
   <% end %>
