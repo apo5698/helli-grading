@@ -19,8 +19,14 @@ class GradingController < ApplicationController
       redirect_to(controller: :submissions)
     else
       options = params.require(:options).permit!.to_h
-      @grading_items.each { |item| item.grade(options) }
-      flash[:success] = "Grading #{RubricItem.find(params[:id])} complete."
+
+      begin
+        @grading_items.each { |item| item.grade(options) }
+        flash[:success] = "Grading #{RubricItem.find(params[:id])} complete."
+      rescue StandardError => e
+        flash[:error] = e.message
+      end
+
       redirect_back(fallback_location: '')
     end
   end
