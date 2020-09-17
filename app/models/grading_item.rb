@@ -6,35 +6,40 @@ class GradingItem < ApplicationRecord
 
   include GradingHelper
 
-  enum status: [ACTION_NEEDED = 'Action needed',
-                ERROR = 'Error',
-                NO_SUBMISSION = 'No submission',
-                NOT_STARTED = 'Not started',
-                SUCCESS = 'Success']
+  enum status: { action_needed: 'Action needed',
+                 error: 'Error',
+                 no_submission: 'No submission',
+                 not_started: 'Not started',
+                 success: 'Success' }
 
   belongs_to :submission
   belongs_to :rubric_item
 
+  def meta
+    student = Student.find(Submission.find(submission_id).student_id)
+    rubric_item = RubricItem.find(rubric_item_id)
+    { name: student.to_s, email: student.email, rubric_item: rubric_item, grading_item: self }
+  end
+
+  def attachment
+    ActiveStorage::Attachment.find(attachment_id)
+  end
+
+  def to_s
+    meta.to_s
+  end
+
   # Result has the structure of { :status, :detail, :output }
   def grade(options)
-    filename = rubric_item.primary_file
-    attachment = submission.files.find { |f| f.filename.to_s == filename }
     if attachment.nil?
-      files = submission.files.map { |f| f.filename.to_s }
-      result = { status: GradingItem::NO_SUBMISSION, detail: "'#{filename}' not found.\n\n"\
-                                                             "[Submitted files]\n"\
-                                                             "#{files.join("\n")}",
-                 output: '', points: 0 }
+      result = { status: GradingItem.statuses[:no_submission], detail: "File not found", points: 0 }
     else
-      file_path = ActiveStorageUtil.download_one(attachment)
+      file_path = ActiveStorageUtil.download_one_to_temp('submissions', attachment).to_s
       result = rubric_item.grade(file_path, options)
-
-      self.filename = File.basename(file_path)
-      self.file_content = File.read(file_path)
     end
 
     self.status = result[:status]
-    self.status_detail = result[:detail]
+    self.status_detail = rubric_item.to_s + result[:detail] + ';'
     self.output = result[:output]
     self.points_received = result[:points]
     self.error_count = result[:error_count]

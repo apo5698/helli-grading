@@ -8,7 +8,7 @@ class ReportsController < ApplicationController
     if gradesheet.nil?
       flash[:error] = 'Upload failed (no file chosen).'
     else
-      @assignment.gradesheet.attach(gradesheet)
+      ActiveStorageUtil.upload(@assignment.gradesheet_import, gradesheet, gradesheet.original_filename)
       flash[:success] = "Successfully uploaded #{gradesheet.original_filename}."
     end
 
@@ -16,38 +16,44 @@ class ReportsController < ApplicationController
   end
 
   def delete
-    gradesheet = @assignment.gradesheet
-    if gradesheet.nil? || !@assignment.gradesheet.attached?
-      flash[:error] = 'Delete failed (no file uploaded).'
-    else
-      filename = gradesheet.filename.to_s
-      gradesheet.purge
+    filename = @assignment.gradesheet_import.filename.to_s
+
+    begin
+      @assignment.gradesheet_import.purge
+      @assignment.gradesheet_export.purge
       flash[:success] = "Successfully deleted #{filename}."
+    rescue StandardError
+      flash[:error] = 'Delete failed (no file uploaded).'
     end
 
     redirect_back(fallback_location: '')
   end
 
   def export
-    name = params[:setting][:name]
-    grade = params[:setting][:grade]
-    feedback = params[:setting][:feedback]
-
-    if name.nil? || grade.nil? || feedback.nil?
-      flash[:error] = "Columns setting incomplete."
-    # elsif name == grade || name == feedback || grade == feedback
-    #   flash[:error] = "Column must be unique."
+    columns = params[:column]
+    if columns.values.include?(nil)
+      flash[:error] = 'Empty column(s).'
+    elsif columns.values.uniq.length != 3
+      flash[:error] = 'Column should be unique.'
     else
-      file = ReportsHelper.export(@assignment, @csv_in, name, grade, feedback)
-      flash[:info] = File.read(file)
+      @csv_export = ReportsHelper.export(@assignment, @csv_import,
+                                         columns[:email_address], columns[:grade], columns[:feedback_comments],
+                                         params[:max])
+      flash[:success] = 'Export successfully.'
     end
 
     redirect_back(fallback_location: '')
   end
 
+  def download
+    send_data(@assignment.gradesheet_export.download,
+              filename: @assignment.gradesheet_export.filename.to_s,
+              type: 'text/csv')
+  end
+
   private def set_variables
     super
-    @csv_in = ReportsHelper.read(@assignment.gradesheet)
-    @csv_out = @csv_in
+    @csv_import = ReportsHelper.read(@assignment.gradesheet_import)
+    @csv_export = ReportsHelper.read(@assignment.gradesheet_export)
   end
 end

@@ -4,16 +4,15 @@
       <table class="table table-hover">
         <thead>
         <tr class="table-active">
-          <th scope="col" class="bootstrap-overrides">
+          <th scope="col">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="select-all">
               <label class="custom-control-label" for="select-all"></label>
             </div>
           </th>
-          <th scope="col" class="bootstrap-overrides">Last / first name</th>
-          <th scope="col" class="bootstrap-overrides">Grade</th>
-          <th scope="col" class="bootstrap-overrides">File submissions</th>
-          <th scope="col" class="bootstrap-overrides">Actions</th>
+          <th scope="col">Last / First name</th>
+          <th scope="col">Files</th>
+          <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -25,17 +24,11 @@
                 <%= f.label("submissions[#{submission.id}]", 0.chr, class: 'custom-control-label') %>
               </div>
             </th>
-            <td>
-              <%= submission.status %> <%= submission.student %>
-            </td>
-            <td>
-              <button type="button" class="btn btn-outline-primary btn-sm">Grade</button>
-              <br/>
-              0 / 100
-            </td>
+            <%#= submission.status %>
+            <td><%= submission.student %></td>
             <td><%= submission.file_submissions %></td>
             <td>
-              <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a>
+              <!-- <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a> -->
               <% delete_url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/#{submission.id}" %>
               <a href="<%= delete_url %>" data-method="delete" data-toggle="tooltip" data-original-title="Delete submission">
                 <i class="far fa-trash-alt fa-150"></i>

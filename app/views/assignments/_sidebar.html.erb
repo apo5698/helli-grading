@@ -50,14 +50,19 @@
   <a href="<%= url %>" class="list-group-item list-group-item-action">
     <li class="d-flex justify-content-between align-items-center">
       Run automated grading
+      <% grading_items = @assignment.rubric.rubric_items.collect(&:grading_items).flatten %>
+      <% if grading_items.blank? || grading_items.any? { |g| g.not_started? } %>
+        <span class="badge badge-danger badge-pill">!</span>
+      <% else %>
+        <span class="badge badge-success badge-pill">✓</span>
+      <% end %>
     </li>
   </a>
 </ul>
 
-<ul class="list-group">
+<ul class="list-group pb-3">
   <% url = "/courses/#{@course.id}/assignments/#{@assignment.id}/report" %>
-  <!-- TODO: enable after csv reader implemented -->
-  <a href="<%= url %>" class="list-group-item list-group-item-action disabled">
+  <a href="<%= url %>" class="list-group-item list-group-item-action">
     <li class="d-flex justify-content-between align-items-center">
       Report
     </li>

@@ -5,7 +5,7 @@ class RubricItem < ApplicationRecord
   def title; end
 
   def to_s
-    "#{title} (#{primary_file})"
+    "[#{title}](#{primary_file})"
   end
 
   def usage; end

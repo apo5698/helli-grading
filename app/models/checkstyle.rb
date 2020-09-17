@@ -30,9 +30,9 @@ class Checkstyle < RubricItem
     error_count = errors.count
     detail = "#{error_count} checkstyle error"
     if error_count.zero?
-      status = GradingItem::SUCCESS
+      status = GradingItem.session[:success]
     else
-      status = GradingItem::ERROR
+      status = GradingItem.session[:error]
       detail << 's' if error_count > 1
     end
 

@@ -1,7 +1,10 @@
 class Assignment < ApplicationRecord
-  has_one_attached :gradesheet
+  has_one_attached :gradesheet_import
+  has_one_attached :gradesheet_export
+
   has_many :submissions, dependent: :destroy
   has_many :ts_files, dependent: :destroy
+
   belongs_to :rubric, dependent: :destroy
 
   enum assignment_type: %i[Exercise Project Homework]

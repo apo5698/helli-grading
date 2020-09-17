@@ -18,7 +18,9 @@ module ActiveStorageUtil
     Zip::File.open(file) do |zip_file|
       zip_file.each do |f|
         moodle_id = f.name.split('/')[0]
-        filepath = File.join(temp_dir, f.name.sub(moodle_id, SubmissionsHelper.rename_moodle_id(moodle_id)))
+        student_name = moodle_id.split('__')[0]
+        student_email = moodle_id.split('__')[1].sub('AT', '@')
+        filepath = File.join(temp_dir, f.name.sub(moodle_id, "#{student_name}_#{student_email}"))
         FileUtils.mkdir_p(File.dirname(filepath))
         zip_file.extract(f, filepath) unless File.exist?(filepath)
       end
@@ -32,17 +34,19 @@ module ActiveStorageUtil
   # +config/environments/#{Rails.env}/config.active_storage.service+.
   # Extracted content will be deleted after uploading.
   # Returns paths of all uploaded files.
-  def self.upload(zipfile, course_id, assignment_id)
+  def self.upload_zip(zipfile, course_id, assignment_id)
     dir = unzip(zipfile, assignment_id)
     entries = Dir.glob(dir.join('**')).sort
     entries.each do |e|
-      student_name = File.basename(e).split(' ')
+      student = File.basename(e).split('_')
+      student_name = student[0].split(' ')
+      student_email = student[1]
       next if student_name.nil?
 
-      student = StudentsHelper.create(student_name[0], student_name[1], course_id)
+      student = StudentsHelper.create(student_name[0], student_name[1], student_email, course_id)
       submission = SubmissionsHelper.create(student.id, assignment_id)
       Dir.glob(File.join(e, '**', '*')).select { |f| File.file?(f) }.each do |g|
-        submission.files.attach(io: File.open(g), filename: File.basename(g))
+        upload(submission.files, g)
       end
     end
 
@@ -74,14 +78,17 @@ module ActiveStorageUtil
     zipfile
   end
 
-  # Returns the path of where the attachment will be downloaded.
-  def self.download_dir(attachment_id)
-    Rails.root.join('tmp', 'storage', attachment_id.to_s)
+  def self.local_temp_dir(type = '')
+    Rails.root.join('tmp', 'storage', type)
+  end
+
+  def self.upload(attachment, path, filename = nil)
+    attachment.attach(io: File.open(path), filename: filename || File.basename(path))
   end
 
   # Downloads one attachment to temp directory and returns its path.
-  def self.download_one(attachment)
-    path = File.join(download_dir(attachment.id), attachment.filename.to_s)
+  def self.download_one_to_temp(type, attachment)
+    path = local_temp_dir(type).join(attachment.id.to_s, attachment.filename.to_s)
     return path if File.exist?(path)
 
     FileUtils.mkdir_p(File.dirname(path))
@@ -90,10 +97,10 @@ module ActiveStorageUtil
   end
 
   # Downloads multiple attachments to temp directory and returns their paths.
-  def self.download_multiple(attachments)
+  def self.download_multiple_to_temp(attachments)
     paths = []
     attachments.each do |a|
-      path = download_dir(a.id)
+      path = local_temp_dir('submissions').join(a.id)
       FileUtils.mkdir_p(path)
       file_path = File.join(path, a.filename.to_s)
       next if File.exist?(file_path)

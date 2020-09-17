@@ -1,0 +1,73 @@
+<table class="table table-hover table-striped">
+  <thead>
+  <tr class="table-active">
+    <th scope="col">Student</th>
+    <th scope="col">File</th>
+    <th scope="col">Status</th>
+    <th scope="col">Grade</th>
+    <th scope="col">Output</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @grading_items.each do |grading_item| %>
+    <% color = if grading_item.success?
+                 'success'
+               elsif grading_item.error?
+                 'primary'
+               elsif grading_item.action_needed?
+                 'info'
+               elsif grading_item.no_submission?
+                 'danger'
+               elsif grading_item.not_started?
+                 'secondary'
+               else
+                 'warning'
+               end %>
+    <% tr_color = grading_item.success? || grading_item.not_started? ? '' : 'table-danger' %>
+    <tr class="<%= tr_color %>">
+      <td>
+        <%= grading_item.submission.student %>
+      </td>
+      <td>
+        <% id = grading_item.attachment_id %>
+        <%= link_to(id != -1 ? ActiveStorage::Attachment.find(id).filename : '',
+                    { controller: :grading_item, action: :show, id: grading_item.id,
+                      modal_content: 'file', modal_size: 'xl' },
+                    { data: { remote: true, toggle: 'modal' } }) %>
+      </td>
+      <td>
+        <span class="badge badge-<%= color %>" data-toggle="tooltip" title="<%= grading_item.status_detail %>">
+          <%= GradingItem.statuses[grading_item.status] %>
+        </span>
+        <% if grading_item.error? %>
+          <span class="badge badge-primary"><%= grading_item.error_count %></span>
+        <% end %>
+      </td>
+      <td>
+        <%= grading_item.points_received.to_f %> / <%= @rubric_item.points %>
+      </td>
+      <td>
+        <% unless grading_item.output.blank? %>
+          <span data-toggle="tooltip" title="<%= grading_item.output %>">
+            <%= link_to('View',
+                        { controller: :grading_item, action: :show, id: grading_item.id,
+                          modal_content: 'output', modal_size: 'xl' },
+                        { data: { remote: true, toggle: 'modal' } }) %>
+          </span>
+        <% end %>
+      </td>
+      <td>
+        <%= link_to('Edit',
+                    { controller: :grading_item, action: :edit, id: grading_item.id },
+                    { data: { remote: true, toggle: 'modal' } }) %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<style>
+  .tooltip-inner {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+</style>

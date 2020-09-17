@@ -1,6 +1,6 @@
 class Wce < RubricItem
-  enum wce_criterion_type: [FILENAME_OK = "File is named '[filename]'",
-                            CLASSNAME_OK = "Class is named '[classname]'",
+  enum wce_criterion_type: [FILENAME_OK = "File is named as expected",
+                            CLASSNAME_OK = "Class is named as expected",
                             COMPILE_OK = 'Program compiles',
                             RUN_OK = 'Program runs']
 
@@ -39,8 +39,8 @@ class Wce < RubricItem
                   "[exit status] #{captures_java[:status].exitstatus}"
     output.strip!
 
-    can_compile = captures_java[:status].exitstatus.zero?
-    can_run = captures_javac[:status].exitstatus.zero?
+    can_compile = captures_javac[:status].exitstatus.zero?
+    can_run = captures_java[:status].exitstatus.zero?
 
     points = 0
     points += criterions.find_by(criterion: FILENAME_OK).points if File.exist?(File.join(File.dirname(path), primary_file))
@@ -48,16 +48,13 @@ class Wce < RubricItem
     points += criterions.find_by(criterion: COMPILE_OK).points if can_compile
     points += criterions.find_by(criterion: RUN_OK).points if can_run
 
-    success = can_compile && can_run
-    if success
-      status = GradingItem::SUCCESS
-      detail = ''
-    else
-      status = GradingItem::ERROR
-      detail = 'Error occurred while compiling/running.'
-    end
-
     error_count = output.scan(/([eE]rror:)|(java.*Exception)/).length
+    status = can_compile && can_run ? GradingItem.statuses[:success] : GradingItem.statuses[:error]
+    detail = "#{error_count} error"
+    detail << 's' if error_count > 1
+
+    detail << ", javac exited with code #{captures_javac[:status].exitstatus}" unless can_compile
+    detail << ", java exited with code #{captures_java[:status].exitstatus}" unless can_run
 
     { status: status, detail: detail, output: output, points: points, error_count: error_count }
   end
