@@ -1,3 +1,5 @@
+require 'zip'
+
 module ActiveStorageUtil
   # Add files to a zip file.
   def self.zip(content_dir, zipfile_path)
