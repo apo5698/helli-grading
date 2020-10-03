@@ -34,7 +34,7 @@ class GradingItem < ApplicationRecord
     if attachment.nil?
       result = { status: GradingItem.statuses[:no_submission], detail: "File not found", points: 0 }
     else
-      file_path = ActiveStorageUtil.download_one_to_temp('submissions', attachment).to_s
+      file_path = ActiveStorageUtil.download_one_to_temp('submissions', submission, attachment).to_s
       result = rubric_item.grade(file_path, options)
     end
 

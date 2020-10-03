@@ -89,8 +89,8 @@ module ActiveStorageUtil
   end
 
   # Downloads one attachment to temp directory and returns its path.
-  def self.download_one_to_temp(type, attachment)
-    path = local_temp_dir(type).join(attachment.id.to_s, attachment.filename.to_s)
+  def self.download_one_to_temp(type, submission, attachment)
+    path = local_temp_dir(type).join(submission.id.to_s, attachment.filename.to_s)
     return path if File.exist?(path)
 
     FileUtils.mkdir_p(File.dirname(path))

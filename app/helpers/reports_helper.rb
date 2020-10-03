@@ -2,7 +2,7 @@ module ReportsHelper
   def self.read(attachment)
     return nil unless attachment.attached?
 
-    path = ActiveStorageUtil.download_one_to_temp('gradesheets', attachment)
+    path = ActiveStorageUtil.download_one_to_temp('gradesheets', attachment, attachment)
     CSV.parse(File.open(path), headers: true)
   end
 
