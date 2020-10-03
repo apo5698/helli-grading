@@ -24,9 +24,28 @@
                 <%= f.label("submissions[#{submission.id}]", 0.chr, class: 'custom-control-label') %>
               </div>
             </th>
-            <%#= submission.status %>
             <td><%= submission.student %></td>
-            <td><%= submission.file_submissions %></td>
+            <td>
+              <% submission.files.each do |file| %>
+                <div class="row">
+                  <div class="col-2">
+                    <% case file.content_type when 'text/x-java' %>
+                      <i class="fab fa-java" data-toggle="tooltip" title="Java source code"></i>
+                      <% if file.filename.to_s =~ /test/i %>
+                        <i class="fas fa-vial" data-toggle="tooltip" title="Java test file"></i>
+                      <% end %>
+                    <% when 'application/pdf' %>
+                      <i class="far fa-file-pdf" data-toggle="tooltip" title="PDF document"></i>
+                    <% when 'text/plain' %>
+                      <i class="far fa-file-alt" data-toggle="tooltip" title="Plain text"></i>
+                    <% else
+                         ''
+                       end %>
+                  </div>
+                  <a href="<%= rails_blob_path(file, disposition: 'attachment', only_path: true) %>"><%= file.filename %></a>
+                </div>
+              <% end %>
+            </td>
             <td>
               <!-- <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a> -->
               <% delete_url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/#{submission.id}" %>
