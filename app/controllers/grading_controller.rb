@@ -20,7 +20,6 @@ class GradingController < ApplicationController
     else
       options = params.require(:options).permit!.to_h
 
-
       @grading_items.each { |item| item.grade(options) }
       flash[:success] = "Grading #{RubricItem.find(params[:id])} complete."
 
