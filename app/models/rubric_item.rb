@@ -49,11 +49,14 @@ class RubricItem < ApplicationRecord
   def grade(path, options) end
 end
 
-require_dependency('checkstyle')
-require_dependency('inspection')
-require_dependency('javadoc')
-require_dependency('student_bbt')
-require_dependency('student_wbt')
-require_dependency('ts_bbt')
-require_dependency('ts_wbt')
 require_dependency('wce')
+require_dependency('checkstyle')
+# require_dependency('document')
+# require_dependency('inspection')
+# require_dependency('javadoc')
+# require_dependency('student_bbt')
+# require_dependency('student_wbt')
+# require_dependency('ts_bbt')
+# require_dependency('ts_wbt')
+
+
