@@ -48,6 +48,8 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+  gem 'rspec-rails'
+  gem 'guard-rspec'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -60,4 +62,4 @@ gem 'aws-sdk-s3'
 gem 'activerecord-session_store'
 
 # Active Job
-# gem 'sidekiq'
+gem 'sidekiq'
