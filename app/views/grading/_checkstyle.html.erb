@@ -4,7 +4,7 @@
                'FileTabCharacter': 'Line contains a tab character',
                'Indentation': 'Incorrect indentation level',
                'LineLength': 'Line is longer than 100 characters',
-               'LocalVariableName': 'Local variable name must match pattern <span class="code">^[a-z][a-zA-Z0-9]*$</span>',
+               'LocalVariableName': 'Local variable name must match pattern ^[a-z][a-zA-Z0-9]*$',
                'MagicNumber': 'Avoid magic numbers',
                'MissingJavadoc(Method|Type)': 'Missing a Javadoc comment',
                'UnusedImports': 'Unused imports',
@@ -13,11 +13,11 @@
   <% rules.each do |name, description| %>
     <div class="custom-control custom-checkbox mb-1">
       <%= form.check_box("options[checkstyle][#{name}]", class: 'custom-control-input', checked: true) %>
-      <label class="custom-control-label" for="options[checkstyle][<%= name %>]">
-        <%= name.to_s.html_safe %>
+      <label class="custom-control-label" for="options[checkstyle][<%= name %>]" aria-describedby="<%= name %>-help">
+        <%= name %>
       </label>
-      <small id="options-wce-stdin-help" class="form-text text-muted mt-0">
-        <%= description.to_s.html_safe %>
+      <small id="<%= name %>-help" class="form-text text-muted mt-0">
+        <%= description %>
       </small>
     </div>
   <% end %>
