@@ -5,19 +5,15 @@
 <table class="table table-hover">
   <thead>
   <tr>
-    <th scope="col">Name</th>
     <th scope="col">Package</th>
-    <th scope="col">Description</th>
     <th scope="col">Version</th>
     <th scope="col">Source</th>
   </tr>
   </thead>
   <tbody>
-  <% DependenciesUtil.config.each do |name, prop| %>
+  <% DependenciesUtil.all.each do |name, prop| %>
     <tr>
-      <th scope="row"><a href="<%= prop['website'] %>"><%= prop['name'] %></a></th>
       <td style="white-space: nowrap"><%= name %></td>
-      <td><%= prop['description'] %></td>
       <td><%= prop['version'] %></td>
       <td><a href="<%= prop['source'] %>" target="_blank"><%= prop['source'] %></a></td>
     </tr>

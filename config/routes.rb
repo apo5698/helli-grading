@@ -34,9 +34,9 @@ Rails.application.routes.draw do
       resources :grading, only: [:index] do
         collection do
           post :run
-          post :run_all
-          post :respond
           delete :reset
+
+          resources :grading_item, only: %i[edit update show]
         end
       end
 
@@ -58,6 +58,7 @@ Rails.application.routes.draw do
 
       resources :reports, path: :report, only: [:index] do
         collection do
+          get :download
           post :export
           post :upload
           delete :delete

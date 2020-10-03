@@ -14,7 +14,7 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: 005817
+  password: <%= ENV['AGS_DATABASE_PASSWORD'] %>
   socket: /tmp/mysql.sock
   strict: false
 
@@ -50,6 +50,4 @@ test:
 #
 production:
   <<: *default
-  database: ags_production
-  username: ags
-  password: <%= ENV['AGS_DATABASE_PASSWORD'] %>
+  database: ags

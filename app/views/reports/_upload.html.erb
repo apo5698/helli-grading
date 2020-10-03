@@ -16,7 +16,7 @@
   <div class="form-group">
     <%= f.label(:filename, 'Uploaded gradesheet') %>
     <div class="input-group">
-      <% filename = @assignment.gradesheet.attached? ? @assignment.gradesheet.filename.to_s : '' %>
+      <% filename = @assignment.gradesheet_import.attached? ? @assignment.gradesheet_import.filename.to_s : '' %>
       <%= f.text_field(:filename, class: 'form-control', placeholder: filename, readonly: true) %>
       <div class="input-group-append">
         <%= f.submit('Delete', class: 'input-group-text') %>

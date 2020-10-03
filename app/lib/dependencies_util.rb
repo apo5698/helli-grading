@@ -1,8 +1,9 @@
+require 'open-uri'
 require 'yaml'
 
 module DependenciesUtil
   # Returns all config.
-  def self.config
+  def self.all
     @config
   end
 
@@ -36,8 +37,22 @@ module DependenciesUtil
 
     path = @lib_root.join(type, lib)
     path = path.join(version.to_s) if type != 'git'
-    path = path.join(info['executable'] || '')
+    path = path.join(info['executable'] || '', File.basename(info['source']))
     path.to_s
+  end
+
+  def self.update_all
+    @config.each do |name, info|
+      type = info.dig('type')
+      next if type == 'system'
+
+      dest = @lib_root.join(type, name)
+      dest = File.join(dest, info.dig('version').to_s) if type == 'direct'
+      FileUtils.mkdir_p(dest)
+
+      url = info.dig('source')
+      IO.copy_stream(URI.open(url), File.join(dest, File.basename(url))) if type == 'direct'
+    end
   end
 
   private

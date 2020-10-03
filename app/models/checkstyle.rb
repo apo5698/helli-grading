@@ -17,31 +17,22 @@ class Checkstyle < RubricItem
   end
 
   def grade(path, options)
-    captures = ProcessUtil.checkstyle(path)
-    filename = File.basename(path)
-    output = "[#{filename}] - Checkstyle\n"\
-             "[stdout]\n" << captures[:stdout]
-    output.strip!
-
-
     options = options[:checkstyle].transform_values(&:to_i)
-    errors = output.split("\n").grep(/#{filename}:.+/)
-    if errors.count > 0
-      errors = errors.grep_v(/magic number/) if options[:magic].zero?
-      errors = errors.grep_v(/Javadoc/) if options[:javadoc].zero?
-      errors = errors.grep_v(/indentation/) if options[:indentation].zero?
-      errors = errors.grep_v(/longer/) if options[:length].zero?
-      errors = errors.grep_v(/pattern/) if options[:pattern].zero?
-      errors = errors.grep_v(/tab/) if options[:tab].zero?
-      errors = errors.grep_v(/whitespace/) if options[:whitespace].zero?
-    end
+    raise StandardError, 'No checkstyle rule selected.' if options.values.all? { |v| v.zero? }
+
+    # checkstyle errors are in stdout, not stderr
+    stdout = ProcessUtil.checkstyle(path)[:stdout]
+    output = "[#{File.basename(path)}] - Checkstyle\n"\
+             "[stdout]\n#{stdout}".strip
+    errors = output.split("\n").grep(/\[WARN\].+/)
+    options.each { |name, check| errors = errors.grep_v(/#{name}/) if check.zero? } if errors.count > 0
 
     error_count = errors.count
     detail = "#{error_count} checkstyle error"
     if error_count.zero?
-      status = GradingItem::SUCCESS
+      status = GradingItem.statuses[:success]
     else
-      status = GradingItem::ERROR
+      status = GradingItem.statuses[:error]
       detail << 's' if error_count > 1
     end
 
@@ -49,6 +40,6 @@ class Checkstyle < RubricItem
     points -= criterions.where(criterion_type: Criterion::DEDUCTION_EACH).pluck(:points).sum * error_count
     points = 0 if points < 0
 
-    { status: status, detail: detail, output: output, points: points, error_count: error_count }
+    { status: status, detail: detail, output: errors.join("\n"), points: points, error_count: error_count }
   end
 end

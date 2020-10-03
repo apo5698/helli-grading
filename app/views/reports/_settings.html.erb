@@ -1,17 +1,19 @@
 <h2>Settings</h2>
 <%= form_with(url: { action: :export }) do |f| %>
-  <div class="row">
-    <div class="form-group col">
-      <%= f.label('setting[name]', 'Name') %>
-      <%= f.select('setting[name]', ReportsHelper.header(@csv_in), {}, { class: 'form-control' }) %>
-    </div>
-    <div class="form-group col">
-      <%= f.label('setting[grade]', 'Grade') %>
-      <%= f.select('setting[grade]', ReportsHelper.header(@csv_in), {}, { class: 'form-control' }) %>
-    </div>
-    <div class="form-group col">
-      <%= f.label('setting[feedback]', 'Feedback') %>
-      <%= f.select('setting[feedback]', ReportsHelper.header(@csv_in), {}, { class: 'form-control' }) %>
+  <div class="form-row">
+    <% columns = ['Email address', 'Grade', 'Feedback comments'] %>
+    <% columns.each do |col| %>
+      <% id = col.downcase.split(' ').join('_') %>
+      <div class="form-group col">
+        <%= f.label("column[#{id}]", col) %>
+        <%= f.select("column[#{id}]", ReportsHelper.header(@csv_import), { selected: col }, { class: 'form-control' }) %>
+      </div>
+    <% end %>
+  </div>
+  <div class="form-row">
+    <div class="col"></div>
+    <div class="form-group col-4">
+      <%= f.text_field(:max, class: 'form-control', placeholder: 'Maximum grade (optional)') %>
     </div>
   </div>
   <div class="float-right">

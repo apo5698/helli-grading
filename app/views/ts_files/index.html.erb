@@ -43,15 +43,13 @@
     <% end %>
   </div>
 </div>
-<% content_for(:js) do %>
-  <script>
-    $(document).on('turbolinks:load', () => {
-      $('input:submit').on('click', () => {
-        if ($('.custom-file-label').html().trim() !== 'Choose file') {
-          $('.toast').toast('show');
-        }
-      });
+<script>
+  $(document).on('turbolinks:load', () => {
+    $('input:submit').on('click', () => {
+      if ($('.custom-file-label').html().trim() !== 'Choose file') {
+        $('.toast').toast('show');
+      }
     });
-  </script>
-<% end %>
+  });
+</script>
 

@@ -3,9 +3,9 @@
   <div class="form-group">
     <% case type %>
     <% when 'Wce' %>
-      <%= render partial: 'grading/execute', locals: { form: f } %>
+      <%= render partial: 'wce', locals: { form: f } %>
     <% when 'Checkstyle' %>
-      <%= render partial: 'grading/javadoc', locals: { form: f } %>
+      <%= render partial: 'checkstyle', locals: { form: f } %>
     <% else
          ''
        end %>
@@ -16,10 +16,8 @@
     <span class="ml-2" id="error"></span>
   </div>
 <% end %>
-<% content_for(:js) do %>
-  <script>
-    $(document).on('ajax:error', () => {
-      $('#error').html('Error occurred during grading. Please rerun.');
-    });
-  </script>
-<% end %>
+<script>
+  $(document).on('ajax:error', () => {
+    $('#error').html('Error occurred.');
+  });
+</script>

@@ -2,7 +2,7 @@
   <div class="col-lg-6">
     <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/expected_file_add", class: 'mb-3') do |f| %>
       <div class="form-group">
-        <%= f.label(:expected_input_filename, 'Enter a input filename') %>
+        <%= f.label(:expected_input_filename, 'Enter program filename') %>
         <div class="d-flex align-items-start">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -24,7 +24,7 @@
   <div class="col-lg-6">
     <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/expected_file_delete", method: :delete) do |f| %>
       <div class="form-group">
-        <%= f.label(:added_input_filenames, 'Added input files') %>
+        <%= f.label(:added_input_filenames, 'Added files') %>
         <div class="d-flex">
           <%= f.select(:added_input_filenames, @assignment.expected_input_filenames.split(';'), {}, { class: 'form-control mr-2', required: true }) %>
           <%= f.submit('Delete', class: 'btn btn-secondary') %>

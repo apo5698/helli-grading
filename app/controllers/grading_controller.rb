@@ -19,15 +19,13 @@ class GradingController < ApplicationController
       redirect_to(controller: :submissions)
     else
       options = params.require(:options).permit!.to_h
+
       @grading_items.each { |item| item.grade(options) }
       flash[:success] = "Grading #{RubricItem.find(params[:id])} complete."
+
       redirect_back(fallback_location: '')
     end
   end
-
-  def run_all; end
-
-  def respond; end
 
   def reset
     GradingItem.where(rubric_item_id: @rubric_item.id).destroy_all
@@ -40,7 +38,12 @@ class GradingController < ApplicationController
   def generate_grading_items(assignment, rubric_item)
     submissions = Submission.where(assignment_id: assignment.id)
     submissions.each do |submission|
-      GradingItem.create(rubric_item_id: rubric_item.id, submission_id: submission.id, status: 'Not started')
+      attachment = submission.files.find { |f| f.filename == rubric_item.primary_file }
+      GradingItem.create(rubric_item_id: rubric_item.id,
+                         submission_id: submission.id,
+                         attachment_id: attachment.nil? ? -1 : attachment.id,
+                         student_id: submission.student_id,
+                         status: GradingItem.statuses[:not_started])
     end
 
     GradingItem.where(rubric_item_id: rubric_item.id)

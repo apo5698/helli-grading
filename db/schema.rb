@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_09_225141) do
+ActiveRecord::Schema.define(version: 2020_09_13_053757) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 2020_08_09_225141) do
   create_table "grading_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "rubric_item_id"
     t.bigint "submission_id"
-    t.integer "status"
+    t.string "status"
     t.text "comments"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -78,6 +78,8 @@ ActiveRecord::Schema.define(version: 2020_08_09_225141) do
     t.string "status_detail"
     t.text "output"
     t.integer "error_count", default: 0
+    t.bigint "attachment_id"
+    t.bigint "student_id"
     t.index ["rubric_item_id"], name: "index_grading_items_on_rubric_item_id"
     t.index ["submission_id"], name: "index_grading_items_on_submission_id"
   end
@@ -120,6 +122,7 @@ ActiveRecord::Schema.define(version: 2020_08_09_225141) do
     t.bigint "course_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email"
     t.index ["course_id"], name: "index_students_on_course_id"
     t.index ["first_name", "last_name", "course_id"], name: "index_students_on_first_name_and_last_name_and_course_id", unique: true
   end

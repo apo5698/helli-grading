@@ -4,16 +4,15 @@
       <table class="table table-hover">
         <thead>
         <tr class="table-active">
-          <th scope="col" class="bootstrap-overrides">
+          <th scope="col">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="select-all">
               <label class="custom-control-label" for="select-all"></label>
             </div>
           </th>
-          <th scope="col" class="bootstrap-overrides">Last / first name</th>
-          <th scope="col" class="bootstrap-overrides">Grade</th>
-          <th scope="col" class="bootstrap-overrides">File submissions</th>
-          <th scope="col" class="bootstrap-overrides">Actions</th>
+          <th scope="col">Last / First name</th>
+          <th scope="col">Files</th>
+          <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -25,17 +24,30 @@
                 <%= f.label("submissions[#{submission.id}]", 0.chr, class: 'custom-control-label') %>
               </div>
             </th>
+            <td><%= submission.student %></td>
             <td>
-              <%= submission.status %> <%= submission.student %>
+              <% submission.files.each do |file| %>
+                <div class="row">
+                  <div class="col-2">
+                    <% case file.content_type when 'text/x-java' %>
+                      <i class="fab fa-java" data-toggle="tooltip" title="Java source code"></i>
+                      <% if file.filename.to_s =~ /test/i %>
+                        <i class="fas fa-vial" data-toggle="tooltip" title="Java test file"></i>
+                      <% end %>
+                    <% when 'application/pdf' %>
+                      <i class="far fa-file-pdf" data-toggle="tooltip" title="PDF document"></i>
+                    <% when 'text/plain' %>
+                      <i class="far fa-file-alt" data-toggle="tooltip" title="Plain text"></i>
+                    <% else
+                         ''
+                       end %>
+                  </div>
+                  <a href="<%= rails_blob_path(file, disposition: 'attachment', only_path: true) %>"><%= file.filename %></a>
+                </div>
+              <% end %>
             </td>
             <td>
-              <button type="button" class="btn btn-outline-primary btn-sm">Grade</button>
-              <br/>
-              0 / 100
-            </td>
-            <td><%= submission.file_submissions %></td>
-            <td>
-              <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a>
+              <!-- <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a> -->
               <% delete_url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/#{submission.id}" %>
               <a href="<%= delete_url %>" data-method="delete" data-toggle="tooltip" data-original-title="Delete submission">
                 <i class="far fa-trash-alt fa-150"></i>
@@ -56,14 +68,3 @@
     </div>
   </div>
 <% end %>
-<%# content_for(:js) do %>
-<!--  <script>-->
-<!--    $(document).on('turbolinks:load', () => {-->
-<!--      $('input:submit').on('click', () => {-->
-<!--        if ($('.custom-file-label').html().trim() !== 'Choose file') {-->
-<!--          $('.toast').toast('show');-->
-<!--        }-->
-<!--      });-->
-<!--    });-->
-<!--  </script>-->
-<%# end %>

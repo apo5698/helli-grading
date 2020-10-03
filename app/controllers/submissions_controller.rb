@@ -8,7 +8,7 @@ class SubmissionsController < ApplicationController
     else
       course_id = params[:course_id]
       begin
-        count = ActiveStorageUtil.upload(zip_file, course_id, @assignment.id).count
+        count = ActiveStorageUtil.upload_zip(zip_file, course_id, @assignment.id).count
         flash[:success] = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
       rescue StandardError => e
         flash[:error] = "Upload failed (#{e})"
