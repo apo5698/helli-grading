@@ -85,13 +85,11 @@ GEM
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
-    bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.4.6)
       msgpack (~> 1.0)
     builder (3.2.4)
-    byebug (11.1.3)
     capybara (3.33.0)
       addressable
       mini_mime (>= 0.1.3)
@@ -129,8 +127,6 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     i18n (1.8.3)
       concurrent-ruby (~> 1.0)
-    jbuilder (2.10.0)
-      activesupport (>= 5.0.0)
     jmespath (1.4.0)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -260,11 +256,6 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
-    web-console (4.0.3)
-      actionview (>= 6.0.0)
-      activemodel (>= 6.0.0)
-      bindex (>= 0.4.0)
-      railties (>= 6.0.0)
     webdrivers (4.4.1)
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
@@ -286,30 +277,25 @@ PLATFORMS
 DEPENDENCIES
   activerecord-session_store
   aws-sdk-s3
-  bcrypt (~> 3.1.7)
+  bcrypt
   better_errors
   binding_of_caller
-  bootsnap (>= 1.4.2)
-  byebug
-  capybara (>= 2.15)
+  bootsnap
+  capybara
   colorize
   guard-rspec
-  jbuilder (~> 2.7)
-  listen (~> 3.2)
-  mysql2 (>= 0.4.4)
-  puma (~> 4.1)
-  rails (~> 6.0.3)
+  mysql2
+  puma
+  rails
   rspec-rails
-  sass-rails (>= 6)
+  sass-rails
   selenium-webdriver
   sidekiq
   spring
-  spring-watcher-listen (~> 2.0.0)
-  turbolinks (~> 5)
-  tzinfo-data
-  web-console (>= 3.3.0)
+  spring-watcher-listen
+  turbolinks
   webdrivers
-  webpacker (~> 4.0)
+  webpacker
 
 RUBY VERSION
    ruby 2.7.1p83
