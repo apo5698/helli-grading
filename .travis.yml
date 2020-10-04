@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - 2.7.1
+branches:
+  only:
+    - master
+git:
+  submodules: false
+before_install:
+  - echo -e "machine github.ncsu.edu\n  login $GITHUB_NCSU_EDU_USERNAME\n  password $GITHUB_NCSU_EDU_PASSWORD" > ~/.netrc
+  - git submodule update --init --recursive
