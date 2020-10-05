@@ -9,3 +9,7 @@ git:
 before_install:
   - echo -e "machine github.ncsu.edu\n  login $GITHUB_NCSU_EDU_USERNAME\n  password $GITHUB_NCSU_EDU_PASSWORD" > ~/.netrc
   - git submodule update --init --recursive
+  - cp config/database.yml.example config/database.yml
+  - mysql -e "CREATE DATABASE ags_test;"
+services:
+  - mysql

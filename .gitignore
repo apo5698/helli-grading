@@ -25,6 +25,7 @@
 *.iml
 
 # secret files
+config/database.yml
 config/master.key
 
 # test coverage

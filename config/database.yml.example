@@ -11,12 +11,9 @@
 #
 default: &default
   adapter: mysql2
-  encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
   username: root
-  password: <%= ENV['AGS_DATABASE_PASSWORD'] %>
-  socket: /tmp/mysql.sock
-  strict: false
+  password:
 
 development:
   <<: *default
