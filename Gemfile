@@ -7,7 +7,7 @@ gem 'activerecord-session_store'
 gem 'aws-sdk-s3'
 gem 'bcrypt'
 gem 'bootsnap', require: false
-gem 'mysql2'
+gem 'pg'
 gem 'puma'
 gem 'rails'
 gem 'sass-rails'
