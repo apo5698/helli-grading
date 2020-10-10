@@ -343,6 +343,7 @@ DEPENDENCIES
   rubocop
   rubocop-rails
   rubocop-rspec
+  rubyzip
   sass-rails
   selenium-webdriver
   sidekiq
