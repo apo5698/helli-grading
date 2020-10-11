@@ -39,7 +39,7 @@
         <%= form.check_box("options[wce][lib][junit]", class: 'custom-control-input') %>
         <%= form.label("options[wce][lib][junit]", 'JUnit', class: 'custom-control-label', aria: { describedby: 'lib-junit' }) %>
         <small id="lib-junit" class="form-text text-muted mt-0">
-          <%= File.basename(DependenciesUtil.path('junit')) %>
+          <%= File.basename(Dependency.path('junit')) %>
         </small>
       </div>
     </div>
