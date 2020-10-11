@@ -1,6 +1,7 @@
 # dependencies
-/lib/dependencies
-!/lib/dependencies/dependencies.yml
+/vendor/dependencies/direct
+# submodules can be added
+!/vendor/dependencies/git
 
 # environment variables
 .env

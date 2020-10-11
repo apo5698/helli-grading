@@ -12,7 +12,7 @@ module ProcessUtil
     { stdout: stdout, stderr: stderr, status: status }
   end
 
-  @junit = "#{DependenciesUtil.path('junit')}"
+  @junit = Dependency.path('junit')
 
   # Runs a compiled Java file (*.class).
   def self.java(file:, junit: false, args: '', stdin: '')
@@ -42,7 +42,7 @@ module ProcessUtil
 
   # Runs checkstyle on a Java file (*.java). checkstyle does not generate errors to stderr but stdout.
   def self.checkstyle(file)
-    path = DependenciesUtil.path('cs-checkstyle')
+    path = Dependency.path('cs-checkstyle')
     output = exec(path, file)
 
     output[:stdout] = output[:stdout].gsub(file, File.basename(file))

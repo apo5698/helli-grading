@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_13_053757) do
+ActiveRecord::Schema.define(version: 2020_10_11_044240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,15 @@ ActiveRecord::Schema.define(version: 2020_09_13_053757) do
     t.string "response"
     t.decimal "points", precision: 5, scale: 2, default: "0.0"
     t.index ["rubric_item_id"], name: "index_criterions_on_rubric_item_id"
+  end
+
+  create_table "dependencies", force: :cascade do |t|
+    t.string "name"
+    t.string "version"
+    t.string "source"
+    t.string "source_type"
+    t.string "executable"
+    t.index ["name"], name: "index_dependencies_on_name", unique: true
   end
 
   create_table "grading_items", force: :cascade do |t|

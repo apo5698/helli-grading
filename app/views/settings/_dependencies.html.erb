@@ -1,6 +1,5 @@
 <div class="mb-2">
-  <%= link_to('Reload', { controller: 'settings', action: 'reload' }, class: 'btn btn-secondary') %>
-  <%= link_to('dependencies.json', DependenciesUtil.json, class: 'btn btn-secondary') %>
+  <%= link_to('dependencies.json', Dependency.json, class: 'btn btn-secondary') %>
 </div>
 <table class="table table-hover">
   <thead>
@@ -11,11 +10,11 @@
   </tr>
   </thead>
   <tbody>
-  <% DependenciesUtil.all.each do |name, prop| %>
+  <% @dependencies.each do |d| %>
     <tr>
-      <td style="white-space: nowrap"><%= name %></td>
-      <td><%= prop['version'] %></td>
-      <td><a href="<%= prop['source'] %>" target="_blank"><%= prop['source'] %></a></td>
+      <td><%= d.name %></td>
+      <td><%= d.version %></td>
+      <td><%= link_to(d.source, d.source, target: '_blank') %></td>
     </tr>
   <% end %>
   </tbody>
