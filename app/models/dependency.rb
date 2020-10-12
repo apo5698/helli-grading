@@ -25,6 +25,7 @@ class Dependency < ApplicationRecord
   # Writes the dependencies to JSON.
   def self.json
     url = 'api/dependencies.json'
+    FileUtils.mkdir_p('public/api')
     File.open("public/#{url}", 'w') { |f| f.write(@dependencies.to_json) }
     url
   end
