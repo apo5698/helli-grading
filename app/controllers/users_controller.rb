@@ -2,7 +2,9 @@ class UsersController < ApplicationController
   before_action :catch_denied_access, except: %i[new create]
 
   def new
-    render layout: 'pre_application'
+    flash[:error] = 'AGS has closed public registration.'
+    redirect_back(fallback_location: '')
+    # render layout: 'pre_application'
   end
 
   def create

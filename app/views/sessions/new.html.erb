@@ -5,8 +5,9 @@
       <div class="form-group">
         <%= form.label 'email', 'Email' %>
         <%= form.text_field 'email', class: "form-control" %>
-        <small id="email-help" class="form-text text-muted">We'll share your email and your password with everyone
-          else.</small>
+        <small id="email-help" class="form-text text-muted">
+          We will not share your email and your password with everyone else.
+        </small>
       </div>
       <div class="form-group">
         <%= form.label 'password', 'Password' %>
@@ -17,10 +18,10 @@
     </fieldset>
   <% end %>
 </div>
-<div class="card-footer center">
-  Don't have an account?&nbsp;
-  <strong><a href="/users/new">Sign up!</a></strong>
-</div>
+<!--<div class="card-footer center">-->
+<!--  Don't have an account?&nbsp;-->
+<!--  <strong><a href="/users/new">Sign up!</a></strong>-->
+<!--</div>-->
 
 <!-- Modal for inputting email-->
 <div class="modal hide fade" id="modal-window" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
