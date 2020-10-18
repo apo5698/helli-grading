@@ -31,6 +31,7 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'guard-rspec'
+  gem 'rspec-its'
   gem 'rspec-rails'
   gem 'rubocop-rspec'
   gem 'selenium-webdriver'
@@ -39,5 +40,6 @@ end
 
 group :development, :test do
   gem 'dotenv-rails'
+  gem 'faker', github: 'faker-ruby/faker'
   gem 'rubocop'
 end
