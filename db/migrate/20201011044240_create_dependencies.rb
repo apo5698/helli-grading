@@ -6,8 +6,10 @@ class CreateDependencies < ActiveRecord::Migration[6.0]
       t.string :source
       t.string :source_type
       t.string :executable
+      t.string :path
 
       t.index :name, unique: true
+      t.timestamps
     end
   end
 end

@@ -76,6 +76,9 @@ ActiveRecord::Schema.define(version: 2020_10_11_044240) do
     t.string "source"
     t.string "source_type"
     t.string "executable"
+    t.string "path"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_dependencies_on_name", unique: true
   end
 
