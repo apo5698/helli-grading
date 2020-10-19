@@ -33,12 +33,32 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
+  # Load testing dependencies (root path different from production)
+  dependency_path = 'spec/fixtures/dependency'
+  FileUtils.mkdir_p(dependency_path)
+  ENV['DEPENDENCY_FILE'] = "#{dependency_path}/dependencies.yml"
+  FileUtils.touch("#{dependency_path}/empty.yml")
+
+  def load_dependencies
+    Dependency.delete_all
+    config = ENV['DEPENDENCY_FILE']
+    FileUtils.cp('config/dependencies.yml', config)
+    File.write(config, File.read(config).sub(/(?<=root: )(.*)/, 'spec/fixtures/dependency/downloads'))
+    Dependency.load(config)
+    Dependency.download_all
+  end
+
+  load_dependencies
+
+  # Automatically adding metadata
+  config.infer_spec_type_from_file_location!
+
   # Use FactoryBot
   config.include FactoryBot::Syntax::Methods
 
   # DatabaseCleaner
   config.before(:suite) do
-    DatabaseCleaner.clean_with :truncation
+    DatabaseCleaner.clean_with(:truncation, except: 'dependencies')
   end
 
   config.before do
