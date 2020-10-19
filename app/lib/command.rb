@@ -84,8 +84,8 @@ module Command
 
       class_file = file.sub('.java', '.class')
       unless File.exist?(class_file)
-        _, stderr, status = javac(file, args: args, junit: junit)
-        raise CompileError, "unable to compile #{file}: #{stderr}" unless status.exitstatus.zero?
+        result = javac(file, args: args, junit: junit)
+        raise CompileError, "unable to compile #{file}: #{stderr}" unless result[:exitcode].zero?
       end
 
       dir = directory || File.dirname(file)
