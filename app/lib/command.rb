@@ -39,7 +39,11 @@ module Command
   # *Java*-related commands.
   module Java
     # Raised when error occurs during compilation. Only use this if compilation is aborted.
-    class CompileError < StandardError; end
+    class CompileError < StandardError
+      def initialize(file = 'file')
+        super("#{file} cannot be compiled")
+      end
+    end
 
     @checkstyle = Dependency.path('cs-checkstyle')
     @junit = Dependency.path('junit')
@@ -83,10 +87,7 @@ module Command
       raise UnsupportedFileError, 'unsupported file type' unless %w[.java .class].include?(File.extname(file))
 
       class_file = file.sub('.java', '.class')
-      unless File.exist?(class_file)
-        result = javac(file, args: args, junit: junit)
-        raise CompileError, "unable to compile #{file}: #{stderr}" unless result[:exitcode].zero?
-      end
+      raise CompileError, file unless File.exist?(class_file)
 
       dir = directory || File.dirname(file)
       class_name = File.basename(class_file).sub('.class', '')

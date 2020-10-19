@@ -22,36 +22,30 @@ describe Command do
     end
 
     describe '.java' do
-      class1 = "#{fixtures}/JavaOK.class"
-      class2 = "#{fixtures}/JavaFailed.class"
-
-      it 'has not yet compiled' do
-        FileUtils.rm_f(class1)
-        FileUtils.rm_f(class2)
-        expect(File).not_to exist(class1)
-        expect(File).not_to exist(class2)
-      end
-
-      ok = {}
-      failed = {}
-
-      it 'compiles files' do
-        ok = described_class.java("#{fixtures}/JavaOK.java")
-        failed = described_class.java("#{fixtures}/JavaFailed.java")
-        expect(File).to exist(class1)
-        expect(File).to exist(class2)
-      end
-
       context 'when file is valid' do
-        it('runs successfully') { expect(ok[:exitcode]).to be_zero }
-        it('has something in stdout') { expect(ok[:stdout]).not_to be_blank }
-        it('has nothing in stderr') { expect(ok[:stderr]).to be_blank }
+        described_class.javac("#{fixtures}/JavaOK.java")
+        o = described_class.java("#{fixtures}/JavaOK.java")
+
+        it('runs successfully') { expect(o[:exitcode]).to be_zero }
+        it('has something in stdout') { expect(o[:stdout]).not_to be_blank }
+        it('has nothing in stderr') { expect(o[:stderr]).to be_blank }
       end
 
       context 'when file is invalid' do
-        it('runs failed') { expect(failed[:exitcode]).not_to be_zero }
-        it('has nothing in stdout') { expect(failed[:stdout]).to be_blank }
-        it('has something in stdout') { expect(failed[:stderr]).not_to be_blank }
+        described_class.javac("#{fixtures}/JavaFailed.java")
+        o = described_class.java("#{fixtures}/JavaFailed.java")
+
+        it('runs failed') { expect(o[:exitcode]).not_to be_zero }
+        it('has nothing in stdout') { expect(o[:stdout]).to be_blank }
+        it('has something in stdout') { expect(o[:stderr]).not_to be_blank }
+      end
+
+      context 'when file is not compiled' do
+        it 'raises CompileError' do
+          FileUtils.rm_f("#{fixtures}/JavaOK.class")
+          expect { described_class.java("#{fixtures}/JavaOK.java") }
+            .to raise_error(described_class::CompileError)
+        end
       end
     end
 
