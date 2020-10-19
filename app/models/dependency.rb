@@ -2,61 +2,73 @@ require 'open-uri'
 require 'yaml'
 
 # External dependencies are used for grading (compile, execute, javadoc, etc.) and loaded from
-# config/dependencies.yml file on app initialization (see config/initializers/dependencies.rb)
+# the dependencies file on server initialization (see config/initializers/dependencies.rb)
 class Dependency < ApplicationRecord
   validates :name, presence: true, uniqueness: true
-  validates :version, presence: true
-  validates :source, presence: true
-  validates :source_type, presence: true
+  validates :version, :source_type, presence: true
 
-  attr_reader :path
-
-  after_initialize do
-    @path = "vendor/dependencies/#{source_type}/#{name}/"
-    @path << File.basename(source) if source_type == 'direct'
-    @path << executable if source_type == 'git'
+  after_validation do
+    self.executable = File.basename(source) if executable.blank?
+    self.path = "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}/#{executable}"
   end
 
-  # Returns the local path of a specified dependency name.
+  before_destroy do
+    FileUtils.remove_entry_secure(File.dirname(path))
+  end
+
+  # Downloads or updates all dependencies.
+  def self.download_all
+    Command::Git::Submodule.update
+    all.find_each(&:download)
+  end
+
+  # Loads dependencies from the YAML file.
+  def self.load(path)
+    # +load_file()+ return +false+ if file is empty, not +nil+ or empty hash
+    dependencies = YAML.load_file(path)
+    raise EmptyFileError, 'empty dependencies file' unless dependencies
+
+    ENV['DEPENDENCY_ROOT'] = dependencies.delete('root')
+
+    dependencies.each do |name, prop|
+      find_or_initialize_by(name: name).update(
+        version: prop['version'],
+        source: prop['source'],
+        source_type: prop['source_type'],
+        executable: prop['executable']
+      )
+    end
+
+    dependencies
+  end
+
+  # Finds the local path by name, *including* executable.
   def self.path(name)
     find_by(name: name).path
   end
 
-  # Writes the dependencies to JSON.
-  def self.json
-    url = 'api/dependencies.json'
-    FileUtils.mkdir_p('public/api')
-    File.open("public/#{url}", 'w') { |f| f.write(@dependencies.to_json) }
-    url
+  # Returns the root path of dependencies.
+  def self.root
+    ENV['DEPENDENCY_ROOT']
   end
 
-  # Loads dependencies from the YAML file.
-  def self.load(yml)
-    @dependencies = YAML.load_file(yml)
-    @dependencies.each do |name, prop|
-      old = find_by(name: name)
-      new = new(name: name,
-                version: prop['version'],
-                source: prop['source'],
-                source_type: prop['source_type'],
-                executable: prop['executable'] || File.basename(prop['source']))
-
-      if old.nil?
-        new.save
-      elsif old.attributes != new.attributes
-        old.update(new.attributes.except('id'))
+  # Downloads the dependency from its source.
+  def download
+    case source_type
+    when 'direct'
+      FileUtils.mkdir_p(File.dirname(path))
+      File.open(path, 'wb') do |f|
+        URI.open(source, 'rb') { |o| f.write(o.read) }
       end
-    end
-  end
-
-  # Downloads (or update if exists) all local files of dependencies.
-  def self.download
-    direct = where(source_type: 'direct')
-    direct.each do |d|
-      FileUtils.mkdir_p(File.dirname(d.path))
-      File.open(d.path, 'wb') do |f|
-        URI.open(d.source, 'rb') { |o| f.write(o.read) }
+    when 'git'
+      # keep submodules clean
+      if Rails.env.test?
+        Command::Git.clone(source, File.dirname(path))
+      else
+        Command::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
       end
+    else
+      raise NotImplementedError, "#{source_type} is not supported for downloading"
     end
   end
 end
