@@ -27,21 +27,30 @@ class Wce < RubricItem
     options = options[:wce]
     junit = options[:lib][:junit].to_i == 1
 
-    captures_javac = Command::Java.javac(file: path, junit: junit, args: options[:args][:javac])
+    captures_javac = Command::Java.javac(path, junit: junit, args: options[:args][:javac])
     filename = File.basename(path)
     output = "[#{filename}] - Compile\n"\
                   "[stdout]\n#{captures_javac[:stdout]}\n"\
                   "[stderr]\n#{captures_javac[:stderr]}\n"\
-                  "[exit status] #{captures_javac[:status].exitstatus}\n\n"
-    captures_java = Command::Java.java(file: path, junit: junit, args: options[:args][:java], stdin: options[:stdin][:data])
+                  "[exit status] #{captures_javac[:exitcode]}\n\n"
+
+    begin
+      captures_java = Command::Java.java(path,
+                                         junit: junit,
+                                         args: options[:args][:java],
+                                         stdin: options[:stdin][:data])
+    rescue Command::Java::CompileError => e
+      captures_java = { stdout: '', stderr: e.message, exitcode: -1 }
+    end
+
     output << "[#{filename}] - Run\n"\
                   "[stdout]\n#{captures_java[:stdout]}\n"\
                   "[stderr]\n#{captures_java[:stderr]}\n"\
-                  "[exit status] #{captures_java[:status].exitstatus}"
+                  "[exit status] #{captures_java[:exitcode]}"
     output.strip!
 
-    can_compile = captures_javac[:status].exitstatus.zero?
-    can_run = captures_java[:status].exitstatus.zero?
+    can_compile = captures_javac[:exitcode].zero?
+    can_run = captures_java[:exitcode].zero?
 
     points = 0
     points += criterions.find_by(criterion: FILENAME_OK).points if File.exist?(File.join(File.dirname(path), primary_file))
@@ -54,8 +63,8 @@ class Wce < RubricItem
     detail = "#{error_count} error"
     detail << 's' if error_count > 1
 
-    detail << ", javac exited with code #{captures_javac[:status].exitstatus}" unless can_compile
-    detail << ", java exited with code #{captures_java[:status].exitstatus}" unless can_run
+    detail << ", javac exited with code #{captures_javac[:exitcode]}" unless can_compile
+    detail << ", java exited with code #{captures_java[:exitcode]}" unless can_run
 
     { status: status, detail: detail, output: output, points: points, error_count: error_count }
   end
