@@ -1,10 +1,11 @@
 describe Command do
   describe Command::Java do
     fixtures = 'spec/fixtures/java'
+    Dir.glob("#{fixtures}/*.class").each { |f| File.delete(f) }
 
     describe '.javac' do
       context 'when file is valid' do
-        o = Command::Java.javac("#{fixtures}/JavacOK.java")
+        o = described_class.javac("#{fixtures}/JavacOK.java")
 
         it('compiles successfully') { expect(o[:exitcode]).to be_zero }
         it('has nothing in stdout') { expect(o[:stdout]).to be_blank }
@@ -12,7 +13,7 @@ describe Command do
       end
 
       context 'when file is invalid' do
-        o = Command::Java.javac("#{fixtures}/JavacFailed.java")
+        o = described_class.javac("#{fixtures}/JavacFailed.java")
 
         it('compiles failed') { expect(o[:exitcode]).not_to be_zero }
         it('has nothing in stdout') { expect(o[:stdout]).to be_blank }
@@ -21,27 +22,42 @@ describe Command do
     end
 
     describe '.java' do
-      context 'when file is valid' do
-        o = Command::Java.java("#{fixtures}/JavaOK.java")
+      class1 = "#{fixtures}/JavaOK.class"
+      class2 = "#{fixtures}/JavaFailed.class"
 
-        it('runs successfully') { expect(o[:exitcode]).to be_zero }
-        it('has something in stdout') { expect(o[:stdout]).not_to be_blank }
-        it('has nothing in stderr') { expect(o[:stderr]).to be_blank }
+      it 'has not yet compiled' do
+        FileUtils.rm_f(class1)
+        FileUtils.rm_f(class2)
+        expect(File).not_to exist(class1)
+        expect(File).not_to exist(class2)
+      end
+
+      ok = {}
+      failed = {}
+
+      it 'compiles files' do
+        ok = described_class.java("#{fixtures}/JavaOK.java")
+        failed = described_class.java("#{fixtures}/JavaFailed.java")
+        expect(File).to exist(class1)
+        expect(File).to exist(class2)
+      end
+
+      context 'when file is valid' do
+        it('runs successfully') { expect(ok[:exitcode]).to be_zero }
+        it('has something in stdout') { expect(ok[:stdout]).not_to be_blank }
+        it('has nothing in stderr') { expect(ok[:stderr]).to be_blank }
       end
 
       context 'when file is invalid' do
-        o = Command::Java.java("#{fixtures}/JavaFailed.java")
-
-        it('runs failed') { expect(o[:exitcode]).not_to be_zero }
-        it('has nothing in stdout') { expect(o[:stdout]).to be_blank }
-        it('has something in stdout') { expect(o[:stderr]).not_to be_blank }
+        it('runs failed') { expect(failed[:exitcode]).not_to be_zero }
+        it('has nothing in stdout') { expect(failed[:stdout]).to be_blank }
+        it('has something in stdout') { expect(failed[:stderr]).not_to be_blank }
       end
     end
 
     describe '.checkstyle' do
-      ok = Command::Java.checkstyle("#{fixtures}/CheckstyleOK.java")
-
-      failed = Command::Java.checkstyle("#{fixtures}/CheckstyleWarnings.java")
+      ok = described_class.checkstyle("#{fixtures}/CheckstyleOK.java")
+      failed = described_class.checkstyle("#{fixtures}/CheckstyleWarnings.java")
 
       context 'when file has no warnings' do
         it('runs successfully') { expect(ok[:exitcode]).to be_zero }
