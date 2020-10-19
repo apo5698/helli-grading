@@ -27,13 +27,13 @@ class Wce < RubricItem
     options = options[:wce]
     junit = options[:lib][:junit].to_i == 1
 
-    captures_javac = ProcessUtil.javac(file: path, junit: junit, args: options[:args][:javac])
+    captures_javac = Command::Java.javac(file: path, junit: junit, args: options[:args][:javac])
     filename = File.basename(path)
     output = "[#{filename}] - Compile\n"\
                   "[stdout]\n#{captures_javac[:stdout]}\n"\
                   "[stderr]\n#{captures_javac[:stderr]}\n"\
                   "[exit status] #{captures_javac[:status].exitstatus}\n\n"
-    captures_java = ProcessUtil.java(file: path, junit: junit, args: options[:args][:java], stdin: options[:stdin][:data])
+    captures_java = Command::Java.java(file: path, junit: junit, args: options[:args][:java], stdin: options[:stdin][:data])
     output << "[#{filename}] - Run\n"\
                   "[stdout]\n#{captures_java[:stdout]}\n"\
                   "[stderr]\n#{captures_java[:stderr]}\n"\

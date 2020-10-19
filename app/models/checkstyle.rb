@@ -21,7 +21,7 @@ class Checkstyle < RubricItem
     raise StandardError, 'No checkstyle rule selected.' if options.values.all? { |v| v.zero? }
 
     # checkstyle errors are in stdout, not stderr
-    stdout = ProcessUtil.checkstyle(path)[:stdout]
+    stdout = Command::Java.checkstyle(path)[:stdout]
     output = "[#{File.basename(path)}] - Checkstyle\n"\
              "[stdout]\n#{stdout}".strip
     errors = output.split("\n").grep(/\[WARN\].+/)
