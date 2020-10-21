@@ -38,6 +38,9 @@ module Command
 
   # *Java*-related commands.
   module Java
+    # The filename pattern for java files.
+    FILENAME_PATTERN = /^[A-Z]\w*$/.freeze
+
     # Raised when error occurs during compilation. Only use this if compilation is aborted.
     class CompileError < StandardError
       def initialize(file = 'file')
