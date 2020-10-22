@@ -5,10 +5,8 @@ Rails.application.routes.draw do
   get 'help', to: 'home#help'
   get 'about', to: 'home#about'
 
-  resources :settings do
-    collection do
-      get :reload
-    end
+  resource :settings do
+    get :json
   end
 
   resources :sessions, only: %i[new create destroy]
@@ -20,8 +18,8 @@ Rails.application.routes.draw do
     put :share, action: :share
 
     resources :assignments do
-      post :expected_file_add
-      delete :expected_file_delete
+      put :programs, action: :program_add
+      delete :programs, action: :program_delete
 
       resources :rubrics, path: :rubric, only: [] do
         collection do
@@ -56,13 +54,8 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :reports, path: :report, only: [:index] do
-        collection do
-          get :download
-          post :export
-          post :upload
-          delete :delete
-        end
+      resource :grades do
+        get :export
       end
     end
   end
