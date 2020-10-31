@@ -126,7 +126,7 @@ module Command
       raise UnsupportedFileError, 'unsupported file type' unless file.end_with?('.java')
 
       bin = directory || File.dirname(file)
-      dir = bin
+      dir = directory || File.dirname(file)
       dir << ":#{@junit}/*" if junit
       cmd = "javac -d #{bin} -cp #{dir} #{file} #{args}"
 
