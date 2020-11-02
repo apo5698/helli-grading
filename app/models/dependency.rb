@@ -16,6 +16,11 @@ class Dependency < ApplicationRecord
     FileUtils.remove_entry_secure(File.dirname(path))
   end
 
+  enum visibility: {
+    private: :private,
+    public: :public
+  }, _prefix: true
+
   # Downloads or updates all dependencies.
   def self.download_all
     Command::Git::Submodule.update
@@ -35,7 +40,8 @@ class Dependency < ApplicationRecord
         version: prop['version'],
         source: prop['source'],
         source_type: prop['source_type'],
-        executable: prop['executable']
+        executable: prop['executable'],
+        visibility: prop['visibility'] || :private
       )
     end
 
@@ -50,6 +56,11 @@ class Dependency < ApplicationRecord
   # Returns the root path of dependencies.
   def self.root
     ENV['DEPENDENCY_ROOT']
+  end
+
+  # Returns all public dependencies.
+  def self.public_dependencies
+    where(visibility: :public)
   end
 
   # Downloads the dependency from its source.
