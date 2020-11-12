@@ -1,0 +1,82 @@
+<%= form_with url: course_assignment_grades_path(@course, @assignment), method: :put do |form| %>
+  <h3>Scale</h3>
+  <div class="form-group form-row mx-3" style="max-width: 600px">
+    <div class="form-group col-12">
+      <%= form.label :scale, 'Percentage of each item (%)' %>
+      <div class="my-5" id="grades-scale-slider"></div>
+    </div>
+    <%= form.fields_for :grades_scale do |f| %>
+      <div class="col-md">
+        <div class="row">
+          <div class="form-group col">
+            <%= f.label :program, 'Program' %>
+            <%= f.text_field :program, value: @grades_scale[:program], class: 'form-control' %>
+          </div>
+          <div class="form-group col">
+            <%= f.label :zybooks, 'zyBooks' %>
+            <%= f.text_field :zybooks, value: @grades_scale[:zybooks], class: 'form-control' %>
+          </div>
+          <% if false %>
+            <div class="form-group col">
+              <%= f.label :other, 'Other' %>
+              <%= f.text_field :other, value: @grades_scale[:other], class: 'form-control' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <h3>zyBooks Grades Scale</h3>
+  <div class="form-group">
+    <%= form.fields_for :zybooks_scale do |f| %>
+      <% @zybooks_scale.sort_by { |k, _| k }.reverse.each do |level| %>
+        <div class="form-row my-1">
+          <div class="form-inline col">
+            <span class="mx-1">Total score >=</span>
+            <%= f.text_field level[0], value: level[0], class: 'form-control col-3 col-md-1', readonly: true %>
+            <span class="mx-1"><i class="fas fa-arrow-right"></i></span>
+            <%= f.text_field level[0], value: level[1], class: 'form-control col-3 col-md-1', readonly: true %>
+            <span class="mx-1">%</span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <%= form.submit 'Export', class: 'btn btn-primary' %>
+<% end %>
+<% content_for :js do %>
+  <script>
+    $(document).on('turbolinks:load', () => {
+      // this slider is used for without other_grade (single handle)
+      let slider = document.getElementById('grades-scale-slider');
+
+      if (slider != null) {
+        noUiSlider.create(slider, {
+          start: <%= @grades_scale[:program] %>,
+          connect: true,
+          range: {
+            min: 0,
+            max: 100
+          },
+          step: 1,
+          tooltips: true,
+          format: wNumb({
+            decimals: 0
+          }),
+          pips: {
+            mode: 'count',
+            values: 5,
+            stepped: true,
+            density: 20
+          }
+        });
+
+        slider.noUiSlider.on('update', function () {
+          let val = slider.noUiSlider.get();
+          $('#_grades_scale_program').val(val);
+          $('#_grades_scale_zybooks').val(100 - val);
+        });
+      }
+    });
+  </script>
+<% end %>

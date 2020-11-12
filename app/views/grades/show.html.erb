@@ -1,0 +1,13 @@
+<% breadcrumb_for request.path %>
+
+<%= render 'assignment_sidebar' %>
+<h2>Grades</h2>
+<hr>
+
+<% if @grades.empty? %>
+  <div class="center m-5">No grade worksheet uploaded yet.</div>
+<% else %>
+  <%= render partial: 'grades/options' %>
+  <div class="my-3"></div>
+  <%= render partial: 'grades/preview' %>
+<% end %>

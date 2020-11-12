@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       flash[:success] = 'You have successfully signed in.'
       redirect_to '/'
     else
-      flash[:error] = flash_errors(messages)
+      flash_errors(messages)
       redirect_to '/users/new'
     end
   end
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     if messages.blank?
       flash[:success] = 'Your profile has been updated.'
     else
-      flash[:error] = flash_errors(messages)
+      flash_errors(messages)
     end
     redirect_to '/'
   end

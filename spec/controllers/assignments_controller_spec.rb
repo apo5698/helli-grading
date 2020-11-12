@@ -1,0 +1,2 @@
+describe AssignmentsController do
+end

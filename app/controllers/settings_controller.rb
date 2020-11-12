@@ -1,10 +1,10 @@
 class SettingsController < ApplicationController
   before_action lambda {
-    @dependencies = Dependency.all.map do |d|
-      d.attributes.except('id', 'path', 'created_at', 'updated_at')
-    end
+    @title = controller_name.classify.pluralize
+    @dependencies = Dependency.all.map { |d| d.attributes.except('id', 'path', 'created_at', 'updated_at') }
   }
 
+  #  GET /settings/json
   def json
     send_data(
       @dependencies.to_json,
@@ -13,4 +13,6 @@ class SettingsController < ApplicationController
       disposition: :inline
     )
   end
+
+  def show; end
 end

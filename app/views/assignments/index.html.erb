@@ -1,51 +1,43 @@
-<ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
-  <li class="breadcrumb-item active"><%= @course.to_s %></li>
-</ol>
+<% breadcrumb_for request.path %>
 
-<div class="pt-3">
-  <div class="row">
-    <div class="col-lg-12 pb-3">
-      <h1>Assignments</h1>
-    </div>
-  </div>
+<h1>Assignments</h1>
 
-  <div class="row">
-    <% @assignments.each do |assignment| %>
-      <div class="col-lg-4 pb-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <% assignment_url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
-            <h4 class="card-title"><a href=<%= assignment_url %>><%= assignment.name %></a></h4>
-            <h6 class="card-subtitle mb-2 text-muted"><%= assignment.assignment_type %></h6>
-            <p class="card-text">
-              <%= assignment.description %>
-            </p>
-            <p class="card-text">
-              <% url = "/courses/#{@course.id}/assignments/#{assignment.id}/edit" %>
-              <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
-              <% url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
-              <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    <% end %>
+<div class="row">
+  <% @assignments.each do |assignment| %>
     <div class="col-lg-4 pb-3">
       <div class="card h-100">
         <div class="card-body">
-          <!--center the 'plus' button-->
-          <div class="center h-100">
-            <% url = "/courses/#{@course.id}/assignments/new" %>
-            <a href="<%= url %>" class=" stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
-              <i class="fas fa-plus-circle fa-4x"></i>
-            </a>
-          </div>
+          <% assignment_url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
+          <h4 class="card-title"><a href=<%= assignment_url %>><%= assignment.name %></a></h4>
+          <h6 class="card-subtitle mb-2 text-muted"><%= Assignment.categories[assignment.category] %></h6>
+          <p class="card-text">
+            <%= assignment.description %>
+          </p>
+          <p class="card-text">
+            <% url = "/courses/#{@course.id}/assignments/#{assignment.id}/edit" %>
+            <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
+            <% url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
+            <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <div class="col-lg-4 pb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <!--center the 'plus' button-->
+        <div class="center h-100">
+          <% url = "/courses/#{@course.id}/assignments/new" %>
+          <a href="<%= url %>" class=" stretched-link" data-remote="true" data-toggle="modal" data-target="#modal-window">
+            <i class="fas fa-plus-circle fa-4x"></i>
+          </a>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
   <% if flash[:modal_error] %>
   $("#modal-window").find(".modal-content").html("<%= j render partial: 'assignments/edit' %>");

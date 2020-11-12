@@ -8,18 +8,6 @@ cs-checkstyle:
   source_type: git
   executable: checkstyle
 
-drawing-panel:
-  version: 4.04
-  source: http://www.buildingjavaprograms.com/drawingpanel/DrawingPanel.java
-  source_type: direct
-  visibility: public
-
-hamcrest-core:
-  version: 1.3
-  source: https://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
-  source_type: direct
-  visibility: public
-
 junit:
   version: 1.6.2
   source: https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar

@@ -1,0 +1,14 @@
+<div class="list-group-item-action card-header d-flex justify-content-between align-items-center"
+     data-toggle="collapse" data-target="#grade-item-<%= rubric.id %>">
+  <span><%= rubric %></span>
+</div>
+<div id="grade-item-<%= rubric.id %>" class="collapse" data-parent="#grade-items-accordion">
+  <div class="card-body">
+    <%= render partial: 'grading/options', locals: { rubric: rubric } %>
+    <%= render partial: 'grading/result', locals: { rubric: rubric } %>
+    <div class="float-right mt-2 mb-4">
+      <%= link_to 'Reset grading status', course_assignment_grading_path(@course, @assignment, rubric),
+                  method: :delete, data: { confirm: 'All grading results will be cleared. Proceed?' } %>
+    </div>
+  </div>
+</div>

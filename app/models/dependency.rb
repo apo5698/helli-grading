@@ -1,3 +1,4 @@
+require 'helli/error'
 require 'open-uri'
 require 'yaml'
 
@@ -12,9 +13,7 @@ class Dependency < ApplicationRecord
     self.path = "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}/#{executable}"
   end
 
-  before_destroy do
-    FileUtils.remove_entry_secure(File.dirname(path))
-  end
+  before_destroy { FileUtils.remove_entry_secure(File.dirname(path)) }
 
   enum visibility: {
     private: :private,
@@ -23,7 +22,7 @@ class Dependency < ApplicationRecord
 
   # Downloads or updates all dependencies.
   def self.download_all
-    Command::Git::Submodule.update
+    Helli::Process::Git::Submodule.update
     all.find_each(&:download)
   end
 
@@ -31,7 +30,7 @@ class Dependency < ApplicationRecord
   def self.load(path)
     # +load_file()+ return +false+ if file is empty, not +nil+ or empty hash
     dependencies = YAML.load_file(path)
-    raise EmptyFileError, 'empty dependencies file' unless dependencies
+    raise Helli::EmptyFileError, 'empty dependencies file' unless dependencies
 
     ENV['DEPENDENCY_ROOT'] = dependencies.delete('root')
 
@@ -74,9 +73,9 @@ class Dependency < ApplicationRecord
     when 'git'
       # keep submodules clean
       if Rails.env.test?
-        Command::Git.clone(source, File.dirname(path))
+        Helli::Process::Git.clone(source, File.dirname(path))
       else
-        Command::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
+        Helli::Process::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
       end
     else
       raise NotImplementedError, "#{source_type} is not supported for downloading"

@@ -1,13 +1,12 @@
-<% url = "/courses/#{@course.id}/assignments/#{@assignment.id}" %>
-<% html = "<li class='breadcrumb-item'><a href=#{url}>#{@assignment.name}</a></li><li class='breadcrumb-item active'>Submissions</li>".html_safe %>
-<%= render partial: '/assignments/header', locals: { html: html } %>
+<% breadcrumb_for request.path %>
 
-<div class="row">
-  <div class="col-lg-3">
-    <%= render partial: '/assignments/sidebar' %>
-  </div>
-  <div class="col-lg-9">
-    <%= render partial: '/submissions/upload' %>
-    <%= render partial: '/submissions/table' %>
-  </div>
-</div>
+<%= render 'assignment_sidebar' %>
+
+<h2>Submissions</h2>
+<hr>
+<% if @participants.empty? %>
+  <div class="center">No participants found.</div>
+<% else %>
+  <%= render partial: '/submissions/upload' %>
+  <%= render partial: '/submissions/table' %>
+<% end %>

@@ -1,0 +1,63 @@
+<h3>Result</h3>
+<div class="table-responsive">
+  <table class="table table-hover table-striped">
+    <thead>
+    <tr class="table-active">
+      <th scope="col" style="max-width: 100px">Student</th>
+      <th scope="col">File</th>
+      <th scope="col">Status</th>
+      <th scope="col">Grade</th>
+      <th scope="col">Output</th>
+      <th scope="col" style="max-width: 250px">Feedback</th>
+      <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% rubric.grade_items.each do |item| %>
+      <% has_issues = item.success? || item.inactive? %>
+      <% tr_color = has_issues ? '' : 'table-danger' %>
+      <tr class="<%= tr_color %>">
+        <td style="max-width: 100px"><%= item.participant.name %></td>
+        <td>
+          <% attachment = item.primary_file %>
+          <% if attachment %>
+            <%= link_to(attachment.filename,
+                        course_assignment_grading_grade_item_path(@course, @assignment, rubric, item),
+                        data: { remote: true, toggle: 'modal', params: { view: :file }.to_param }) %>
+          <% end %>
+        </td>
+        <td>
+          <%= badge @status_colors[item.status.to_sym], GradeItem.statuses[item.status] %>
+          <% if item.error? %>
+            <span class="badge badge-primary"><%= item.error %></span>
+          <% end %>
+        </td>
+        <td><%= item.grade || '?' %> / <%= rubric.maximum_grade %></td>
+        <td>
+          <% if item.stdout.present? || item.stderr.present? %>
+            <% preview_text = item.stderr.present? ? item.stderr : item.stdout %>
+            <span data-toggle="tooltip"
+                  title="<%= preview_text.length > 200 ? 'Output is too long. Click to view' : preview_text %>">
+            <%= link_to('View',
+                        course_assignment_grading_grade_item_path(@course, @assignment, rubric, item),
+                        data: { remote: true, toggle: 'modal', params: { view: :output }.to_param }) %>
+            </span>
+          <% end %>
+        </td>
+        <td style="max-width: 250px"><%= item.feedback %></td>
+        <td>
+          <%= link_to('Edit',
+                      course_assignment_grading_grade_item_path(@course, @assignment, rubric, item),
+                      data: { remote: true, toggle: 'modal', params: { view: :edit }.to_param }) %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .tooltip-inner {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+</style>

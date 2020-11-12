@@ -18,32 +18,18 @@ Rails.application.routes.draw do
     put :share, action: :share
 
     resources :assignments do
-      put :programs, action: :program_add
-      delete :programs, action: :program_delete
+      member do
+        put :programs, action: :program_add
+        delete :programs, action: :program_delete
 
-      resources :rubrics, path: :rubric, only: [] do
-        collection do
-          get '', action: :show
-          resources :rubric_items, only: %i[create update destroy] do
-          end
-        end
+        put :input_files, action: :input_file_add
+        delete :input_files, action: :input_file_delete
       end
 
-      resources :grading, only: [:index] do
-        collection do
-          post :run
-          delete :reset
-
-          resources :grading_item, only: %i[edit update show]
-        end
-      end
-
-      resources :submissions, only: %i[index destroy] do
-        post :upload, action: :replace
+      resources :submissions, except: [:show] do
         collection do
           get :download_all
-          post :destroy_selected
-          post :upload
+          delete :destroy
         end
       end
 
@@ -54,15 +40,19 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :rubrics do
+        collection do
+          put :update
+        end
+      end
+
+      resources :grading do
+        resources :grade_items, only: %i[edit update show], path: ''
+      end
+
       resource :grades do
-        get :export
+        post :zybooks
       end
     end
-  end
-
-  resources :rubrics, only: [:index] do
-    get '', action: :show_published
-    delete '', action: :delete_published
-    put :adopt
   end
 end

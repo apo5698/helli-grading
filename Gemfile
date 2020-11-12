@@ -3,11 +3,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.1'
 
+gem 'active_model_serializers'
 gem 'activerecord-session_store'
 gem 'aws-sdk-s3'
 gem 'bcrypt'
 gem 'bootsnap', require: false
 gem 'colorize'
+gem 'devise'
 gem 'pg'
 gem 'puma'
 gem 'rails'
@@ -33,7 +35,6 @@ group :test do
   gem 'guard-rspec'
   gem 'rspec-its'
   gem 'rspec-rails'
-  gem 'rubocop-rspec'
   gem 'selenium-webdriver'
   gem 'webdrivers'
 end
@@ -42,4 +43,6 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'faker', github: 'faker-ruby/faker'
   gem 'rubocop'
+  gem 'rubocop-faker'
+  gem 'rubocop-rspec'
 end

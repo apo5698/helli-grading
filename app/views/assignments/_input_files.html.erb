@@ -1,0 +1,23 @@
+<div class="mb-2">
+  <h3 class="inline-header">Input Files (Optional)</h3>
+  <span class="align-middle">
+    <%= badge_checkmark if @has_input_files %>
+  </span>
+</div>
+
+<%= form_with(url: { action: :input_file_add }, method: :put) do |f| %>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="custom-file">
+        <%= f.file_field :file, class: 'custom-file-input' %>
+        <%= f.label :file, 'Choose file', class: 'custom-file-label' %>
+      </div>
+      <div class="input-group-append">
+        <%= f.submit('Upload', class: 'input-group-text') %>
+      </div>
+    </div>
+    <small class="form-text text-muted">
+      Files will be applied to all submissions.
+    </small>
+  </div>
+<% end %>

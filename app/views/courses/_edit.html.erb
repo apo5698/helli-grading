@@ -1,5 +1,5 @@
 <% if @course.id %>
-  <% title = "Edit #{@course.to_s}" %>
+  <% title = "Edit #{@course}" %>
 <% else %>
   <% title = 'Add a new course' %>
 <% end %>
@@ -16,7 +16,7 @@
       <div class="form-group row">
         <%= f.label :term, "Term", class: "col-lg-2 col-form-label" %>
         <div class="col-lg-10">
-          <%= f.text_field :term, class: "form-control-plaintext", readonly: "", value: Course.current_term %>
+          <%= f.text_field :term, class: "form-control-plaintext", readonly: true, value: 3 %>
         </div>
       </div>
       <div class="row">

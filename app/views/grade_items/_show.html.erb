@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    <%= @grade_item.rubric %>: <%= @grade_item.participant.name %>
+  </h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% view = params[:view] %>
+<div class="modal-body">
+  <% case view %>
+  <% when 'file' %>
+    <pre class="p-2"><%= @grade_item.primary_file.download %></pre>
+  <% when 'output' %>
+    <%= render partial: 'grade_items/output' %>
+  <% when 'edit' %>
+    <%= render partial: 'grade_items/edit' %>
+  <% else %>
+    <%= "view=#{view} is not supported" %>
+  <% end %>
+</div>
+<% unless view == 'edit' %>
+  <div class="modal-footer">
+    <% if view == 'file' %>
+      <%= link_to('Download', rails_blob_path(@grade_item.primary_file), class: 'btn btn-primary') %>
+    <% end %>
+    <%= button_tag('Close', type: 'button', class: 'btn btn-secondary', data: { dismiss: 'modal' }) %>
+  </div>
+<% end %>

@@ -1,5 +1,14 @@
 $(document).on('turbolinks:load', () => {
+  // Tooltip
   $('[data-toggle="tooltip"]').tooltip();
+
+  // Collapse toggle
+  $('.collapse').collapse({ toggle: false });
+
+  // Rotate icon
+  $('.collapsed').on('click', function () {
+    $(this).find("[class*='rotate']").toggleClass("down");
+  });
 
   // File upload
   $('input:file').on('change', function () {

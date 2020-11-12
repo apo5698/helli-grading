@@ -32,6 +32,7 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
 RSpec.configure do |config|
   # Load testing dependencies (root path different from production)
   dependency_path = 'spec/fixtures/dependency'
@@ -68,6 +69,10 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+  end
+
+  def login(user)
+    request.session[:user_id] = user.id
   end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

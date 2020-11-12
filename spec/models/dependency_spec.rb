@@ -20,7 +20,7 @@ describe Dependency, ignore_clean: true do
     end
 
     it 'cannot load empty file' do
-      expect { described_class.load(config_empty) }.to raise_error(EmptyFileError)
+      expect { described_class.load(config_empty) }.to raise_error(Helli::EmptyFileError)
     end
   end
 

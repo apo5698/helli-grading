@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :catch_denied_access
-  before_action :set_variables
+  before_action -> { @title = 'AGS-dev' }
 
   private
 
@@ -11,16 +11,19 @@ class ApplicationController < ActionController::Base
   def catch_denied_access
     return if access_allowed?
 
-    flash[:error] = 'Access denied'
-    redirect_to '/'
+    flash[:error] = 'Access denied.'
+    redirect_back fallback_location: '/'
   end
 
   def flash_errors(messages)
-    messages.uniq.reject(&:blank?).join(".\n") << '.'
+    return if messages.blank?
+
+    flash.now[:error] = (messages.uniq.reject(&:blank?).join('.<br>') << '.').html_safe
   end
 
-  def set_variables
-    @course = Course.find_by(id: params[:course_id])
-    @assignment = Assignment.find_by(id: params[:assignment_id])
+  def flash_modal_errors(messages)
+    return if messages.blank?
+
+    flash.now[:modal_error] = (messages.uniq.reject(&:blank?).join('.<br>') << '.').html_safe
   end
 end

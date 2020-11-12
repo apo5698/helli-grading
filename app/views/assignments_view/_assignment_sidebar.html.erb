@@ -1,0 +1,42 @@
+<% content_for(:sidebar) do %>
+  <h6 class="sidebar-heading d-flex justify-content-between align-items-center mt-4 mb-1 text-muted">
+    <span>Assignment: <%= @assignment.name %></span>
+  </h6>
+  <ul class="navbar-nav">
+    <% url = course_assignment_path(@course, @assignment) %>
+    <li class="nav-item">
+      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
+        Setup
+        <%= @has_program && @has_grades_uploaded ? badge_checkmark : badge_exclamation %>
+      </a>
+    </li>
+    <% url = course_assignment_submissions_path(@course, @assignment) %>
+    <li class="nav-item">
+      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
+        Submissions
+        <%= @has_submission ? badge_checkmark : badge_exclamation %>
+      </a>
+    </li>
+    <% url = course_assignment_rubrics_path(@course, @assignment) %>
+    <li class="nav-item">
+      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
+        Rubric
+        <%= @has_rubric ? badge_checkmark : badge_exclamation %>
+      </a>
+    </li>
+    <% url = course_assignment_grading_index_path(@course, @assignment) %>
+    <li class="nav-item">
+      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
+        Automated Grading
+        <!-- TODO: add badge -->
+      </a>
+    </li>
+    <% url = course_assignment_grades_path(@course, @assignment) %>
+    <li class="nav-item d-flex justify-content-between align-items-center">
+      <a href="<%= url %>" class="nav-link">
+        Grades
+      </a>
+      <%= @has_grades_filled ? badge_checkmark : badge_exclamation %>
+    </li>
+  </ul>
+<% end %>

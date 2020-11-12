@@ -1,61 +1,65 @@
-class GradingController < ApplicationController
+class GradingController < AssignmentsViewController
+  before_action lambda {
+    @title = 'Automated Grading'
+    @rubrics.each(&:generate_grade_items)
+    @dependencies = Dependency.public_dependencies
+
+    @status_colors = {
+      inactive: :light,
+      success: :success,
+      resolved: :info,
+      unresolved: :danger,
+      error: :error,
+      no_submission: :warning
+    }
+  }
+
+  #  GET /courses/:course_id/assignments/:assignment_id/grading
   def index
-    if @rubric_item.nil?
-      flash[:error] = 'No rubric specified.'
-      redirect_to(controller: :rubrics, action: :show)
-      return
-    end
-
-    @submissions = Submission.where(assignment_id: params[:assignment_id])
     if @submissions.empty?
-      flash[:error] = 'No submission uploaded.'
-      redirect_to(controller: :submissions)
+      flash.now[:error] = 'No submission uploaded. '\
+                          "#{helpers.link_to 'Upload a submission zip file.',
+                                             course_assignment_submissions_path(@course, @assignment)}".html_safe
+    elsif @rubrics.empty?
+      flash.now[:error] = 'No rubric specified. '\
+                          "#{helpers.link_to 'Create a rubric.',
+                                             course_assignment_rubrics_path(@course, @assignment)}".html_safe
     end
   end
 
-  def run
-    if @grading_items.empty?
-      flash[:error] = 'No submission uploaded.'
-      redirect_to(controller: :submissions)
+  #  GET /courses/:course_id/assignments/:assignment_id/grading/:id
+  def show
+    respond_to do |format|
+      format.html { render partial: 'show' }
+    end
+  end
+
+  #  PUT /courses/:course_id/assignments/:assignment_id/grading/:id
+  def update
+    id = params.require(:id)
+    rubric = Rubric.find(id)
+    grade_items = rubric.grade_items
+    if grade_items.empty?
+      flash[:error] = 'The rubric has not been completed. '\
+                      "#{helpers.link_to 'Complete.',
+                                         course_assignment_rubrics_path(@course, @assignment)}.".html_safe
     else
-      options = params.require(:options).permit!.to_h
-
-      @grading_items.each { |item| item.grade(options) }
-      flash[:success] = "Grading #{RubricItem.find(params[:id])} complete."
-
-      redirect_back(fallback_location: '')
-    end
-  end
-
-  def reset
-    GradingItem.where(rubric_item_id: @rubric_item.id).destroy_all
-    flash[:success] = 'Grading status reset.'
-    redirect_back(fallback_location: '')
-  end
-
-  private
-
-  def generate_grading_items(assignment, rubric_item)
-    submissions = Submission.where(assignment_id: assignment.id)
-    submissions.each do |submission|
-      attachment = submission.files.find { |f| f.filename == rubric_item.primary_file }
-      GradingItem.create(rubric_item_id: rubric_item.id,
-                         submission_id: submission.id,
-                         attachment_id: attachment.nil? ? -1 : attachment.id,
-                         student_id: submission.student_id,
-                         status: GradingItem.statuses[:not_started])
+      # in case there is no option
+      options = params.dig(:options, id)&.permit!&.to_h || {}
+      grade_items.each { |item| item.run(options) }
+      flash[:success] = "Run #{rubric} complete."
     end
 
-    GradingItem.where(rubric_item_id: rubric_item.id)
+    redirect_back fallback_location: { action: :index }
   end
 
-  def set_variables
-    super
-    @rubric_items = RubricItem.where(rubric_id: @assignment.rubric.id)
-    @rubric_item = RubricItem.find_by(id: params[:id] || params[:rubric_id]) || @rubric_items.first
-    return if @rubric_item.nil?
+  #  DELETE /courses/:course_id/assignments/:assignment_id/grading/:id
+  def destroy
+    id = params.require(:id)
+    GradeItem.where(rubric_id: id).destroy_all
+    title = Rubric.find(id)
 
-    @grading_items = GradingItem.where(rubric_item_id: @rubric_item.id)
-    @grading_items = generate_grading_items(@assignment, @rubric_item) if @grading_items.empty? && @rubric_item
+    flash[:success] = "Grading results for #{title} has been reset."
+    redirect_back fallback_location: { action: :index }
   end
 end

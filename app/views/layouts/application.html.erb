@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>AGS</title>
+  <title><%= yield(:title).blank? ? @title : yield(:title) %> - AGS Dev</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,13 +12,29 @@
 </head>
 
 <body>
-<%= render partial: '/layouts/header' %>
-<div class="container">
-  <%= render partial: '/layouts/flash' %>
-  <%= yield %>
-  <%= render partial: '/layouts/footer' %>
+<%= render 'layouts/navbar' %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-lg-3 col-xl-2">
+      <%= render 'layouts/sidebar' %>
+    </div>
+    <div class="col">
+      <div class="row">
+        <div class="col-xl-1"></div>
+        <div class="col">
+          <div class="pt-4">
+            <%= render 'layouts/flash' %>
+            <%= render 'layouts/breadcrumb' %>
+            <%= yield %>
+          </div>
+          <%= render 'layouts/footer' %>
+        </div>
+        <div class="col-xl-1"></div>
+      </div>
+    </div>
+  </div>
 </div>
-<%= render partial: '/layouts/modal' %>
+<%= render 'layouts/modal' %>
 <%= yield :js %>
 </body>
 </html>
