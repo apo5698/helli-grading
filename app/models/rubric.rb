@@ -24,8 +24,7 @@ class Rubric < ApplicationRecord
   end
 
   # Run grading on a file with options.
-  # Returns the result as hash:
-  #   { :exitcode, :stdout, :stderr, :error }
+  # Returns a Helli::Process and the error count.
   def run(primary_file, secondary_file, options) end
 end
 

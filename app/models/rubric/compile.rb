@@ -11,25 +11,19 @@ class Rubric
       { action: :award, point: 1.0, criterion: :compile, feedback: @@feedbacks[:compile] }
     ]
 
-    # +test_file+ not used
     def run(primary_file, _, options)
       lib = Wce.lib(options)
 
-      result = Helli::Process::Java.javac(
+      process = Helli::Command::Java.javac(
         primary_file,
         junit: lib[:junit] || false,
         args: options[:args][:javac]
       )
-      stderr = result[:stderr]
-      exitcode = result[:exitcode]
 
       # only matches "* error(s)" at the end of stderr
-      error = exitcode.zero? ? 0 : stderr.match(/\d+(?= errors?)/)[0]
+      error = process.exitstatus.zero? ? 0 : process.stderr.match(/\d+(?= errors?)/)[0]
 
-      { exitcode: exitcode,
-        stdout: '',
-        stderr: stderr,
-        error: error }
+      [process, error]
     end
   end
 end

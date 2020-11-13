@@ -50,27 +50,25 @@ class GradeItem < ApplicationRecord
       f_source = Helli::Attachment.download(primary_file, 'java', "participant_#{participant.id}")[0]
       f_test = Helli::Attachment.download(secondary_file, 'java', "participant_#{participant.id}")[0]
 
-      # copy input file
+      # copy input files
       input_files = rubric.assignment.input_files
       input_files_path = Helli::Attachment.download(input_files, 'java', "participant_#{participant.id}")
 
-      # replace input file name to path
-      stdin_data = options.dig(:stdin, :data)
-      if stdin_data
-        stdin_data = stdin_data.split("\n").map! do |str|
-          # find(-> { str }): set default value if cannot found
-          input_files_path.find(-> { str }) { |path| File.basename(path) == str }
-        end
-        # put new stdin_data back
-        options[:stdin][:data] = stdin_data.join("\n")
-      end
+      # # replace input file name to path
+      # stdin_data = options.dig(:stdin, :data)
+      # if stdin_data
+      #   stdin_data = stdin_data.split("\n").map! do |str|
+      #     # find(-> { str }): set default value if cannot found
+      #     input_files_path.find(-> { str }) { |path| File.basename(path) == str }
+      #   end
+      #   # put new stdin_data back
+      #   options[:stdin][:data] = stdin_data.join("\n")
+      # end
 
-      # { :exitcode, :stdout, :stderr, :error }
       begin
-        result = rubric.run(f_source, f_test, options)
+        process, error = rubric.run(f_source, f_test, options)
       rescue StandardError => e
         msg = e.message
-        msg = msg.gsub(f_source, File.basename(f_source)).gsub(f_test, File.basename(f_test)) if Rails.env.production?
         gi_result = {
           status: :unresolved,
           feedback: "AutoResolve failed: #{Helli::Message.resolve_manually(msg)}"
@@ -81,13 +79,13 @@ class GradeItem < ApplicationRecord
 
       source_filename = File.basename(f_source)
       source_file_contents = File.read(f_source)
-      exitcode = result[:exitcode]
+      exitstatus = process.exitstatus
 
       # grade_item attributes
       gi_status = :success
-      gi_stdout = result[:stdout]
-      gi_stderr = result[:stderr]
-      gi_error = result[:error]
+      gi_stdout = process.stdout
+      gi_stderr = process.stderr
+      gi_error = error
       gi_grade = 0
       gi_feedback = []
 
@@ -111,7 +109,7 @@ class GradeItem < ApplicationRecord
             gi_feedback << format(c.feedback, actual: classname)
           end
         elsif c.compile?
-          if exitcode.zero?
+          if exitstatus.zero?
             # exit 0 -> can compile -> success!
             gi_grade += c.point
             gi_feedback << 'Success'
@@ -121,14 +119,14 @@ class GradeItem < ApplicationRecord
             gi_feedback << c.feedback
           end
         elsif c.execute?
-          if exitcode.zero?
+          if exitstatus.zero?
             # exit 0 -> can execute: success
             gi_grade += c.point
             gi_feedback << 'Success'
-          elsif gi_stderr.empty? && source_file_contents.include?("System.exit(#{exitcode})")
+          elsif gi_stderr.empty? && source_file_contents.include?("System.exit(#{exitstatus})")
             # can execute & no stderr -> action_needed!
             gi_status = :unresolved
-            gi_feedback << Helli::Message.resolve_manually("No error found, but exits with code #{exitcode}")
+            gi_feedback << Helli::Message.resolve_manually("No error found, but exits with status #{exitstatus}")
           else
             # exit not 0 -> can/cannot execute & has stderr -> error!
             gi_status = :error
@@ -151,7 +149,7 @@ class GradeItem < ApplicationRecord
         # TODO: the separator can be set by user
         gi_feedback.join(';'),
         filename: source_filename,
-        exitcode: exitcode,
+        exitstatus: exitstatus,
         error: gi_error
       )
 

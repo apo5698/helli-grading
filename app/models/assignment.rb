@@ -35,7 +35,7 @@ class Assignment < ApplicationRecord
   def add_program(file)
     raise ArgumentError, "#{file} already exists" if programs.include?(file)
 
-    pattern = Helli::Process::Java::FILENAME_REGEXP_STR
+    pattern = Helli::Command::Java::FILENAME_REGEXP_STR
     raise ArgumentError, "#{file} does not match pattern #{pattern}" unless file.match(pattern)
 
     programs << file

@@ -7,8 +7,8 @@
     <% end %>
   <% end %>
   <div class="form-group d-flex align-items-center">
-    <% spinner = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>' %>
-    <%= form.submit('Run', class: 'btn btn-primary', data: { disable_with: "#{spinner} Running...".html_safe }) %>
+    <%# spinner = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>' %>
+    <%= form.submit('Run', class: 'btn btn-primary', data: { disable_with: "Running..." }) %>
     <span class="ml-2 text-primary" id="error"></span>
   </div>
 <% end %>

@@ -1,5 +1,5 @@
 class AssignmentsController < AssignmentsViewController
-  before_action -> { @pattern = Helli::Process::Java::FILENAME_REGEXP_STR }
+  before_action -> { @pattern = Helli::Command::Java::FILENAME_REGEXP_STR }
   #  GET /courses/:course_id/assignments
   def index
     @title = controller_name.classify.pluralize
@@ -17,12 +17,12 @@ class AssignmentsController < AssignmentsViewController
 
   #  POST /courses/:course_id/assignments
   def create
-    # begin
-    assignment = Assignment.create!(assignment_params.merge(course_id: params[:course_id]))
-    flash[:success] = "Assignment #{assignment.name} created."
-    # rescue StandardError => e
-    #   flash[:error] = e.message
-    # end
+    begin
+      assignment = Assignment.create!(assignment_params.merge(course_id: params[:course_id]))
+      flash[:success] = "Assignment #{assignment.name} created."
+    rescue StandardError => e
+      flash[:error] = e.message
+    end
 
     redirect_back fallback_location: { action: :index }
   end

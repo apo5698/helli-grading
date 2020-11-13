@@ -22,7 +22,7 @@ class Dependency < ApplicationRecord
 
   # Downloads or updates all dependencies.
   def self.download_all
-    Helli::Process::Git::Submodule.update
+    Helli::Command::Git::Submodule.update
     all.find_each(&:download)
   end
 
@@ -47,9 +47,9 @@ class Dependency < ApplicationRecord
     dependencies
   end
 
-  # Finds the local path by name, *including* executable.
+  # Returns the absolute path of a dependency by name, *including* executable.
   def self.path(name)
-    find_by(name: name).path
+    Rails.root.join(find_by(name: name).path)
   end
 
   # Returns the root path of dependencies.
@@ -73,9 +73,9 @@ class Dependency < ApplicationRecord
     when 'git'
       # keep submodules clean
       if Rails.env.test?
-        Helli::Process::Git.clone(source, File.dirname(path))
+        Helli::Command::Git.clone(source, File.dirname(path))
       else
-        Helli::Process::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
+        Helli::Command::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
       end
     else
       raise NotImplementedError, "#{source_type} is not supported for downloading"

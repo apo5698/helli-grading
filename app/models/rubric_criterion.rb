@@ -27,7 +27,7 @@ class RubricCriterion < ApplicationRecord
     filename: 'File is incorrectly named, expected: %{filename}, actual: %{actual}',
     classname: 'Class is incorrectly named, expected: %{filename}, actual: %{actual}',
     compile: 'Cannot compile %{filename}, %{error} error(s) found',
-    execute: 'Cannot run %{filename}, %{error} error(s) found, program exits with %{exitcode}',
+    execute: 'Cannot run %{filename}, %{error} error(s) found, program exits with %{exitstatus}',
     checkstyle_warning: '%{error} checkstyle warning(s)'
   }.freeze
 
@@ -35,7 +35,7 @@ class RubricCriterion < ApplicationRecord
     filename: 'Filename of the current rubric',
     actual: 'Actual file name',
     output: 'stdout and stderr',
-    exitcode: 'Process exit status code',
+    exitstatus: 'Process exit status code',
     error: 'Error count'
   }.freeze
 end

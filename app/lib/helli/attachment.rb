@@ -105,7 +105,7 @@ module Helli
         zipfile
       end
 
-      # Downloads attachments to the temp directory and returns their path.
+      # Downloads attachments to the temp directory and returns their path as array.
       def download(attachments, *dir)
         path = tmppath('downloads', *dir)
         FileUtils.mkdir_p(path)

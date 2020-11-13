@@ -23,35 +23,22 @@ class Rubric
       'WhitespaceAround': 'Operators/operands are not preceded/followed with whitespace'
     }.freeze
 
-    # +test_file+ not used
     def run(primary_file, _, options)
       opt = options[:checkstyle].transform_values { |v| v.to_i == 1 }
       raise StandardError, 'No checkstyle rule selected.' if opt.values.all?(&:!) # (&:!) means false
 
       # checkstyle errors are in stdout, not stderr
-      result = Helli::Process::Java.checkstyle(primary_file)
-      stdout = result[:stdout]
-      exitcode = result[:exitcode]
-
-      filename = File.basename(primary_file)
-      # remove path (absolute)
-      stdout.gsub!(Rails.root.join(primary_file).to_s, filename)
+      process = Helli::Command::Java.checkstyle(primary_file)
 
       # warnings begin with [WARN]
-      warnings = stdout.split("\n").grep(/^\[WARN\]\s.+$/)
+      warnings = process.stdout.split("\n").grep(/^\[WARN\]\s.+$/)
+      error = warnings.count
       # invert match: remove unselected rules and keep those selected
-      if warnings.count.positive?
+      if error.positive?
         opt.each { |rule, enabled| warnings = warnings.grep_v(/\[#{rule}\]$/) unless enabled }
       end
 
-      # regard warnings as stderr, although they are in stdout
-      stderr = warnings.join("\n")
-      error = warnings.count
-
-      { exitcode: exitcode,
-        stdout: '',
-        stderr: stderr,
-        error: error }
+      [process, error]
     end
   end
 end

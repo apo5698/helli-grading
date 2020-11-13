@@ -2,3 +2,9 @@ require:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-faker
+
+Naming/MethodParameterName:
+  MinNameLength: 1
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
