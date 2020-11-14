@@ -102,7 +102,7 @@ class AssignmentsController < AssignmentsViewController
     filename = params.require(:name)
 
     begin
-      Helli::Attachment.delete_by_name(@assignment.input_files, filename)
+      @assignment.input_files.delete_by_filename(filename)
       flash[:success] = "#{filename} deleted."
     rescue StandardError => e
       flash[:error] = e.message

@@ -21,52 +21,44 @@ class GradeItem < ApplicationRecord
   # Find the source file by rubric filename.
   # TODO: Find similar filename if no match found.
   def primary_file
-    participant.files.select { |f| f.blob.filename == rubric.primary_file }[0] || nil
+    participant.files.find_by_filename(rubric.primary_file)
   end
 
   # Find the attachment by rubric filename.
   # TODO: Find similar filename if no match found.
   def secondary_file
-    participant.files.select { |f| f.blob.filename == rubric.secondary_file }[0] || nil
+    participant.files.find_by_filename(rubric.secondary_file)
+  end
+
+  # Downloads all files needed. Returns path of rubric's primary and secondary files.
+  def download(*dir)
+    # copy input files
+    Helli::Attachment.download(rubric.assignment.input_files, *dir)
+    [Helli::Attachment.download_one(primary_file, *dir), Helli::Attachment.download(secondary_file, *dir)]
   end
 
   # Accepts a series of options and then invokes +run()+ per its rubric type.
   def run(options)
+    gi_stdout = ''
+    gi_stderr = ''
+    gi_error = 0
+    gi_grade = 0
+
     if participant.grade.no_submission?
-      # no submission at all
-      gi_result = {
-        status: :no_submission,
-        feedback: 'No submission'
-      }
+      # no submission per grade worksheet
+      gi_status = :no_submission
+      gi_feedback = 'No submission'
     elsif primary_file.nil?
-      # submitted, but no filename matched
+      # submitted, but no matched filename
       # TODO: handle filename typo, this is just a temporary solution
-      gi_result = {
-        status: :unresolved,
-        feedback: Helli::Message.resolve_manually('No matched filename')
-      }
+      gi_status = :unresolved
+      gi_feedback = Helli::Message.resolve_manually('No matched filename')
     else
       # download files
-      f_source = Helli::Attachment.download(primary_file, 'java', "participant_#{participant.id}")[0]
-      f_test = Helli::Attachment.download(secondary_file, 'java', "participant_#{participant.id}")[0]
-
-      # copy input files
-      input_files = rubric.assignment.input_files
-      input_files_path = Helli::Attachment.download(input_files, 'java', "participant_#{participant.id}")
-
-      # # replace input file name to path
-      # stdin_data = options.dig(:stdin, :data)
-      # if stdin_data
-      #   stdin_data = stdin_data.split("\n").map! do |str|
-      #     # find(-> { str }): set default value if cannot found
-      #     input_files_path.find(-> { str }) { |path| File.basename(path) == str }
-      #   end
-      #   # put new stdin_data back
-      #   options[:stdin][:data] = stdin_data.join("\n")
-      # end
+      primary, secondary = download('java', "participant_#{participant.id}")
 
       begin
-        process, error = rubric.run(f_source, f_test, options)
+        process, error = rubric.run(primary, secondary, options)
       rescue StandardError => e
         msg = e.message
         gi_result = {
@@ -77,8 +69,8 @@ class GradeItem < ApplicationRecord
         return
       end
 
-      source_filename = File.basename(f_source)
-      source_file_contents = File.read(f_source)
+      source_filename = File.basename(primary)
+      source_file_contents = File.read(primary)
       exitstatus = process.exitstatus
 
       # grade_item attributes
@@ -152,24 +144,17 @@ class GradeItem < ApplicationRecord
         exitstatus: exitstatus,
         error: gi_error
       )
-
-      # hide full file path in production
-      if Rails.env.production?
-        gi_stdout = gi_stdout.gsub(f_source, File.basename(f_source)).gsub(f_test, File.basename(f_test))
-        gi_stderr = gi_stderr.gsub(f_source, File.basename(f_source)).gsub(f_test, File.basename(f_test))
-      end
-
-      # export result
-      gi_result = {
-        status: gi_status,
-        stdout: gi_stdout,
-        stderr: gi_stderr,
-        error: gi_error,
-        grade: gi_grade,
-        feedback: gi_feedback
-      }
     end
 
+    # export result
+    gi_result = {
+      status: gi_status,
+      stdout: gi_stdout,
+      stderr: gi_stderr,
+      error: gi_error,
+      grade: gi_grade,
+      feedback: gi_feedback
+    }
     update!(gi_result)
   end
 end

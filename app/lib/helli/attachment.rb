@@ -51,14 +51,6 @@ module Helli
         model.attach(io: File.open(path), filename: filename || File.basename(path))
       end
 
-      def find_by_name(model, name)
-        model.find { |attachment| attachment.filename == name }
-      end
-
-      def delete_by_name(model, name)
-        find_by_name(model, name).purge
-      end
-
       # Deletes the attachment by id. Pass an array of ids if there are multiple to delete.
       def delete_by_id(id)
         Array(id).each { |i| ActiveStorage::Attachment.find(i).purge_later }
@@ -118,6 +110,10 @@ module Helli
         end
 
         list
+      end
+
+      def download_one(attachments, *dir)
+        download(attachments, *dir)[0]
       end
 
       ##################

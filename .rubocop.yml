@@ -6,5 +6,8 @@ require:
 Naming/MethodParameterName:
   MinNameLength: 1
 
+Rails/DynamicFindBy:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
