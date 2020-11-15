@@ -18,7 +18,7 @@ class AssignmentsViewController < ApplicationController
       @has_input_files = @assignment.input_files.attached?
       @has_grades_uploaded = @grades.any?
       @has_submission = @submissions.present?
-      @has_rubric = @rubrics.all? { |r| r.rubric_criteria.any? }
+      @has_rubric = @rubrics.present? && @rubrics.all? { |r| r.rubric_criteria.present? }
       @has_grades_filled = @grades.pluck(:grade).any?
     end
   }
