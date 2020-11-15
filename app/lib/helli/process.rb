@@ -20,6 +20,7 @@ class Helli::Process
     Dir.chdir(@wd) do
       Open3.popen3(@cmd) do |i, o, e, t|
         i.puts @stdin
+        i.close
 
         begin
           Timeout.timeout(timeout) do
@@ -31,8 +32,6 @@ class Helli::Process
           Process.kill('KILL', t.pid)
           raise Timeout::Error, 'process timeout exceeded'
         end
-
-        i.close
       end
     end
 
