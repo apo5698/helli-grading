@@ -1,6 +1,5 @@
 <% compile = local_assigns[:compile] %>
 <% execute = local_assigns[:execute] %>
-<% id = rubric.id.to_s %>
 <% title = if compile;
              'Compile';
            elsif execute;
@@ -26,7 +25,7 @@
         <%= verb.capitalize %> with external libraries
       </small>
       <!-- hidden -->
-      <div class="mt-2" id="_options_<%= id %>_lib_enabled" style="display: none">
+      <div class="mt-2" id="_options_lib_enabled" style="display: none">
         <div class="form-group">
           <% @dependencies.each do |d| %>
             <div class="custom-control custom-checkbox">
@@ -52,7 +51,7 @@
         </small>
       <% end %>
       <!-- hidden -->
-      <div class="mt-2" id="_options_<%= id %>_args_enabled" style="display: none">
+      <div class="mt-2" id="_options_args_enabled" style="display: none">
         <% if compile %>
           <div class="form-group">
             <%= args.text_field(:javac, class: 'form-control code', placeholder: '-Xlint:none') %>
@@ -89,7 +88,7 @@
           Enter all inputs needed throughout the entire program.
         </small>
         <!-- hidden -->
-        <div class="mt-2" id="_options_<%= id %>_stdin_enabled" style="display: none">
+        <div class="mt-2" id="_options_stdin_enabled" style="display: none">
           <div class="form-group">
             <!-- Disable Grammarly by data-gramm="false" -->
             <%= stdin.text_area(:data, class: 'form-control code', rows: 5, spellcheck: false, data: { gramm: false }) %>
@@ -121,7 +120,7 @@
           Match program output.
         </small>
         <!-- hidden -->
-        <div class="mt-2" id="_options_<%= id %>_match_enabled" style="display: none">
+        <div class="mt-2" id="_options_match_enabled" style="display: none">
           <div class="form-group">
             <!-- Disable Grammarly by data-gramm="false" -->
             <%= match.text_area(:data, class: 'form-control code', rows: 10, spellcheck: false, data: { gramm: false }) %>

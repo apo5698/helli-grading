@@ -1,4 +1,3 @@
-<h3>Result</h3>
 <div class="table-responsive">
   <table class="table table-hover table-striped">
     <thead>
@@ -16,7 +15,7 @@
     <% rubric.grade_items.each do |item| %>
       <% has_issues = item.success? || item.inactive? %>
       <% tr_color = has_issues ? '' : 'table-danger' %>
-      <tr class="<%= tr_color %>">
+      <tr class="<%= tr_color %>" id="autograding-item-<%= item.id %>">
         <td style="max-width: 100px"><%= item.participant.name %></td>
         <td>
           <% attachment = item.primary_file %>
@@ -55,9 +54,3 @@
     </tbody>
   </table>
 </div>
-
-<style>
-  .tooltip-inner {
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-</style>

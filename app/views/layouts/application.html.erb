@@ -23,7 +23,9 @@
         <div class="col-xl-1"></div>
         <div class="col">
           <div class="pt-4">
-            <%= render 'layouts/flash' %>
+            <div id="flash">
+              <%= render 'layouts/flash' %>
+            </div>
             <%= render 'layouts/breadcrumb' %>
             <%= yield %>
           </div>
