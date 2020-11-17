@@ -16,6 +16,7 @@ class Rubric < ApplicationRecord
     return if rubric_criteria.blank? || grade_items.present?
 
     assignment.participants.each { |p| GradeItem.create_or_find_by!(participant_id: p.id, rubric_id: id) }
+    GradeItem.where(rubric_id: id)
   end
 
   def update_criteria(criteria)

@@ -12,7 +12,7 @@
     </tr>
     </thead>
     <tbody>
-    <% rubric.grade_items.each do |item| %>
+    <% @grade_items.each do |item| %>
       <% has_issues = item.success? || item.inactive? %>
       <% tr_color = has_issues ? '' : 'table-danger' %>
       <tr class="<%= tr_color %>" id="autograding-item-<%= item.id %>">
@@ -21,7 +21,7 @@
           <% attachment = item.primary_file %>
           <% if attachment %>
             <%= link_to(attachment.filename,
-                        course_assignment_grading_grade_item_path(@course, @assignment, rubric, item),
+                        course_assignment_grading_grade_item_path(@course, @assignment, @rubric, item),
                         data: { remote: true, toggle: 'modal', params: { view: :file }.to_param }) %>
           <% end %>
         </td>
@@ -31,14 +31,14 @@
             <span class="badge badge-primary"><%= item.error %></span>
           <% end %>
         </td>
-        <td><%= item.grade || '?' %> / <%= rubric.maximum_grade %></td>
+        <td><%= item.grade || '?' %> / <%= @rubric.maximum_grade %></td>
         <td>
           <% if item.stdout.present? || item.stderr.present? %>
             <% preview_text = item.stderr.present? ? item.stderr : item.stdout %>
             <span data-toggle="tooltip"
                   title="<%= preview_text.length > 200 ? 'Output is too long. Click to view' : preview_text %>">
             <%= link_to('View',
-                        course_assignment_grading_grade_item_path(@course, @assignment, rubric, item),
+                        course_assignment_grading_grade_item_path(@course, @assignment, @rubric, item),
                         data: { remote: true, toggle: 'modal', params: { view: :output }.to_param }) %>
             </span>
           <% end %>
@@ -46,7 +46,7 @@
         <td style="max-width: 250px"><%= item.feedback %></td>
         <td>
           <%= link_to('Edit',
-                      course_assignment_grading_grade_item_path(@course, @assignment, rubric, item),
+                      course_assignment_grading_grade_item_path(@course, @assignment, @rubric, item),
                       data: { remote: true, toggle: 'modal', params: { view: :edit }.to_param }) %>
         </td>
       </tr>

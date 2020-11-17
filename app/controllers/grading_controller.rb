@@ -1,10 +1,12 @@
 class GradingController < AssignmentsViewController
-  before_action lambda {
-    @title = 'Automated Grading'
-    @rubrics.each(&:generate_grade_items)
-    @dependencies = Dependency.public_dependencies
+  before_action -> { @title = 'Automated Grading' }
 
-    @status_colors = {
+  before_action lambda {
+    @rubric = Rubric.find(params.require(:id))
+    @grade_items = @rubric.grade_items.presence || @rubric.generate_grade_items
+
+    @dependencies ||= Dependency.public_dependencies
+    @status_colors ||= {
       inactive: :light,
       success: :success,
       resolved: :info,
@@ -12,7 +14,7 @@ class GradingController < AssignmentsViewController
       error: :error,
       no_submission: :warning
     }
-  }
+  }, except: :index
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading
   def index
@@ -39,17 +41,13 @@ class GradingController < AssignmentsViewController
   #  GET /courses/:course_id/assignments/:assignment_id/grading/:id
   def show
     respond_to do |format|
-      format.html { render 'show', locals: { rubric: Rubric.find(params.require(:id)) } }
+      format.html { render 'show' }
     end
   end
 
   #  PUT /courses/:course_id/assignments/:assignment_id/grading/:id
   def update
-    id = params.require(:id)
-    @rubric = Rubric.find(id)
-    grade_items = @rubric.grade_items
-
-    if grade_items.empty?
+    if @grade_items.empty?
       flash[:error] = 'The rubric has not been completed. '\
                       "#{helpers.link_to 'Complete',
                                          course_assignment_rubrics_path(@course, @assignment)}.".html_safe
@@ -58,7 +56,7 @@ class GradingController < AssignmentsViewController
     end
 
     options = params.require(:options).permit!.to_h
-    grade_items.each { |item| item.run(options) }
+    @grade_items.each { |item| item.run(options) }
 
     respond_to do |format|
       format.js { flash.now[:success] = "Run #{@rubric} complete." }
@@ -72,6 +70,6 @@ class GradingController < AssignmentsViewController
     title = Rubric.find(id)
 
     flash[:success] = "Grading results for #{title} has been reset."
-    redirect_back fallback_location: { action: :index }
+    redirect_back fallback_location: { action: :show }
   end
 end

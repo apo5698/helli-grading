@@ -11,3 +11,6 @@ Rails/DynamicFindBy:
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+
+Style/ClassVars:
+  Enabled: false
