@@ -187,11 +187,13 @@ class Assignment < ApplicationRecord
         feedback << gi.to_s + gi.feedback if gi.feedback.present?
       end
 
-      moodle_max = p.grade.maximum_grade
-      zybooks_max = moodle_max * grades_scale[:zybooks] / 100.0
-      zybooks_percentage = zybooks_scale[zybooks_scores.select { |score| (p.zybooks_total || 0) >= score }[0]] || 0
-      zybooks_partial = zybooks_max * (zybooks_percentage / 100.0)
-      feedback << "[zyBooks]Total: #{p.zybooks_total || 0} => #{zybooks_partial}"
+      if grades_scale[:zybooks].positive?
+        moodle_max = p.grade.maximum_grade
+        zybooks_max = moodle_max * grades_scale[:zybooks] / 100.0
+        zybooks_percentage = zybooks_scale[zybooks_scores.select { |score| (p.zybooks_total || 0) >= score }[0]] || 0
+        zybooks_partial = zybooks_max * (zybooks_percentage / 100.0)
+        feedback << "[zyBooks]Total: #{p.zybooks_total || 0} => #{zybooks_partial}"
+      end
 
       p.grade.update(feedback_comments: feedback.join('; '))
     end
