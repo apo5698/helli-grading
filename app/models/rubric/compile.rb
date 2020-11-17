@@ -12,11 +12,11 @@ class Rubric
     ]
 
     def run(primary_file, _, options)
-      lib = Wce.lib(options)
+      lib = options[:lib].transform_values(&:to_b)
 
       process = Helli::Command::Java.javac(
         primary_file,
-        junit: lib[:junit] || false,
+        junit: lib.delete(:enabled) && lib[:junit].to_b,
         args: options[:args][:javac]
       )
 

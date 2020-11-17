@@ -33,7 +33,7 @@
     $('#autograding-<%= @rubric.id %>').tab('show');
 
     // show/hide options
-    $('input:checkbox[name=toggle]').change(function () {
+    $('input:checkbox').change(function () {
       toggleOptions($(this));
     });
 

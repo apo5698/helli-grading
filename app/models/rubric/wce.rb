@@ -12,13 +12,5 @@ class Rubric
     def grade(primary_file, _, options)
       raise NotImplementedError
     end
-
-    # Converts values of library options from the params to boolean.
-    # Returns empty hash if +options[:lib]+ is not defined.
-    def self.lib(options)
-      return {} unless options[:lib]
-
-      options[:lib].transform_values! { |v| ActiveModel::Type::Boolean.new.cast(v) }
-    end
   end
 end

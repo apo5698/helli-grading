@@ -12,7 +12,7 @@
 <%= form.fields_for :lib do |lib| %>
   <div class="form-group">
     <div class="custom-control custom-checkbox">
-      <%= lib.check_box :enabled, { class: 'custom-control-input', name: :toggle }, true, false %>
+      <%= lib.check_box :enabled, { class: 'custom-control-input' } %>
       <%= lib.label :enabled, 'Libraries', { class: 'custom-control-label' } %>
       <small class="form-text text-muted mt-0">
         <% verb = if compile
@@ -29,7 +29,7 @@
         <div class="form-group">
           <% @dependencies.each do |d| %>
             <div class="custom-control custom-checkbox">
-              <%= lib.check_box(d.name, { class: 'custom-control-input' }, true, false) %>
+              <%= lib.check_box(d.name, { class: 'custom-control-input' }) %>
               <%= lib.label(d.name, d.name, class: 'custom-control-label') %>
               <small class="form-text text-muted mt-0"><%= d.executable %></small>
             </div>
@@ -43,7 +43,7 @@
 <%= form.fields_for :args do |args| %>
   <div class="form-group">
     <div class="custom-control custom-checkbox">
-      <%= args.check_box :enabled, { class: 'custom-control-input', name: :toggle }, true, false %>
+      <%= args.check_box :enabled, { class: 'custom-control-input' } %>
       <%= args.label :enabled, 'Arguments', { class: 'custom-control-label' } %>
       <% if execute %>
         <small class="form-text text-muted mt-0">
@@ -81,7 +81,7 @@
   <%= form.fields_for :stdin do |stdin| %>
     <div class="form-group">
       <div class="custom-control custom-checkbox">
-        <%= stdin.check_box :enabled, { class: 'custom-control-input', name: :toggle }, true, false %>
+        <%= stdin.check_box :enabled, { class: 'custom-control-input' } %>
         <%= stdin.label :enabled, 'Standard input', { class: 'custom-control-label' } %>
         <small class="form-text text-muted mt-0">
           Read input from keyboard - <span class="code">Scanner(System.in)</span><br/>
@@ -114,7 +114,7 @@
   <%= form.fields_for :match do |match| %>
     <div class="form-group">
       <div class="custom-control custom-checkbox">
-        <%= match.check_box :enabled, { class: 'custom-control-input', name: :toggle }, true, false %>
+        <%= match.check_box :enabled, { class: 'custom-control-input' } %>
         <%= match.label :enabled, 'Output matching', { class: 'custom-control-label' } %>
         <small class="form-text text-muted mt-0">
           Match program output.
