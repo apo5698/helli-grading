@@ -76,6 +76,7 @@ class GradeItem < ApplicationRecord
       # grade_item attributes
       gi_status = :success
       gi_stdout = process.stdout
+      gi_stdout << "\n\n#{process.other.presence}".strip
       gi_stderr = process.stderr
       gi_error = error
       gi_grade = 0
@@ -98,7 +99,7 @@ class GradeItem < ApplicationRecord
           else
             # classname does not match -> error!
             gi_status = :error
-            gi_feedback << format(c.feedback, actual: classname)
+            gi_feedback << Helli::Message.format(c.feedback, actual: classname)
           end
         elsif c.compile?
           if exitstatus.zero?

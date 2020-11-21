@@ -45,20 +45,23 @@
     <div class="custom-control custom-checkbox">
       <%= args.check_box :enabled, { class: 'custom-control-input' } %>
       <%= args.label :enabled, 'Arguments', { class: 'custom-control-label' } %>
-      <% if execute %>
-        <small class="form-text text-muted mt-0">
-          Using command line arguments - <span class="code">String[] args</span>
-        </small>
-      <% end %>
+      <small class="form-text text-muted mt-0">
+        <% if execute %>
+          Command line arguments - <span class="code">String[] args</span>
+        <% end %>
+        <% if compile %>
+          javac arguments
+        <% end %>
+      </small>
       <!-- hidden -->
       <div class="mt-2" id="_options_args_enabled" style="display: none">
         <% if compile %>
           <div class="form-group">
             <%= args.text_field(:javac, class: 'form-control code', placeholder: '-Xlint:none') %>
             <small class="form-text text-muted">
-              Separated by spaces.<br/>
-              Use quotes if arguments contain spaces.<br/>
-              Use <b>Libraries</b> option above for using JUnit.
+              Separated by spaces<br/>
+              Use quotes if arguments contain spaces<br/>
+              Use <b>Libraries</b> option above for using JUnit
             </small>
           </div>
         <% end %>
@@ -85,7 +88,7 @@
         <%= stdin.label :enabled, 'Standard input', { class: 'custom-control-label' } %>
         <small class="form-text text-muted mt-0">
           Read input from keyboard - <span class="code">Scanner(System.in)</span><br/>
-          Enter all inputs needed throughout the entire program.
+          Enter all inputs needed throughout the entire program
         </small>
         <!-- hidden -->
         <div class="mt-2" id="_options_stdin_enabled" style="display: none">
@@ -117,7 +120,7 @@
         <%= match.check_box :enabled, { class: 'custom-control-input' } %>
         <%= match.label :enabled, 'Output matching', { class: 'custom-control-label' } %>
         <small class="form-text text-muted mt-0">
-          Match program output.
+          Match program output
         </small>
         <!-- hidden -->
         <div class="mt-2" id="_options_match_enabled" style="display: none">
@@ -130,4 +133,25 @@
       </div>
     </div>
   <% end %>
+<% end %>
+
+<%= form.fields_for :create do |create| %>
+  <div class="form-group">
+    <div class="custom-control custom-checkbox">
+      <%= create.check_box :enabled, { class: 'custom-control-input' } %>
+      <%= create.label :enabled, 'Create files', { class: 'custom-control-label' } %>
+      <small class="form-text text-muted mt-0">
+        Program creates output files
+      </small>
+      <!-- hidden -->
+      <div class="mt-2" id="_options_create_enabled" style="display: none">
+        <div class="form-group">
+          <%= create.text_field(:filename, class: 'form-control code', placeholder: 'output.txt') %>
+          <small class="form-text text-muted">
+            Separated by spaces
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>

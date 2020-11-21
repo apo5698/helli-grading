@@ -22,6 +22,17 @@ class Rubric
       )
       stderr = process.stderr
 
+      if options[:create].delete(:enabled).to_b
+        created_file = options[:create][:filename]
+        Dir.chdir(File.dirname(primary_file)) do
+          process.other = if File.exist?(created_file)
+                            "[#{created_file}]\n#{File.read(created_file)}"
+                          else
+                            "#{created_file} not created"
+                          end
+        end
+      end
+
       error = 0
       # runtime errors
       error += 1 if stderr.include?('Exception in thread')
