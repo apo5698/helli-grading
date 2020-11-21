@@ -30,13 +30,13 @@ class GradesController < AssignmentsViewController
   # Upload grade worksheet.
   #  POST /courses/:course_id/assignments/:assignment_id/grades
   def create
-    # begin
+    begin
       worksheet = CSV.parse(params[:_json], MoodleGradingWorksheetAdapter)
       @assignment.generate_records(worksheet)
       flash[:success] = "Moodle grade worksheet uploaded (#{params[:_json].length} participants)."
-    # rescue StandardError => e
-    #   flash[:error] = e.message
-    # end
+    rescue StandardError => e
+      flash[:error] = e.message
+    end
 
     redirect_back(fallback_location: { action: :show })
   end

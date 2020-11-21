@@ -24,8 +24,8 @@ module Helli::Parser::CSV
       raise EmptyFileError if data.blank?
 
       header = adapter.header
-      unless header_valid?(data.first.keys, header.values)
-        raise ParseError, 'Unable to parse csv data, it may contain invalid headers or cells.'
+      unless header_valid?(data.first.keys.map(&:downcase), header.values.map(&:downcase))
+        raise ParseError, 'Unable to parse csv data with invalid headers.'
       end
 
       adapter.parse(data)

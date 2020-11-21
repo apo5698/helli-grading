@@ -49,7 +49,7 @@ class Dependency < ApplicationRecord
 
   # Returns the absolute path of a dependency by name, *including* executable.
   def self.path(name)
-    Rails.root.join(find_by(name: name).path)
+    Rails.root.join(find_by(name: name).path).to_s
   end
 
   # Returns the root path of dependencies.

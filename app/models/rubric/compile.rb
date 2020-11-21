@@ -21,7 +21,8 @@ class Rubric
       )
 
       # only matches "* error(s)" at the end of stderr
-      error = process.exitstatus.zero? ? 0 : process.stderr.match(/\d+(?= errors?)/)[0]
+      # match returns +nil+ if no match found
+      error = process.exitstatus.zero? ? 0 : process.stderr.match(/\d+(?= errors?)/)[0] || 0
 
       [process, error]
     end

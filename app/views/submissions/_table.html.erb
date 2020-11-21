@@ -28,7 +28,7 @@
             <% if participant.files.attached? %>
               <% participant.files.each do |file| %>
                 <div class="row">
-                  <div class="col-1">
+                  <div class="col-2">
                     <% case file.content_type %>
                     <% when 'text/x-java' %>
                       <i class="fab fa-java" data-toggle="tooltip" title="Java source code"></i>

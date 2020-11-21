@@ -55,8 +55,8 @@ module Helli::Command::Java
       destination = '.'
 
       classpath = [destination.dup]
-      classpath << "#{@junit}/*" if junit
-      classpath.join(CLASSPATH_SEPARATOR)
+      classpath << "#{File.dirname(@junit)}/*" if junit
+      classpath = classpath.join(CLASSPATH_SEPARATOR)
 
       filename = File.basename(path)
 

@@ -40,6 +40,12 @@ class GradingController < AssignmentsViewController
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading/:id
   def show
+    if @grade_items.blank?
+      flash[:error] = 'Rubrics not completed.'
+      redirect_back fallback_location: ''
+      return
+    end
+
     respond_to do |format|
       format.html { render 'show' }
     end
