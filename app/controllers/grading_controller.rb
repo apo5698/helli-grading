@@ -14,6 +14,7 @@ class GradingController < AssignmentsViewController
       error: :error,
       no_submission: :warning
     }
+    @checkstyle_rules = Rubric::Checkstyle::RULES
   }, except: :index
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading

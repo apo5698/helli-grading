@@ -4,8 +4,8 @@ require 'open3'
 
 # Creates child processes to run commands.
 class Helli::Process
-  attr_reader :wd, :cmd, :stdin, :stdout, :stderr, :exitstatus
-  attr_accessor :other
+  attr_reader :wd, :cmd, :stdin, :exitstatus
+  attr_accessor :stdout, :stderr, :other
 
   # Creates a Process in at given working directory.
   def initialize(wd = nil)

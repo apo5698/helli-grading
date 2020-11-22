@@ -1,14 +1,10 @@
 <h3>Checkstyle Rules</h3>
 <div class="form-group" id="javadoc-rules">
-  <% Checkstyle::RULES.each do |rule, description| %>
+  <% @checkstyle_rules.each do |rule, description| %>
     <div class="custom-control custom-checkbox mb-1">
-      <%= form.check_box("options[#{rule}]", class: 'custom-control-input', checked: true) %>
-      <label class="custom-control-label" for="options[<%= rule %>]" aria-describedby="<%= rule %>-help">
-        <%= rule %>
-      </label>
-      <small id="<%= rule %>-help" class="form-text text-muted mt-0">
-        <%= description %>
-      </small>
+      <%= form.check_box(rule, class: 'custom-control-input', checked: true) %>
+      <label class="custom-control-label" for="_options_<%= rule %>"><%= rule %></label>
+      <small id="<%= rule %>-help" class="form-text text-muted mt-0"><%= description %></small>
     </div>
   <% end %>
 

@@ -11,34 +11,35 @@ class Rubric
       { action: :deduct_each, point: 1.0, criterion: :checkstyle_warning, feedback: @@feedbacks[:checkstyle_warning] }
     ]
 
+    # noinspection SpellCheckingInspection
     RULES = {
-      'EmptyLineSeparator': 'Definition is not separated from previous statement',
-      'FileTabCharacter': 'Line contains a tab character',
-      'Indentation': 'Incorrect indentation level',
-      '(JavadocVariable)|MissingJavadoc(Type|Method)': 'Missing Javadoc comment',
-      'LineLength': 'Line is longer than 100 characters',
-      'LocalVariableName': 'Local variable name must match pattern ^[a-z][a-zA-Z0-9]*$',
-      'MagicNumber': 'Contains magic numbers',
-      'UnusedImports': 'Contains Unused imports',
-      'WhitespaceAround': 'Operators/operands are not preceded/followed with whitespace'
+      'Javadoc': 'Missing Javadoc comment',
+      'MagicNumber': 'Contains magic numbers'
     }.freeze
 
     def run(primary_file, _, options)
-      opt = options[:checkstyle].transform_values { |v| v.to_i == 1 }
-      raise StandardError, 'No checkstyle rule selected.' if opt.values.all?(&:!) # (&:!) means false
+      options.transform_values!(&:to_b)
 
       # checkstyle errors are in stdout, not stderr
       process = Helli::Command::Java.checkstyle(primary_file)
 
       # warnings begin with [WARN]
       warnings = process.stdout.split("\n").grep(/^\[WARN\]\s.+$/)
-      error = warnings.count
+
       # invert match: remove unselected rules and keep those selected
-      if error.positive?
-        opt.each { |rule, enabled| warnings = warnings.grep_v(/\[#{rule}\]$/) unless enabled }
+      if warnings.count.positive?
+        selected_rules = options.reject { |_, enabled| enabled }.keys
+        selected_rules.each { |rule| warnings = warnings.grep_v(/(?<=.\[).*#{rule}.*(?=\])/) }
       end
 
-      [process, error]
+      # hide full path in production
+      if Rails.env.production?
+        process.stdout = warnings.map do |line|
+          line.sub(Rails.root.join(primary_file).to_s, File.basename(primary_file))
+        end.join("\n")
+      end
+
+      [process, warnings.count]
     end
   end
 end

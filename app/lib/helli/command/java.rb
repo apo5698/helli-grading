@@ -106,16 +106,17 @@ module Helli::Command::Java
 
     # Runs checkstyle on a java file.
     #
-    #   p = Helli::Command::Java.checkstyle('HelloWorld.java')
-    #     #=> { stdout: '** Doing style check...\nStarting audit...\nAudit done.\n\n'
-    #           stderr: '',
-    #           exitcode: 0 }
+    #   p = Helli::Command::Java.checkstyle('day1/student1/HelloWorldTest.java')
+    #     p.working_directory #=> "day1/student1"
+    #     p.command           #=> "checkstyle day1/student1/HelloWorldTest.java"
+    #     p.stdin             #=> ""
+    #     p.stdout            #=> "** Doing style check...\nStarting audit...\nAudit done.\n\n"
+    #     p.stderr            #=> ""
+    #     p.exitstatus        #=> 0
     #
-    # Warnings are outputted to +stdout+ instead of +stderr+.
-    def checkstyle(file)
-      stdout, stderr, status = Open3.capture3(@checkstyle, file)
-      stdout.gsub!(file, File.basename(file)) if Rails.env.production?
-      { stdout: stdout, stderr: stderr, exitstatus: status.exitstatus }
+    # Warnings are in +stdout+ instead of +stderr+.
+    def checkstyle(path)
+      Helli::Process.new(File.dirname(path)).open(@checkstyle, File.basename(path))
     end
   end
 end
