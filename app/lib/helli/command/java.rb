@@ -19,6 +19,13 @@ module Helli::Command::Java
   @checkstyle = Dependency.path('cs-checkstyle')
   @junit = Dependency.path('junit')
 
+  # Raises when the classfile is not found (file not compiled).
+  class ClassFileNotFoundError < Helli::FileNotFoundError
+    def initialize(filename)
+      super filename.sub(File.extname(filename), '.class')
+    end
+  end
+
   class << self
     # Create directories for nested structure.
     def setup(working_directory)
@@ -51,7 +58,8 @@ module Helli::Command::Java
     #     p.stderr            #=> "Invalid.java:4: error: ';' expected\n..."
     #     p.exitstatus        #=> 1
     def javac(path, args: '', junit: false)
-      raise UnsupportedFileError, 'javac: unsupported file type' unless path.end_with?(JAVA_FILE_EXTENSION)
+      raise Helli::FileNotFoundError, path unless File.exist?(path)
+      raise Helli::UnsupportedFileTypeError, File.extname(path) unless path.end_with?(JAVA_FILE_EXTENSION)
 
       wd = File.dirname(path)
       destination = '.'
@@ -98,13 +106,18 @@ module Helli::Command::Java
     #     p.stderr            #=> ""
     #     p.exitstatus        #=> 0
     def java(path, args: '', stdin: '', junit: false)
+      raise Helli::FileNotFoundError, path unless File.exist?(path)
+
       unless [JAVA_FILE_EXTENSION, CLASS_FILE_EXTENSION].include?(File.extname(path))
-        raise UnsupportedFileError, 'java: unsupported file type'
+        raise Helli::UnsupportedFileTypeError, File.extname(path)
       end
+
+      classfile = path.sub(File.extname(path), CLASS_FILE_EXTENSION)
+      raise ClassFileNotFoundError, classfile unless File.exist?(classfile)
 
       wd = File.dirname(path)
       classpath = '.'
-      classname = File.basename(path).delete_suffix(JAVA_FILE_EXTENSION).delete_suffix(CLASS_FILE_EXTENSION)
+      classname = File.basename(classfile).delete_suffix(CLASS_FILE_EXTENSION)
 
       cmd = if junit
               ['java', '-jar', @junit, '-cp', classpath, '-c', classname, args]
