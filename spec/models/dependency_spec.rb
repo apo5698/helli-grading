@@ -41,8 +41,8 @@ describe Dependency, ignore_clean: true do
   end
 
   describe '.path' do
-    it { expect(described_class.path(git.name)).to eq(git.path) }
-    it { expect(described_class.path(direct.name)).to eq(direct.path) }
+    it { expect(described_class.path(git.name)).to eq(Rails.root.join(git.path).to_s) }
+    it { expect(described_class.path(direct.name)).to eq(Rails.root.join(direct.path).to_s) }
   end
 
   describe '.destroy' do
