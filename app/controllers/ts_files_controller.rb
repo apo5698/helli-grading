@@ -1,5 +1,8 @@
-class TsFilesController < ApplicationController
-  before_action :set_variables
+class TsFilesController < AssignmentsViewController
+  before_action lambda {
+    flash[:error] = 'Not implemented.'
+    redirect_back fallback_location: { controller: :assignments }
+  }
 
   def index
     @ts_files = @ts_file.files
@@ -29,12 +32,5 @@ class TsFilesController < ApplicationController
       flash[:success] = 'Selected file(s) deleted.'
     end
     redirect_back(fallback_location: '')
-  end
-
-  private
-
-  def set_variables
-    super
-    @ts_file = TsFilesHelper.create(@assignment.id)
   end
 end

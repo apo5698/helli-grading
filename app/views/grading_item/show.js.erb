@@ -1,8 +1,0 @@
-<% if params[:modal_size] %>
-$('.modal-dialog').addClass('modal-<%= params[:modal_size] %>');
-<% end %>
-$('.modal-content').html("<%= j render partial: 'grading_item/show' %>");
-$('.modal').modal('show');
-$('.modal').on('hidden.bs.modal', () => {
-  $('.modal-dialog').removeClass('modal-<%= params[:modal_size] %>');
-});

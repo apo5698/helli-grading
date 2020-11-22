@@ -1,5 +1,5 @@
 <div class="mb-2">
-  <%= link_to('dependencies.json', Dependency.json, class: 'btn btn-secondary') %>
+  <%= link_to('dependencies.json', { action: :json }, { class: 'btn btn-secondary', target: '_blank' }) %>
 </div>
 <table class="table table-hover">
   <thead>
@@ -12,9 +12,9 @@
   <tbody>
   <% @dependencies.each do |d| %>
     <tr>
-      <td><%= d.name %></td>
-      <td><%= d.version %></td>
-      <td><%= link_to(d.source, d.source, target: '_blank') %></td>
+      <td><%= d['name'] %></td>
+      <td><%= d['version'] %></td>
+      <td><%= link_to(d['source'], d['source'], target: '_blank') %></td>
     </tr>
   <% end %>
   </tbody>

@@ -1,0 +1,30 @@
+<h3>Preview</h3>
+<div class="table-responsive">
+  <table class="table table-hover table-striped table-bordered">
+    <thead>
+    <tr class="table-active">
+      <% @csv_header.values.each do |col| %>
+        <th scope="col"><%= col %></th>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+    <% @grades.each do |g| %>
+      <tr>
+        <% @csv_header.keys.each do |attr| %>
+          <td class="text-nowrap"><%= g.csv_string(attr) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="float-right mt-3">
+  <div class="d-inline-block">
+    <%= button_to('Clear', {}, class: 'btn btn-secondary', method: :delete,
+                  data: { confirm: 'All exported grades will be cleared. Proceed?' }) %>
+  </div>
+  <div class="d-inline-block">
+    <%= button_to('Export', new_course_assignment_grades_path, { class: 'btn btn-primary', method: :get }) %>
+  </div>
+</div>

@@ -1,10 +1,16 @@
-<%= render partial: '/assignments/header', locals: { html: "<li class='breadcrumb-item active'>#{@assignment.name}</li>".html_safe } %>
+<% breadcrumb_for request.path %>
+
+<%= render partial: 'assignment_sidebar' %>
+<h2>Setup</h2>
+<hr>
 
 <div class="row">
-  <div class="col-lg-3 mb-4">
-    <%= render partial: '/assignments/sidebar' %>
+  <div class="col-xl-7">
+    <%= render partial: 'assignments/programs' %>
+    <%= render partial: 'assignments/input_files' %>
+    <%= render partial: 'grades/upload_moodle' %>
   </div>
-  <div class="col-lg-9">
-    <%= render partial: 'assignments/overview' %>
+  <div class="col">
+    <%= render partial: 'status' %>
   </div>
 </div>

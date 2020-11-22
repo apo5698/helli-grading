@@ -1,0 +1,157 @@
+<% compile = local_assigns[:compile] %>
+<% execute = local_assigns[:execute] %>
+<% title = if compile;
+             'Compile';
+           elsif execute;
+             'Execute';
+           else
+             'Java'; # for WCE
+           end %>
+<h3 class="mb-3"><%= title %> Options</h3>
+
+<%= form.fields_for :lib do |lib| %>
+  <div class="form-group">
+    <div class="custom-control custom-checkbox">
+      <%= lib.check_box :enabled, { class: 'custom-control-input' } %>
+      <%= lib.label :enabled, 'Libraries', { class: 'custom-control-label' } %>
+      <small class="form-text text-muted mt-0">
+        <% verb = if compile
+                    'compile'
+                  elsif execute
+                    'execute'
+                  else
+                    'compile and execute'
+                  end %>
+        <%= verb.capitalize %> with external libraries
+      </small>
+      <!-- hidden -->
+      <div class="mt-2" id="_options_lib_enabled" style="display: none">
+        <div class="form-group">
+          <% @dependencies.each do |d| %>
+            <div class="custom-control custom-checkbox">
+              <%= lib.check_box(d.name, { class: 'custom-control-input' }) %>
+              <%= lib.label(d.name, d.name, class: 'custom-control-label') %>
+              <small class="form-text text-muted mt-0"><%= d.executable %></small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= form.fields_for :args do |args| %>
+  <div class="form-group">
+    <div class="custom-control custom-checkbox">
+      <%= args.check_box :enabled, { class: 'custom-control-input' } %>
+      <%= args.label :enabled, 'Arguments', { class: 'custom-control-label' } %>
+      <small class="form-text text-muted mt-0">
+        <% if execute %>
+          Command line arguments - <span class="code">String[] args</span>
+        <% end %>
+        <% if compile %>
+          javac arguments
+        <% end %>
+      </small>
+      <!-- hidden -->
+      <div class="mt-2" id="_options_args_enabled" style="display: none">
+        <% if compile %>
+          <div class="form-group">
+            <%= args.text_field(:javac, class: 'form-control code', placeholder: '-Xlint:none') %>
+            <small class="form-text text-muted">
+              Separated by spaces<br/>
+              Use quotes if arguments contain spaces<br/>
+              Use <b>Libraries</b> option above for using JUnit
+            </small>
+          </div>
+        <% end %>
+        <% if execute %>
+          <div class="form-group">
+            <%= args.text_field(:java, class: 'form-control code', placeholder: '--test') %>
+            <small class="form-text text-muted">
+              Separated by spaces.<br/>
+              Use quotes if arguments contain spaces.<br/>
+              Use <b>Libraries</b> option above for using JUnit.
+            </small>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% unless compile %>
+  <%= form.fields_for :stdin do |stdin| %>
+    <div class="form-group">
+      <div class="custom-control custom-checkbox">
+        <%= stdin.check_box :enabled, { class: 'custom-control-input' } %>
+        <%= stdin.label :enabled, 'Standard input', { class: 'custom-control-label' } %>
+        <small class="form-text text-muted mt-0">
+          Read input from keyboard - <span class="code">Scanner(System.in)</span><br/>
+          Enter all inputs needed throughout the entire program
+        </small>
+        <!-- hidden -->
+        <div class="mt-2" id="_options_stdin_enabled" style="display: none">
+          <div class="form-group">
+            <!-- Disable Grammarly by data-gramm="false" -->
+            <%= stdin.text_area(:data, class: 'form-control code', rows: 5, spellcheck: false, data: { gramm: false }) %>
+            <small class="form-text text-muted">Separated by newlines</small>
+          </div>
+          <div class="row">
+            <div class="col-auto">
+              <div class="card">
+                <h6 class="card-header">Available Input Files</h6>
+                <ul class="list-group list-group-flush">
+                  <% @assignment.input_files.each do |input_file| %>
+                    <li class="list-group-item"><%= input_file.filename %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= form.fields_for :match do |match| %>
+    <div class="form-group">
+      <div class="custom-control custom-checkbox">
+        <%= match.check_box :enabled, { class: 'custom-control-input' } %>
+        <%= match.label :enabled, 'Output matching', { class: 'custom-control-label' } %>
+        <small class="form-text text-muted mt-0">
+          Match program output
+        </small>
+        <!-- hidden -->
+        <div class="mt-2" id="_options_match_enabled" style="display: none">
+          <div class="form-group">
+            <!-- Disable Grammarly by data-gramm="false" -->
+            <%= match.text_area(:data, class: 'form-control code', rows: 10, spellcheck: false, data: { gramm: false }) %>
+            <small class="form-text text-muted"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%= form.fields_for :create do |create| %>
+  <div class="form-group">
+    <div class="custom-control custom-checkbox">
+      <%= create.check_box :enabled, { class: 'custom-control-input' } %>
+      <%= create.label :enabled, 'Create files', { class: 'custom-control-label' } %>
+      <small class="form-text text-muted mt-0">
+        Program creates output files
+      </small>
+      <!-- hidden -->
+      <div class="mt-2" id="_options_create_enabled" style="display: none">
+        <div class="form-group">
+          <%= create.text_field(:filename, class: 'form-control code', placeholder: 'output.txt') %>
+          <small class="form-text text-muted">
+            Separated by spaces
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

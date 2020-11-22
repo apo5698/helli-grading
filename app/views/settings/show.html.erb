@@ -1,0 +1,36 @@
+<% breadcrumb_for request.path %>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#dependencies">Dependencies</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#general">General</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane fade" id="general">
+    <%= render partial: 'settings/general' %>
+  </div>
+  <div class="tab-pane fade" id="dependencies">
+    <%= render partial: 'settings/dependencies' %>
+  </div>
+</div>
+<script>
+  $(document).on('turbolinks:load', () => {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+      localStorage.setItem('settingsActiveTab', $(this).attr('href'));
+    });
+
+    let tab = localStorage.getItem('settingsActiveTab');
+    if (tab) {
+      $('a[href="' + tab + '"]').tab('show');
+    } else {
+      $('a[href="#dependencies"]').tab('show');
+    }
+  });
+
+  $(window).on('beforeunload', () => {
+    localStorage.removeItem('settingsActiveTab');
+  });
+</script>

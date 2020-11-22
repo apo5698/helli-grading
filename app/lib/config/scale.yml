@@ -1,0 +1,14 @@
+exercise:
+  program: 50
+  zybooks: 50
+  other: 0
+project:
+  program: 100
+  zybooks: 0
+  other: 0
+zybooks:
+  90: 100
+  80: 80
+  60: 60
+  40: 40
+  10: 20

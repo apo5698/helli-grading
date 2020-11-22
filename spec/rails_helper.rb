@@ -8,7 +8,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-
+require 'helli/error'
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -32,13 +32,34 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
 RSpec.configure do |config|
+  # Load testing dependencies (root path different from production)
+  dependency_path = 'spec/fixtures/dependency'
+  FileUtils.mkdir_p(dependency_path)
+  ENV['DEPENDENCY_FILE'] = "#{dependency_path}/dependencies.yml"
+  FileUtils.touch("#{dependency_path}/empty.yml")
+
+  def load_dependencies
+    Dependency.delete_all
+    config = ENV['DEPENDENCY_FILE']
+    FileUtils.cp('config/dependencies.yml', config)
+    File.write(config, File.read(config).sub(/(?<=root: )(.*)/, 'spec/fixtures/dependency/downloads'))
+    Dependency.load(config)
+    Dependency.download_all
+  end
+
+  load_dependencies
+
+  # Automatically adding metadata
+  config.infer_spec_type_from_file_location!
+
   # Use FactoryBot
   config.include FactoryBot::Syntax::Methods
 
   # DatabaseCleaner
   config.before(:suite) do
-    DatabaseCleaner.clean_with :truncation
+    DatabaseCleaner.clean_with(:truncation, except: 'dependencies')
   end
 
   config.before do
@@ -50,13 +71,17 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  def login(user)
+    request.session[:user_id] = user.id
+  end
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false

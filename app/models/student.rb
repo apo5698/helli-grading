@@ -1,9 +1,11 @@
 class Student < ApplicationRecord
-  def <=>(a)
-    [last_name, first_name] <=> [a.last_name, a.first_name]
+  def ==(other)
+    email == other.email
   end
 
-  def to_s
-    "#{last_name} #{first_name}"
+  def <=>(other)
+    a = name.split(' ')
+    b = other.name.split(' ')
+    [a[1], a[0]] <=> [b[1], b[0]]
   end
 end

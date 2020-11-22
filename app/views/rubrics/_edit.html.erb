@@ -1,0 +1,46 @@
+<%= form.fields_for :criteria do |f| %>
+  <div class="table-responsive">
+    <table class="table table-sm table-hover">
+      <thead>
+      <tr class="table-active">
+        <th scope="col" style="max-width: 150px">Action</th>
+        <th scope="col" style="max-width: 100px">Points</th>
+        <th scope="col" style="max-width: 300px">Criterion</th>
+        <th scope="col" style="max-width: 300px">Feedback on failure</th>
+        <!--<th class="col" scope="col">?</th>-->
+      </tr>
+      </thead>
+      <tbody>
+      <% default_set = rubric.default_set %>
+      <% criteria = rubric.rubric_criteria %>
+      <% criteria = default_set if criteria.empty? %>
+      <% criteria.each_with_index do |criterion, index| %>
+        <%= f.fields_for index.to_s do |f1| %>
+          <tr>
+            <td style="max-width: 150px">
+              <%= f1.select :action, @actions, { selected: criterion[:action] }, { class: 'custom-select border-0' } %>
+            </td>
+            <td style="max-width: 100px">
+              <%= f1.text_field :point, value: criterion[:point], class: 'form-control border-0', required: true %>
+            </td>
+            <td style="max-width: 300px">
+              <%= f1.select :criterion, @criteria, { selected: criterion[:criterion] }, { class: 'custom-select border-0' } %>
+            </td>
+            <td style="max-width: 300px">
+              <%= f1.text_field :feedback, value: criterion[:feedback], class: 'form-control border-0' %>
+            </td>
+            <!--<td class="col">-->
+            <!--  <a class="text-body a-del text-hide"><i class="fas fa-minus"></i></a>-->
+            <!--</td>-->
+          </tr>
+        <% end %>
+      <% end %>
+      <tr class="text-muted" id="new_row_<%= rubric.id %>">
+        <td colspan="6">
+          + New
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>

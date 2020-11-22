@@ -4,6 +4,7 @@ rvm:
 branches:
   only:
     - master
+    - test
 git:
   submodules: false
 before_install:

@@ -1,0 +1,57 @@
+<% breadcrumb_for request.path.delete_suffix(@rubric.id.to_s) %>
+
+<%= render 'assignment_sidebar' %>
+<h2 class="mb-3">Automated Grading</h2>
+
+<ul class="nav nav-tabs" id="autograding">
+  <% @rubrics.each do |rubric| %>
+    <li class="nav-item">
+      <a href="<%= course_assignment_grading_path(@course, @assignment, rubric) %>"
+         class="nav-link" id="autograding-<%= rubric.id %>">
+        <%= rubric %>
+      </a>
+    </li>
+  <% end %>
+</ul>
+
+<div class="tab-pane show active" id="autograding-<%= @rubric.id %>">
+  <%= render partial: 'grading/options' %>
+
+  <h3>Result</h3>
+  <div id="autograding-result">
+    <%= render partial: 'grading/result' %>
+  </div>
+  <div class="float-right mt-2 mb-4">
+    <%= link_to 'Reset grading status', course_assignment_grading_path(@course, @assignment, @rubric),
+                method: :delete, data: { confirm: 'All grading results will be cleared. Proceed?' } %>
+  </div>
+</div>
+
+<% content_for :js do %>
+  <!--suppress JSUnusedAssignment-->
+  <script>
+    $('#autograding-<%= @rubric.id %>').tab('show');
+
+    // show/hide options
+    $('input:checkbox').change(function () {
+      toggleOptions($(this));
+    });
+
+    function toggleOptions(checkbox) {
+      let id = checkbox.prop('id');
+      let options = $(`div#${id}`);
+      if (checkbox.prop('checked')) {
+        options.show();
+      } else {
+        options.hide();
+      }
+    }
+  </script>
+<% end %>
+
+<!--suppress CssUnusedSymbol-->
+<style>
+  .tooltip-inner {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+</style>

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-8">
-    <%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/upload") do |f| %>
+    <%= form_with do |f| %>
       <div class="form-group">
         <div class="input-group">
           <div class="custom-file">
@@ -11,6 +11,9 @@
             <%= f.submit('Upload', data: { disable_with: 'Uploading...' }, class: 'input-group-text') %>
           </div>
         </div>
+        <small class="form-text text-muted" id="zip">
+          It should look like "CSC 116 (004) FALL 2020-Day 11-293581.zip"
+        </small>
       </div>
     <% end %>
   </div>

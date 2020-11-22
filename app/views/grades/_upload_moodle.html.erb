@@ -1,0 +1,45 @@
+<div class="mb-2">
+  <h3 class="inline-header">Moodle Grade Worksheet</h3>
+  <span class="align-middle">
+    <%= @has_grades_uploaded ? badge_checkmark : badge_exclamation %>
+  </span>
+</div>
+
+<%= form_with(id: 'moodle') do |f| %>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="custom-file">
+        <%= f.file_field('moodle-grade-worksheet', class: 'custom-file-input', accept: '.csv', required: true) %>
+        <%= f.label('moodle-grade-worksheet', 'Choose file', class: 'custom-file-label') %>
+      </div>
+      <div class="input-group-append">
+        <%= f.submit('Upload', class: 'input-group-text', data: { disable_with: 'Uploading...' }) %>
+      </div>
+    </div>
+    <small class="form-text text-muted" id="moodle-grade-worksheet">
+      It should look like "Grades-CSC 116 (004) FALL 2020-Day 11-293581.csv"
+    </small>
+  </div>
+<% end %>
+<% content_for :js do %>
+  <script>
+    $('form#moodle').submit(function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      let file = $(this).find('input[type=file]').prop('files')[0];
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          $.ajax({
+            url: '<%= course_assignment_grades_path(@course, @assignment) %>',
+            type: 'POST',
+            data: JSON.stringify(results.data),
+            contentType: 'application/json'
+          });
+        }
+      });
+    });
+  </script>
+<% end %>

@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   before_action :catch_denied_access, except: :index
+  before_action -> { @title = controller_name.classify }
 
   def index
     if session[:user_id]

@@ -1,35 +1,36 @@
-<%= form_with(url: "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/destroy_selected", id: 'submissions_table') do |f| %>
-  <div class="row">
-    <div class="col-lg-12">
-      <table class="table table-hover">
-        <thead>
-        <tr class="table-active">
-          <th scope="col">
+<%= form_with(method: :delete) do |f| %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="select-all">
+            <label class="custom-control-label" for="select-all"></label>
+          </div>
+        </th>
+        <th scope="col">Full name</th>
+        <th scope="col">File submissions</th>
+        <th scope="col">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @participants.each do |participant| %>
+        <tr>
+          <th scope="row">
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="select-all">
-              <label class="custom-control-label" for="select-all"></label>
+              <%= f.check_box("participants[#{participant.id}]", class: 'custom-control-input') %>
+              <%= f.label("participants[#{participant.id}]", 0.chr, class: 'custom-control-label') %>
             </div>
           </th>
-          <th scope="col">Last / First name</th>
-          <th scope="col">Files</th>
-          <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% @submissions.each do |submission| %>
-          <tr>
-            <th scope="row">
-              <div class="custom-control custom-checkbox">
-                <%= f.check_box("submissions[#{submission.id}]", class: 'custom-control-input') %>
-                <%= f.label("submissions[#{submission.id}]", 0.chr, class: 'custom-control-label') %>
-              </div>
-            </th>
-            <td><%= submission.student %></td>
-            <td>
-              <% submission.files.each do |file| %>
+          <td><%= participant.name %></td>
+          <td>
+            <% if participant.files.attached? %>
+              <% participant.files.each do |file| %>
                 <div class="row">
                   <div class="col-2">
-                    <% case file.content_type when 'text/x-java' %>
+                    <% case file.content_type %>
+                    <% when 'text/x-java' %>
                       <i class="fab fa-java" data-toggle="tooltip" title="Java source code"></i>
                       <% if file.filename.to_s =~ /test/i %>
                         <i class="fas fa-vial" data-toggle="tooltip" title="Java test file"></i>
@@ -42,22 +43,35 @@
                          ''
                        end %>
                   </div>
-                  <a href="<%= rails_blob_path(file, disposition: 'attachment', only_path: true) %>"><%= file.filename %></a>
+                  <span class="ml-2"><%= link_to(file.filename, rails_blob_path(file)) %></span>
                 </div>
               <% end %>
-            </td>
-            <td>
-              <!-- <a href="#" data-toggle="tooltip" data-original-title="Add / replace files"><i class="far fa-plus-square fa-150"></i></a> -->
-              <% delete_url = "/courses/#{@course.id}/assignments/#{@assignment.id}/submissions/#{submission.id}" %>
-              <a href="<%= delete_url %>" data-method="delete" data-toggle="tooltip" data-original-title="Delete submission">
-                <i class="far fa-trash-alt fa-150"></i>
-              </a>
-            </td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
+            <% else %>
+              <div class="row">
+                <div class="col-1">
+                  <%= badge_exclamation %>
+                </div>
+                <span class="ml-2">No submission</span>
+              </div>
+            <% end %>
+          </td>
+          <td>
+            <% participant.files.each do |file| %>
+              <% file_url = course_assignment_submission_path(@course, @assignment, file.id) %>
+              <div class="row">
+                <div class="col">
+                  <a href="<%= file_url %>" data-method="delete" data-toggle="tooltip"
+                     data-original-title="Delete <%= participant.name %>/<%= file.filename %>">
+                    <i class="far fa-trash-alt"></i>
+                  </a>
+                </div>
+              </div>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
   </div>
   <div class="row">
     <div class="col-lg-12">

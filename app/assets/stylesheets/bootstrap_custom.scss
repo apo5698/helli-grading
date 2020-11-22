@@ -35,3 +35,29 @@ th {
     display: block;
   }
 }
+
+@media (min-width: 1200px) {
+  .container, .container-sm, .container-md, .container-lg, .container-xl {
+    max-width: 1280px;
+  }
+}
+
+.navbar {
+  height: 48px;
+}
+
+.nav-link {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.modal {
+  text-align: center;
+}
+
+.modal-dialog {
+  text-align: left;
+  max-width: 100%;
+  width: auto !important;
+  display: inline-block;
+}

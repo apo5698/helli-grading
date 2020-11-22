@@ -1,0 +1,35 @@
+<%= form_with(url: { action: :update }, html: { method: :put }) do |f| %>
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <%= f.label(:status, "Status") %>
+      <%= f.select(:status, @statuses, { selected: @grade_item.status }, { class: 'form-control' }) %>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <%= f.label(:grade, "Grade<br/>(maximum #{@grade_item.rubric.maximum_grade})".html_safe) %>
+      <%= f.text_field(:grade, class: 'form-control', value: @grade_item.grade, required: true) %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label(:feedback, "Feedback comments") %>
+    <%= f.text_area(:feedback, class: 'form-control', value: @grade_item.feedback, rows: 5, cols: 80,
+                    spellcheck: false, data: { gramm: false }) %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit('Submit', class: 'btn btn-primary') %>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  </div>
+<% end %>
+<!--suppress EqualityComparisonWithCoercionJS-->
+<script>
+  $('#grade').on('input', function () {
+    // DO NOT USE !==
+    // String is being compared with Number here
+    if ($(this).val() == <%= @grade_item.rubric.maximum_grade %>) {
+      $('#status').val('success');
+    } else {
+      $('#status').val('error');
+    }
+  });
+</script>

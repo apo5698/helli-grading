@@ -1,15 +1,53 @@
-class RubricsController < ApplicationController
+class RubricsController < AssignmentsViewController
+  before_action lambda {
+    @title = controller_name.classify.pluralize
+    @actions = RubricCriterion.actions.invert
+    @criteria = RubricCriterion.criteria.invert
+  }
+
+  #  GET /courses/:course_id/assignments/:assignment_id/rubrics
   def index; end
 
-  def show_published; end
+  #  POST /courses/:course_id/assignments/:assignment_id/rubrics
+  def create
+    @rubric = Rubric.new(assignment_id: @assignment.id)
+    @rubric.update!(rubric_params)
 
-  def destroy_published; end
+    flash[:success] = "Rubric for #{@rubric.type} created."
+    redirect_back fallback_location: { action: :index }
+  end
 
-  def adopt; end
+  #  PUT /courses/:course_id/assignments/:assignment_id/rubrics/:id (save one)
+  #  PUT /courses/:course_id/assignments/:assignment_id/rubrics     (save all)
+  def update
+    id = params[:id]
+
+    if id
+      rubric = Rubric.find(id)
+      rubric.update(rubric_params.except(:criteria))
+      rubric.update_criteria(rubric_params[:criteria])
+      flash[:success] = "Rubric #{rubric} has been updated."
+    else
+      flash[:error] = 'Not implemented.'
+    end
+
+    redirect_back fallback_location: { action: :index }
+  end
+
+  def destroy
+    Rubric.destroy(params[:id])
+
+    flash[:success] = 'Selected rubric deleted.'
+    redirect_back fallback_location: { action: :index }
+  end
 
   def show
-    @rubric = @assignment.rubric
+    # code here
+  end
 
-    @rubric_items = RubricItem.where(rubric_id: @rubric.id)
+  private
+
+  def rubric_params
+    params.require(:rubric).permit!
   end
 end

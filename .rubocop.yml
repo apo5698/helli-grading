@@ -1,3 +1,16 @@
 require:
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-faker
+
+Naming/MethodParameterName:
+  MinNameLength: 1
+
+Rails/DynamicFindBy:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+Style/ClassVars:
+  Enabled: false

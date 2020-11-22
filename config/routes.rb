@@ -5,10 +5,8 @@ Rails.application.routes.draw do
   get 'help', to: 'home#help'
   get 'about', to: 'home#about'
 
-  resources :settings do
-    collection do
-      get :reload
-    end
+  resource :settings do
+    get :json
   end
 
   resources :sessions, only: %i[new create destroy]
@@ -20,32 +18,18 @@ Rails.application.routes.draw do
     put :share, action: :share
 
     resources :assignments do
-      post :expected_file_add
-      delete :expected_file_delete
+      member do
+        put :programs, action: :program_add
+        delete :programs, action: :program_delete
 
-      resources :rubrics, path: :rubric, only: [] do
-        collection do
-          get '', action: :show
-          resources :rubric_items, only: %i[create update destroy] do
-          end
-        end
+        put :input_files, action: :input_file_add
+        delete :input_files, action: :input_file_delete
       end
 
-      resources :grading, only: [:index] do
-        collection do
-          post :run
-          delete :reset
-
-          resources :grading_item, only: %i[edit update show]
-        end
-      end
-
-      resources :submissions, only: %i[index destroy] do
-        post :upload, action: :replace
+      resources :submissions, except: [:show] do
         collection do
           get :download_all
-          post :destroy_selected
-          post :upload
+          delete :destroy
         end
       end
 
@@ -56,20 +40,19 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :reports, path: :report, only: [:index] do
+      resources :rubrics do
         collection do
-          get :download
-          post :export
-          post :upload
-          delete :delete
+          put :update
         end
       end
-    end
-  end
 
-  resources :rubrics, only: [:index] do
-    get '', action: :show_published
-    delete '', action: :delete_published
-    put :adopt
+      resources :grading do
+        resources :grade_items, only: %i[edit update show], path: ''
+      end
+
+      resource :grades do
+        post :zybooks
+      end
+    end
   end
 end
