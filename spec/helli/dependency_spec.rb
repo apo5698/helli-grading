@@ -1,4 +1,4 @@
-describe Dependency, ignore_clean: true do
+describe Helli::Dependency, ignore_clean: true do
   let(:config) { ENV['DEPENDENCY_FILE'] }
   let(:config_empty) { 'spec/fixtures/dependency/empty.yml' }
   let(:root) { described_class.root }

@@ -4,7 +4,9 @@ require 'yaml'
 
 # External dependencies are used for grading (compile, execute, javadoc, etc.) and loaded from
 # the dependencies file on server initialization (see config/initializers/dependencies.rb)
-class Dependency < ApplicationRecord
+class Helli::Dependency < ActiveRecord::Base
+  self.table_name = 'dependencies'
+
   validates :name, presence: true, uniqueness: true
   validates :version, :source_type, presence: true
 
@@ -67,15 +69,13 @@ class Dependency < ApplicationRecord
     case source_type
     when 'direct'
       FileUtils.mkdir_p(File.dirname(path))
-      File.open(path, 'wb') do |f|
-        URI.open(source, 'rb') { |o| f.write(o.read) }
-      end
+      Helli::Attachment.download_from_url(source, path)
     when 'git'
       # keep submodules clean
       if Rails.env.test?
         Helli::Command::Git.clone(source, File.dirname(path))
       else
-        Helli::Command::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
+        Helli::Command::Git::Submodule.add(source, File.join(self.class.root, source_type, name))
       end
     else
       raise NotImplementedError, "#{source_type} is not supported for downloading"

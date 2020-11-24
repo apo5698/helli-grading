@@ -41,12 +41,12 @@ RSpec.configure do |config|
   FileUtils.touch("#{dependency_path}/empty.yml")
 
   def load_dependencies
-    Dependency.delete_all
+    Helli::Dependency.delete_all
     config = ENV['DEPENDENCY_FILE']
     FileUtils.cp('config/dependencies.yml', config)
     File.write(config, File.read(config).sub(/(?<=root: )(.*)/, 'spec/fixtures/dependency/downloads'))
-    Dependency.load(config)
-    Dependency.download_all
+    Helli::Dependency.load(config)
+    Helli::Dependency.download_all
   end
 
   load_dependencies

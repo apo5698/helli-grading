@@ -16,8 +16,8 @@ module Helli::Command::Java
   # Class file extension.
   CLASS_FILE_EXTENSION = '.class'
 
-  @checkstyle = Dependency.path('cs-checkstyle')
-  @junit = Dependency.path('junit')
+  @checkstyle = Helli::Dependency.path('cs-checkstyle')
+  @junit = Helli::Dependency.path('junit')
 
   # Raises when the classfile is not found (file not compiled).
   class ClassFileNotFoundError < Helli::FileNotFoundError

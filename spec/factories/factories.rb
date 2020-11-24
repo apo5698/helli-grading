@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :dependency do
+  factory :dependency, class: 'Helli::Dependency' do
     name { Faker::App.name.downcase }
     version { Faker::App.semantic_version }
     source { Faker::Internet.url }
