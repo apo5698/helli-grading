@@ -55,7 +55,7 @@ module Helli::Command::Java
       destination = '.'
       classpath = [destination.dup]
       if junit
-        @junit ||= Helli::Dependency.path('junit')
+        @junit ||= Helli::Dependency.find_by(name: 'junit').path
         classpath << "#{File.dirname(@junit)}/*"
       end
       classpath = classpath.join(CLASSPATH_SEPARATOR)
@@ -140,8 +140,8 @@ module Helli::Command::Java
     #     p.stderr            #=> ""
     #     p.exitstatus        #=> 0
     def checkstyle(path)
-      @checkstyle ||= Helli::Dependency.path('cs-checkstyle')
-      Helli::Process.new(File.dirname(path)).open(@checkstyle, File.basename(path))
+      @checkstyle ||= Helli::Dependency.find_by(name: 'cs-checkstyle').path
+      Helli::Process.new(File.dirname(path)).open(Rails.root.join(@checkstyle), File.basename(path))
     end
   end
 end

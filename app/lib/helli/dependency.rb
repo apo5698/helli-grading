@@ -1,4 +1,3 @@
-require 'helli/error'
 require 'open-uri'
 require 'yaml'
 
@@ -47,11 +46,6 @@ class Helli::Dependency < ActiveRecord::Base
     end
 
     dependencies
-  end
-
-  # Returns the absolute path of a dependency by name, *including* executable.
-  def self.path(name)
-    Rails.root.join(find_by(name: name).path).to_s
   end
 
   # Returns the root path of dependencies.

@@ -40,20 +40,15 @@ describe Helli::Dependency, ignore_clean: true do
     end
   end
 
-  describe '.path' do
-    it { expect(described_class.path(git.name)).to eq(Rails.root.join(git.path).to_s) }
-    it { expect(described_class.path(direct.name)).to eq(Rails.root.join(direct.path).to_s) }
-  end
-
   describe '.destroy' do
-    random = described_class.first
+    described_class.all.each do |d|
+      it("#{d.name} is downloaded locally") { expect(File).to exist(d.path) }
 
-    it('is downloaded locally') { expect(File).to exist(random.path) }
-
-    it 'removes local files' do
-      random.destroy
-      expect(File).not_to exist(random.path)
-      load_dependencies
+      it "removes #{d.name} local files" do
+        d.destroy
+        expect(File).not_to exist(d.path)
+        load_dependencies
+      end
     end
   end
 
@@ -72,6 +67,8 @@ describe Helli::Dependency, ignore_clean: true do
   end
 
   describe '#download' do
+    described_class.all.each do |d|
 
+    end
   end
 end
