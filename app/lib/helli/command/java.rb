@@ -16,9 +16,6 @@ module Helli::Command::Java
   # Class file extension.
   CLASS_FILE_EXTENSION = '.class'
 
-  @checkstyle = Helli::Dependency.path('cs-checkstyle')
-  @junit = Helli::Dependency.path('junit')
-
   # Raises when the classfile is not found (file not compiled).
   class ClassFileNotFoundError < Helli::FileNotFoundError
     def initialize(filename)
@@ -64,7 +61,10 @@ module Helli::Command::Java
       wd = File.dirname(path)
       destination = '.'
       classpath = [destination.dup]
-      classpath << "#{File.dirname(@junit)}/*" if junit
+      if junit
+        @junit ||= Helli::Dependency.path('junit')
+        classpath << "#{File.dirname(@junit)}/*"
+      end
       classpath = classpath.join(CLASSPATH_SEPARATOR)
 
       filename = File.basename(path)
@@ -119,11 +119,12 @@ module Helli::Command::Java
       classpath = '.'
       classname = File.basename(classfile).delete_suffix(CLASS_FILE_EXTENSION)
 
-      cmd = if junit
-              ['java', '-jar', @junit, '-cp', classpath, '-c', classname, args]
-            else
-              ['java', '-cp', classpath, classname, args]
-            end
+      if junit
+        @junit ||= Helli::Dependency.path('junit')
+        cmd = ['java', '-jar', @junit, '-cp', classpath, '-c', classname, args]
+      else
+        cmd = ['java', '-cp', classpath, classname, args]
+      end
 
       Helli::Process.new(wd).open(cmd, stdin: stdin)
     end
@@ -146,6 +147,7 @@ module Helli::Command::Java
     #     p.stderr            #=> ""
     #     p.exitstatus        #=> 0
     def checkstyle(path)
+      @checkstyle ||= Helli::Dependency.path('cs-checkstyle')
       Helli::Process.new(File.dirname(path)).open(@checkstyle, File.basename(path))
     end
   end
