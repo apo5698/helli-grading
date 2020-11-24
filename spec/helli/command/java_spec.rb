@@ -61,7 +61,7 @@ describe Helli::Command::Java do
     context 'when file has not been compiled' do
       Dir.glob("#{fixtures}/wce/execute/valid/*.java").each do |file|
         it 'raises Helli::FileNotFoundError' do
-          expect { described_class.java(file) }.to raise_error(Helli::Command::Java::ClassFileNotFoundError)
+          expect { described_class.java(file) }.to raise_error(Helli::FileNotFoundError)
         end
       end
     end

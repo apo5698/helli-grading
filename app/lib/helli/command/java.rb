@@ -16,13 +16,6 @@ module Helli::Command::Java
   # Class file extension.
   CLASS_FILE_EXTENSION = '.class'
 
-  # Raises when the classfile is not found (file not compiled).
-  class ClassFileNotFoundError < Helli::FileNotFoundError
-    def initialize(filename)
-      super filename.sub(File.extname(filename), '.class')
-    end
-  end
-
   class << self
     # Create directories for nested structure.
     def setup(working_directory)
@@ -113,7 +106,7 @@ module Helli::Command::Java
       end
 
       classfile = path.sub(File.extname(path), CLASS_FILE_EXTENSION)
-      raise ClassFileNotFoundError, classfile unless File.exist?(classfile)
+      raise Helli::FileNotFoundError, classfile unless File.exist?(classfile)
 
       wd = File.dirname(path)
       classpath = '.'
