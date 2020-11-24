@@ -10,6 +10,7 @@ gem 'bcrypt'
 gem 'bootsnap', require: false
 gem 'colorize'
 gem 'devise'
+gem 'dotenv-rails'
 gem 'pg'
 gem 'puma'
 gem 'rails'
@@ -40,7 +41,6 @@ group :test do
 end
 
 group :development, :test do
-  gem 'dotenv-rails'
   gem 'faker', github: 'faker-ruby/faker'
   gem 'rubocop'
   gem 'rubocop-faker'
