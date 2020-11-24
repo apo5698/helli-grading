@@ -1,7 +1,7 @@
-class GradesController < AssignmentsViewController
-  include Helli::Adapter
-  include Helli::Parser
+require 'helli/csv/adapter'
+require 'helli/csv/parser'
 
+class GradesController < AssignmentsViewController
   before_action lambda {
     @grades_scale = @assignment.grades_scale
     @zybooks_scale = @assignment.zybooks_scale

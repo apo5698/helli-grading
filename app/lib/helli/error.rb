@@ -7,8 +7,8 @@ module Helli
 
   # Raised when the specified file cannot be found.
   class FileNotFoundError < FileError
-    def initialize(filename)
-      super "#{filename} not found"
+    def initialize(msg)
+      super "#{msg} not found"
     end
   end
 
@@ -17,8 +17,8 @@ module Helli
 
   # Raised when the specified file is unsupported or having an invalid file extension.
   class UnsupportedFileTypeError < FileError
-    def initialize(extname)
-      super "unsupported file type #{extname}"
+    def initialize(msg)
+      super "unsupported file type #{msg}"
     end
   end
 

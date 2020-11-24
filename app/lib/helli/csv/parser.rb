@@ -3,7 +3,7 @@
 require 'csv'
 
 # Parses csv files.
-module Helli::Parser::CSV
+module Helli::CSV::Parser
   class << self
     # Used for server-side parsing.
     def read(file)
