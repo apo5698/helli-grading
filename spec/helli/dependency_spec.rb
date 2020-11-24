@@ -1,12 +1,12 @@
 describe Helli::Dependency, ignore_clean: true do
-  let(:config) { ENV['DEPENDENCY_FILE'] }
+  let(:config) { ENV['DEPENDENCIES_FILE'] }
   let(:config_empty) { 'spec/fixtures/dependency/empty.yml' }
   let(:root) { described_class.root }
 
   let(:direct) { create(:dependency, source_type: 'direct', executable: '') }
   let(:git) { create(:dependency, source_type: 'git', source: '') }
 
-  describe "ENV['DEPENDENCY_ROOT']" do
+  describe '.root' do
     it('sets up the root path') { expect(root).not_to be_nil }
   end
 

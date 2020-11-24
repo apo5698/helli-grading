@@ -8,7 +8,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'helli/error'
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -37,12 +37,12 @@ RSpec.configure do |config|
   # Load testing dependencies (root path different from production)
   dependency_path = 'spec/fixtures/dependency'
   FileUtils.mkdir_p(dependency_path)
-  ENV['DEPENDENCY_FILE'] = "#{dependency_path}/dependencies.yml"
+  ENV['DEPENDENCIES_FILE'] = "#{dependency_path}/dependencies.yml"
   FileUtils.touch("#{dependency_path}/empty.yml")
 
   def load_dependencies
     Helli::Dependency.delete_all
-    config = ENV['DEPENDENCY_FILE']
+    config = ENV['DEPENDENCIES_FILE']
     FileUtils.cp('config/dependencies.yml', config)
     File.write(config, File.read(config).sub(/(?<=root: )(.*)/, 'spec/fixtures/dependency/downloads'))
     Helli::Dependency.load(config)
