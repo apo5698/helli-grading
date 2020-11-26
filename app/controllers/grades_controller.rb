@@ -5,7 +5,7 @@ class GradesController < AssignmentsViewController
   before_action lambda {
     @grades_scale = @assignment.grades_scale
     @zybooks_scale = @assignment.zybooks_scale
-    @csv_header = MoodleGradingWorksheetAdapter.header
+    @csv_header = MoodleGradingWorksheetAdapter::HEADER
   }
 
   # Downloads grades as a csv file.

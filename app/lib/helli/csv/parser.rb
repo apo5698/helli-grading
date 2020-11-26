@@ -23,7 +23,7 @@ module Helli::CSV::Parser
     def parse(data, adapter)
       raise EmptyFileError if data.blank?
 
-      header = adapter.header
+      header = adapter::HEADER
       unless header_valid?(data.first.keys.map(&:downcase), header.values.map(&:downcase))
         raise ParseError, 'Unable to parse csv data with invalid headers.'
       end
