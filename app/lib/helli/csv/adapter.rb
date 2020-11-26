@@ -74,8 +74,8 @@ module Helli::CSV
     def self.parse(data)
       data.reduce([]) do |attributes, row|
         attributes << {
-          email: row[header[:email]],
-          total: row[header[:total]]
+          email: row[HEADER[:email]],
+          total: row[HEADER[:total]]
         }
       end
     rescue StandardError => e
