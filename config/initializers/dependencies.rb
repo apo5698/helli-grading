@@ -1,3 +1,5 @@
+return unless Rails.env.production?
+
 begin
   ActiveRecord::Base.connection
 rescue ActiveRecord::NoDatabaseError
