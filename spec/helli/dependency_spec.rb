@@ -40,16 +40,17 @@ describe Helli::Dependency, ignore_clean: true do
     end
   end
 
-  describe '.destroy' do
+  describe '#destroy' do
     described_class.all.each do |d|
       it("#{d.name} is downloaded locally") { expect(File).to exist(d.path) }
 
       it "removes #{d.name} local files" do
         d.destroy
         expect(File).not_to exist(d.path)
-        load_dependencies
       end
     end
+
+    load_dependencies
   end
 
   describe '#name' do
