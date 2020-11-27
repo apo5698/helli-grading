@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Helli::Dependency, ignore_clean: true do
   let(:config) { ENV['DEPENDENCIES_FILE'] }
   let(:config_empty) { 'spec/fixtures/dependency/empty.yml' }
@@ -68,8 +70,13 @@ describe Helli::Dependency, ignore_clean: true do
   end
 
   describe '#download' do
-    described_class.all.each do |d|
+    it('ensures all local files removed') { FileUtils.remove_entry_secure(root) }
 
+    described_class.all.each do |d|
+      it "downloads #{d.name}" do
+        d.download
+        expect(File).to exist("#{root}/#{d.source_type}/#{d.name}")
+      end
     end
   end
 end
