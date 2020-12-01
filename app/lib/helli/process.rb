@@ -21,16 +21,24 @@ class Helli::Process
     # Avoid unnecessary chdir
     if @wd
       Dir.chdir(@wd) do
-        _popen3(timeout)
+        _popen3_timeout(timeout)
       end
     else
-      _popen3(timeout)
+      _popen3_timeout(timeout)
     end
 
     self
   end
 
-  private def _popen3(timeout: 5)
+  # Behaves as same as Helli::Process#open, but also raises Helli::Process::Error if the process exits with a non-zero status.
+  def open!(*cmd, stdin: '', timeout: 5)
+    open(*cmd, stdin: stdin, timeout: timeout)
+    raise Helli::Process::Error, @cmd + ":\n" + @stderr unless @exitstatus.zero?
+
+    self
+  end
+
+  private def _popen3_timeout(timeout)
     Open3.popen3(@cmd) do |i, o, e, t|
       i.puts @stdin
       i.close
@@ -47,4 +55,6 @@ class Helli::Process
       end
     end
   end
+
+  class Error < StandardError; end
 end
