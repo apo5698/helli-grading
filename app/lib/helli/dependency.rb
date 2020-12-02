@@ -11,7 +11,7 @@ class Helli::Dependency < ActiveRecord::Base
 
   after_validation do
     self.executable = File.basename(source) if executable.blank?
-    self.path = "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}/#{executable}"
+    self.path = "#{ENV['DEPENDENCIES_ROOT']}/#{source_type}/#{name}/#{executable}"
   end
 
   before_destroy { FileUtils.remove_entry_secure(File.dirname(path)) }
@@ -33,7 +33,8 @@ class Helli::Dependency < ActiveRecord::Base
     dependencies = YAML.load_file(path)
     raise Helli::EmptyFileError, 'empty dependencies file' unless dependencies
 
-    ENV['DEPENDENCY_ROOT'] = dependencies.delete('root')
+    ENV['DEPENDENCIES_CONFIG'] = path
+    ENV['DEPENDENCIES_ROOT'] = dependencies.delete('root')
 
     dependencies.each do |name, prop|
       find_or_initialize_by(name: name).update(
@@ -48,9 +49,14 @@ class Helli::Dependency < ActiveRecord::Base
     dependencies
   end
 
+  # Returns the dependencies config file path.
+  def self.config
+    ENV['DEPENDENCIES_CONFIG']
+  end
+
   # Returns the root path of dependencies.
   def self.root
-    ENV['DEPENDENCY_ROOT']
+    ENV['DEPENDENCIES_ROOT']
   end
 
   # Returns all public dependencies.
@@ -67,7 +73,9 @@ class Helli::Dependency < ActiveRecord::Base
     when 'git'
       # keep submodules clean
       if Rails.env.test?
-        Helli::Command::Git.clone(source, File.dirname(path))
+        dir = File.dirname(path)
+        FileUtils.remove_entry_secure(dir) if Dir.exist?(dir)
+        Helli::Command::Git.clone!(source, dir)
       else
         Helli::Command::Git::Submodule.add(source, File.join(self.class.root, source_type, name))
       end

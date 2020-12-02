@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+# required for running this spec only
+require 'helli/error'
+
 describe Helli::Dependency, ignore_clean: true do
-  let(:config) { ENV['DEPENDENCIES_FILE'] }
-  let(:config_empty) { 'spec/fixtures/dependency/empty.yml' }
+  let(:config) { described_class.config }
   let(:root) { described_class.root }
 
   let(:direct) { create(:dependency, source_type: 'direct', executable: '') }
@@ -22,7 +24,7 @@ describe Helli::Dependency, ignore_clean: true do
     end
 
     it 'cannot load empty file' do
-      expect { described_class.load(config_empty) }.to raise_error(Helli::EmptyFileError)
+      expect { described_class.load('spec/fixtures/dependencies/empty.yml') }.to raise_error(Helli::EmptyFileError)
     end
   end
 
@@ -52,7 +54,7 @@ describe Helli::Dependency, ignore_clean: true do
       end
     end
 
-    load_dependencies
+    reload_dependencies
   end
 
   describe '#name' do

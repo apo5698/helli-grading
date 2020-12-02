@@ -34,22 +34,15 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  # Load testing dependencies (root path different from production)
-  dependency_path = 'spec/fixtures/dependency'
-  FileUtils.mkdir_p(dependency_path)
-  ENV['DEPENDENCIES_FILE'] = "#{dependency_path}/dependencies.yml"
-  FileUtils.touch("#{dependency_path}/empty.yml")
-
-  def load_dependencies
+  def reload_dependencies
+    # This will also remove all local files (see Helli::Dependency#before_destroy)
     Helli::Dependency.delete_all
-    config = ENV['DEPENDENCIES_FILE']
-    FileUtils.cp('config/dependencies.yml', config)
-    File.write(config, File.read(config).sub(/(?<=root: )(.*)/, 'spec/fixtures/dependency/downloads'))
-    Helli::Dependency.load(config)
+
+    Helli::Dependency.load('config/dependencies.yml')
     Helli::Dependency.download_all
   end
 
-  load_dependencies
+  reload_dependencies
 
   # Automatically adding metadata
   config.infer_spec_type_from_file_location!
