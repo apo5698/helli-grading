@@ -7,7 +7,7 @@ rescue ActiveRecord::NoDatabaseError
 else
   Rails.configuration.to_prepare do
     if Helli::Dependency.table_exists?
-      Helli::Dependency.load(ENV['DEPENDENCIES_FILE'])
+      Helli::Dependency.load(ENV['DEPENDENCIES_FILE'] || 'config/dependencies.yml')
       Helli::Dependency.download_all
     end
   end
