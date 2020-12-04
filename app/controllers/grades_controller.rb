@@ -5,7 +5,7 @@ class GradesController < AssignmentsViewController
   before_action lambda {
     @grades_scale = @assignment.grades_scale
     @zybooks_scale = @assignment.zybooks_scale
-    @csv_header = MoodleGradingWorksheetAdapter::HEADER
+    @csv_header = Helli::CSV::MoodleGradingWorksheetAdapter::HEADER
   }
 
   # Downloads grades as a csv file.
@@ -31,7 +31,7 @@ class GradesController < AssignmentsViewController
   #  POST /courses/:course_id/assignments/:assignment_id/grades
   def create
     begin
-      worksheet = CSV.parse(params[:_json], MoodleGradingWorksheetAdapter)
+      worksheet = Helli::CSV::Parser.parse(params[:_json], Helli::CSV::MoodleGradingWorksheetAdapter)
       @assignment.generate_records(worksheet)
       flash[:success] = "Moodle grade worksheet uploaded (#{params[:_json].length} participants)."
     rescue StandardError => e
@@ -47,7 +47,7 @@ class GradesController < AssignmentsViewController
       flash[:error] = 'Moodle grade worksheet not uploaded.'
     else
       begin
-        data = CSV.parse(params[:_json], ZybooksActivityReportAdapter)
+        data = CSV.parse(params[:_json], Helli::CSV::ZybooksActivityReportAdapter)
         data.each do |e|
           # safe navigator: a student may drop so +Student+ could be +nil+
           student_id = Student.find_by(email: e[:email])&.id
