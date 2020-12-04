@@ -5,7 +5,7 @@ class GradingController < AssignmentsViewController
     @rubric = Rubric.find(params.require(:id))
     @grade_items = @rubric.grade_items.presence || @rubric.generate_grade_items
 
-    @dependencies ||= Dependency.public_dependencies
+    @dependencies ||= Helli::Dependency.public_dependencies
     @status_colors ||= {
       inactive: :light,
       success: :success,
