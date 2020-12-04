@@ -41,7 +41,7 @@ group :test do
 end
 
 group :development, :test do
-  gem 'faker', github: 'faker-ruby/faker'
+  gem 'faker'
   gem 'rubocop'
   gem 'rubocop-faker'
   gem 'rubocop-rspec'
