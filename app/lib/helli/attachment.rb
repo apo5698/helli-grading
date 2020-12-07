@@ -116,6 +116,13 @@ module Helli
         download(attachments, *dir)[0]
       end
 
+      # Downloads a file from a URL.
+      def download_from_url(url, dest)
+        File.open(dest, 'wb') do |f|
+          URI.open(url, 'rb') { |o| f.write(o.read) }
+        end
+      end
+
       ##################
       # Helper methods #
       ##################

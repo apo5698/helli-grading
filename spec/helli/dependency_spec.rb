@@ -1,12 +1,16 @@
-describe Dependency, ignore_clean: true do
-  let(:config) { ENV['DEPENDENCY_FILE'] }
-  let(:config_empty) { 'spec/fixtures/dependency/empty.yml' }
+# frozen_string_literal: true
+
+# required for running this spec only
+require 'helli/error'
+
+describe Helli::Dependency, ignore_clean: true do
+  let(:config) { described_class.config }
   let(:root) { described_class.root }
 
   let(:direct) { create(:dependency, source_type: 'direct', executable: '') }
   let(:git) { create(:dependency, source_type: 'git', source: '') }
 
-  describe "ENV['DEPENDENCY_ROOT']" do
+  describe '.root' do
     it('sets up the root path') { expect(root).not_to be_nil }
   end
 
@@ -20,7 +24,7 @@ describe Dependency, ignore_clean: true do
     end
 
     it 'cannot load empty file' do
-      expect { described_class.load(config_empty) }.to raise_error(Helli::EmptyFileError)
+      expect { described_class.load('spec/fixtures/dependencies/empty.yml') }.to raise_error(Helli::EmptyFileError)
     end
   end
 
@@ -40,21 +44,17 @@ describe Dependency, ignore_clean: true do
     end
   end
 
-  describe '.path' do
-    it { expect(described_class.path(git.name)).to eq(Rails.root.join(git.path).to_s) }
-    it { expect(described_class.path(direct.name)).to eq(Rails.root.join(direct.path).to_s) }
-  end
+  describe '#destroy' do
+    described_class.all.each do |d|
+      it("#{d.name} is downloaded locally") { expect(File).to exist(d.path) }
 
-  describe '.destroy' do
-    random = described_class.first
-
-    it('is downloaded locally') { expect(File).to exist(random.path) }
-
-    it 'removes local files' do
-      random.destroy
-      expect(File).not_to exist(random.path)
-      load_dependencies
+      it "removes #{d.name} local files" do
+        d.destroy
+        expect(File).not_to exist(d.path)
+      end
     end
+
+    reload_dependencies
   end
 
   describe '#name' do
@@ -72,6 +72,13 @@ describe Dependency, ignore_clean: true do
   end
 
   describe '#download' do
+    it('ensures all local files removed') { FileUtils.remove_entry_secure(root) }
 
+    described_class.all.each do |d|
+      it "downloads #{d.name}" do
+        d.download
+        expect(File).to exist("#{root}/#{d.source_type}/#{d.name}")
+      end
+    end
   end
 end

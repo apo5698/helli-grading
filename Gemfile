@@ -10,6 +10,7 @@ gem 'bcrypt'
 gem 'bootsnap', require: false
 gem 'colorize'
 gem 'devise'
+gem 'dotenv-rails'
 gem 'pg'
 gem 'puma'
 gem 'rails'
@@ -22,7 +23,11 @@ gem 'webpacker'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'rubocop'
+  gem 'rubocop-faker'
+  gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'spring'
   gem 'spring-watcher-listen'
 end
@@ -40,9 +45,5 @@ group :test do
 end
 
 group :development, :test do
-  gem 'dotenv-rails'
-  gem 'faker', github: 'faker-ruby/faker'
-  gem 'rubocop'
-  gem 'rubocop-faker'
-  gem 'rubocop-rspec'
+  gem 'faker'
 end

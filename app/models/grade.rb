@@ -1,6 +1,4 @@
 class Grade < ApplicationRecord
-  include Helli::Adapter
-
   belongs_to :participant
 
   validates :identifier, :full_name, :email_address, :status, :maximum_grade, :grade_can_be_changed, presence: true
@@ -26,7 +24,7 @@ class Grade < ApplicationRecord
 
   # Converts attributes to their original form in grade worksheet.
   def csv_string(attribute)
-    datetime_format = MoodleGradingWorksheetAdapter::DATETIME_FORMAT
+    datetime_format = Helli::CSV::MoodleGradingWorksheetAdapter::DATETIME_FORMAT
 
     str = {
       identifier: "Participant #{identifier}",

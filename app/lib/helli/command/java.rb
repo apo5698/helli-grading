@@ -16,16 +16,6 @@ module Helli::Command::Java
   # Class file extension.
   CLASS_FILE_EXTENSION = '.class'
 
-  @checkstyle = Dependency.path('cs-checkstyle')
-  @junit = Dependency.path('junit')
-
-  # Raises when the classfile is not found (file not compiled).
-  class ClassFileNotFoundError < Helli::FileNotFoundError
-    def initialize(filename)
-      super filename.sub(File.extname(filename), '.class')
-    end
-  end
-
   class << self
     # Create directories for nested structure.
     def setup(working_directory)
@@ -64,7 +54,10 @@ module Helli::Command::Java
       wd = File.dirname(path)
       destination = '.'
       classpath = [destination.dup]
-      classpath << "#{File.dirname(@junit)}/*" if junit
+      if junit
+        @junit ||= Helli::Dependency.find_by(name: 'junit').path
+        classpath << "#{File.dirname(@junit)}/*"
+      end
       classpath = classpath.join(CLASSPATH_SEPARATOR)
 
       filename = File.basename(path)
@@ -113,17 +106,18 @@ module Helli::Command::Java
       end
 
       classfile = path.sub(File.extname(path), CLASS_FILE_EXTENSION)
-      raise ClassFileNotFoundError, classfile unless File.exist?(classfile)
+      raise Helli::FileNotFoundError, classfile unless File.exist?(classfile)
 
       wd = File.dirname(path)
       classpath = '.'
       classname = File.basename(classfile).delete_suffix(CLASS_FILE_EXTENSION)
 
-      cmd = if junit
-              ['java', '-jar', @junit, '-cp', classpath, '-c', classname, args]
-            else
-              ['java', '-cp', classpath, classname, args]
-            end
+      if junit
+        @junit ||= Helli::Dependency.path('junit')
+        cmd = ['java', '-jar', @junit, '-cp', classpath, '-c', classname, args]
+      else
+        cmd = ['java', '-cp', classpath, classname, args]
+      end
 
       Helli::Process.new(wd).open(cmd, stdin: stdin)
     end
@@ -146,7 +140,8 @@ module Helli::Command::Java
     #     p.stderr            #=> ""
     #     p.exitstatus        #=> 0
     def checkstyle(path)
-      Helli::Process.new(File.dirname(path)).open(@checkstyle, File.basename(path))
+      @checkstyle ||= Helli::Dependency.find_by(name: 'cs-checkstyle').path
+      Helli::Process.new(File.dirname(path)).open(Rails.root.join(@checkstyle), File.basename(path))
     end
   end
 end

@@ -1,16 +1,17 @@
-require 'helli/error'
 require 'open-uri'
 require 'yaml'
 
 # External dependencies are used for grading (compile, execute, javadoc, etc.) and loaded from
 # the dependencies file on server initialization (see config/initializers/dependencies.rb)
-class Dependency < ApplicationRecord
+class Helli::Dependency < ActiveRecord::Base
+  self.table_name = 'dependencies'
+
   validates :name, presence: true, uniqueness: true
   validates :version, :source_type, presence: true
 
   after_validation do
     self.executable = File.basename(source) if executable.blank?
-    self.path = "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}/#{executable}"
+    self.path = "#{ENV['DEPENDENCIES_ROOT']}/#{source_type}/#{name}/#{executable}"
   end
 
   before_destroy { FileUtils.remove_entry_secure(File.dirname(path)) }
@@ -32,7 +33,8 @@ class Dependency < ApplicationRecord
     dependencies = YAML.load_file(path)
     raise Helli::EmptyFileError, 'empty dependencies file' unless dependencies
 
-    ENV['DEPENDENCY_ROOT'] = dependencies.delete('root')
+    ENV['DEPENDENCIES_CONFIG'] = path
+    ENV['DEPENDENCIES_ROOT'] = dependencies.delete('root')
 
     dependencies.each do |name, prop|
       find_or_initialize_by(name: name).update(
@@ -47,14 +49,14 @@ class Dependency < ApplicationRecord
     dependencies
   end
 
-  # Returns the absolute path of a dependency by name, *including* executable.
-  def self.path(name)
-    Rails.root.join(find_by(name: name).path).to_s
+  # Returns the dependencies config file path.
+  def self.config
+    ENV['DEPENDENCIES_CONFIG']
   end
 
   # Returns the root path of dependencies.
   def self.root
-    ENV['DEPENDENCY_ROOT']
+    ENV['DEPENDENCIES_ROOT']
   end
 
   # Returns all public dependencies.
@@ -67,15 +69,15 @@ class Dependency < ApplicationRecord
     case source_type
     when 'direct'
       FileUtils.mkdir_p(File.dirname(path))
-      File.open(path, 'wb') do |f|
-        URI.open(source, 'rb') { |o| f.write(o.read) }
-      end
+      Helli::Attachment.download_from_url(source, path)
     when 'git'
       # keep submodules clean
       if Rails.env.test?
-        Helli::Command::Git.clone(source, File.dirname(path))
+        dir = File.dirname(path)
+        FileUtils.remove_entry_secure(dir) if Dir.exist?(dir)
+        Helli::Command::Git.clone!(source, dir)
       else
-        Helli::Command::Git::Submodule.add(source, "#{ENV['DEPENDENCY_ROOT']}/#{source_type}/#{name}")
+        Helli::Command::Git::Submodule.add(source, File.join(self.class.root, source_type, name))
       end
     else
       raise NotImplementedError, "#{source_type} is not supported for downloading"

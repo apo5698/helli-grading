@@ -3,7 +3,7 @@
 require 'csv'
 
 # Parses csv files.
-module Helli::Parser::CSV
+module Helli::CSV::Parser
   class << self
     # Used for server-side parsing.
     def read(file)
@@ -23,7 +23,7 @@ module Helli::Parser::CSV
     def parse(data, adapter)
       raise EmptyFileError if data.blank?
 
-      header = adapter.header
+      header = adapter::HEADER
       unless header_valid?(data.first.keys.map(&:downcase), header.values.map(&:downcase))
         raise ParseError, 'Unable to parse csv data with invalid headers.'
       end
