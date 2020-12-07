@@ -33,3 +33,7 @@
 *.class
 /coverage
 /spec/fixtures/dependency
+
+# miscellaneous
+.DS_Store
+.vscode
