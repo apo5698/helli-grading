@@ -23,7 +23,11 @@ gem 'webpacker'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'rubocop'
+  gem 'rubocop-faker'
+  gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'spring'
   gem 'spring-watcher-listen'
 end
@@ -42,7 +46,4 @@ end
 
 group :development, :test do
   gem 'faker'
-  gem 'rubocop'
-  gem 'rubocop-faker'
-  gem 'rubocop-rspec'
 end
