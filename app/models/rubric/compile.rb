@@ -12,12 +12,14 @@ class Rubric
     ]
 
     def run(primary_file, _, options)
-      lib = options[:lib].transform_values(&:to_b)
+      opts = options.deep_dup
+
+      lib = opts[:lib].transform_values(&:to_b)
 
       process = Helli::Command::Java.javac(
         primary_file,
         junit: lib.delete(:enabled) && lib[:junit].to_b,
-        args: options[:args][:javac]
+        args: opts[:args][:javac]
       )
 
       # only matches "* error(s)" at the end of stderr
