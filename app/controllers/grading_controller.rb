@@ -63,7 +63,12 @@ class GradingController < AssignmentsViewController
     end
 
     options = params.require(:options).permit!.to_h
-    @grade_items.each { |item| item.run(options) }
+
+    threads = []
+    @grade_items.each do |item|
+      threads << Thread.new { item.run(options) }
+    end
+    threads.each(&:join)
 
     respond_to do |format|
       format.js { flash.now[:success] = "Run #{@rubric} complete." }

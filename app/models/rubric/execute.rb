@@ -12,25 +12,26 @@ class Rubric
     ]
 
     def run(primary_file, _, options)
-      lib = options[:lib].transform_values(&:to_b)
+      opt = options.deep_dup
+
+      lib = opt[:lib].transform_values(&:to_b)
 
       process = Helli::Command::Java.java(
         primary_file,
         junit: lib.delete(:enabled) && lib[:junit].to_b,
-        args: options[:args].delete(:enabled).to_b ? options[:args][:java] : '',
-        stdin: options[:stdin].delete(:enabled).to_b ? options[:stdin][:data] : ''
+        args: opt[:args].delete(:enabled).to_b ? opt[:args][:java] : '',
+        stdin: opt[:stdin].delete(:enabled).to_b ? opt[:stdin][:data] : ''
       )
       stderr = process.stderr
 
-      if options[:create].delete(:enabled).to_b
-        created_file = options[:create][:filename]
-        Dir.chdir(File.dirname(primary_file)) do
-          process.other = if File.exist?(created_file)
-                            "[#{created_file}]\n#{File.read(created_file)}"
-                          else
-                            "#{created_file} not created"
-                          end
-        end
+      if opt[:create].delete(:enabled).to_b
+        c_filename = opt[:create][:filename]
+        c_path = File.join(File.dirname(primary_file), c_filename)
+        process.other = if File.exist?(c_path)
+                          "[#{c_filename}]\n#{File.read(c_path)}"
+                        else
+                          "#{c_filename} not created"
+                        end
       end
 
       error = 0
