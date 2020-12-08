@@ -2,7 +2,7 @@ describe Assignment do
   let(:course) { create(:course) }
   let(:exercise) { create(:exercise, course_id: course.id) }
   let(:project) { create(:project, course_id: course.id) }
-  let(:filename) { Faker::App.name + '.java' }
+  let(:filename) { "#{Faker::App.name.gsub(/\W/, '')}.java" }
 
   describe '.name' do
     it 'must present' do
