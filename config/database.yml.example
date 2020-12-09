@@ -2,9 +2,10 @@ default: &default
   adapter: postgresql
   host: localhost
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 30 } %>
+  pool: <%= ENV.fetch("DATABASE_POOL") { 10 } %>
   username:
   password:
+  checkout_timeout: 10
 
 development:
   <<: *default
