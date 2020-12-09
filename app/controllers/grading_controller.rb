@@ -66,7 +66,11 @@ class GradingController < AssignmentsViewController
 
     threads = []
     @grade_items.each do |item|
-      threads << Thread.new { item.run(options) }
+      threads << Thread.new do
+        item.run(options)
+      ensure
+        ActiveRecord::Base.connection_pool.release_connection
+      end
     end
     threads.each(&:join)
 
