@@ -381,6 +381,7 @@ DEPENDENCIES
   pg
   puma
   rails
+  redis
   rspec-its
   rspec-rails
   rubocop

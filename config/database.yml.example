@@ -2,7 +2,7 @@ default: &default
   adapter: postgresql
   host: localhost
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 30 } %>
+  pool: <%= ENV.fetch('WEB_CONCURRENCY', 2).to_i * ENV.fetch('RAILS_MAX_THREADS', 5).to_i %>
   username:
   password:
 
