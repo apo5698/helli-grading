@@ -65,11 +65,15 @@ class GradingController < AssignmentsViewController
     options = params.require(:options).permit!.to_h
 
     threads = []
-    @grade_items.each do |item|
+    threads_count = ENV.fetch('AUTOGRADING_THREADS', ENV.fetch('RAILS_MAX_THREADS', 5)).to_i
+    # false: do not fill arrays with nil
+    @grade_items.in_groups(threads_count, false).each do |items|
       threads << Thread.new do
-        item.run(options)
-      ensure
-        ActiveRecord::Base.connection_pool.release_connection
+        items.each do |item|
+          item.run(options)
+        ensure
+          ActiveRecord::Base.connection_pool.release_connection
+        end
       end
     end
     threads.each(&:join)
