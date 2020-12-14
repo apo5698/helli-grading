@@ -2,7 +2,7 @@
 #   + type (direct/git)
 #   + version
 #   + source (url)
-#   ? checksum (required for direct)
+#   - checksum (md5, required for direct)
 #   - executable (or filename)
 #   - visibility (public/private, default private)
 
@@ -16,5 +16,5 @@ junit:
   type: direct
   version: 1.6.2
   source: https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar
-  checksum: 0
+  checksum: 241682ad8aa17fd0af1f984b44d34e74
   visibility: public
