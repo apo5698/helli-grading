@@ -16,8 +16,7 @@
       <div class="form-group row">
         <%= f.label :term, "Term", class: "col-lg-2 col-form-label" %>
         <div class="col-lg-10">
-          <%= f.hidden_field :term, value: @course.current_term %>
-          <%= f.text_field :term_to_display, class: "form-control-plaintext", readonly: true, value: @course.term! %>
+          <%= f.select :term, future_terms, {}, {class: 'form-control'} %>
         </div>
       </div>
       <div class="row">

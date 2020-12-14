@@ -12,8 +12,8 @@ class Course < ApplicationRecord
     "#{name} (#{section}) #{term![1]} #{term![0]}"
   end
 
-  def term!
-    t = term || current_term
+  def term!(to_add = 0)
+    t = (term || current_term) + to_add
     year = 2020 + t / 4
     semester = SEMESTERS[(t - 2020) % 4]
     [year, semester]
