@@ -80,11 +80,12 @@ class CoursesController < ApplicationController
   #  PUT /courses/:course_id/share
   def add_share
     @course = Course.find(params[:course_id])
-    user = User.find_by(email: params.require(:email))
+    email = params.require(:email)
+    user = User.find_by(email: email)
     if user.nil?
-      flash[:error] = 'User does not exist.'
+      flash[:error] = "User #{email} does not exist."
     elsif user.in?(@course.permitted_users)
-      flash[:error] = 'User has already been added.'
+      flash[:error] = "User #{user} has already been added to #{@course}."
     else
       @course.collaborator_ids << user.id
       flash[:success] = "User #{user} has been added as collaborator."

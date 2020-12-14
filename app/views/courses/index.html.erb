@@ -11,7 +11,10 @@
           <% year, semester = course.term! %>
           <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %>
             <% unless current_user?(course.user_id) %>
-            <span class="text-muted"><i class="fas fa-user-friends"></i></span>
+              <% owner = course.owner %>
+              <span class="text-muted" data-toggle="tooltip" data-original-title="<%= "Shared by #{owner} (#{owner.email})" %>">
+                <i class="fas fa-user-friends"></i>
+              </span>
             <% end %>
           </h6>
           <h4 class="card-title">
@@ -26,10 +29,10 @@
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Share</a>
           <% if current_user?(course.user_id) %>
             <% url = "/courses/#{course.id}" %>
-            <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
+            <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure to delete <%= course %>?">Delete</a>
           <% else %>
             <% url = "/courses/#{course.id}/share?uid=#{session[:user_id]}" %>
-            <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure?">Withdraw</a>
+            <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure to withdraw from <%= course %>?">Withdraw</a>
         <% end %>
         </div>
       </div>
