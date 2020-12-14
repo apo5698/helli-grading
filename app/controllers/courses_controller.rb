@@ -5,6 +5,13 @@ class CoursesController < ApplicationController
     @course = Course.find(id) if id
   }
 
+  def access_allowed?
+    id = params[:id] || params[:course_id]
+    @course = Course.find(id) if id
+
+    session[:user_id]
+  end
+
   #  GET /courses
   def index
     @courses = Course.of(session[:user_id])
@@ -22,7 +29,7 @@ class CoursesController < ApplicationController
 
   #  POST /courses
   def create
-    course = Course.create(course_params)
+    course = Course.create(course_params.merge(user_id: session[:user_id]))
     messages = course.errors.full_messages
     if messages.blank?
       flash[:success] = "#{course} has been successfully created."

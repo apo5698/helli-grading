@@ -6,7 +6,7 @@
   <% @courses.each do |course| %>
     <div class="col-lg-4 pb-3">
       <div class="card h-100">
-        <div style="height: 100px; width: 100%; display: block; background-color: #CCCCCC"></div>
+        <div style="height: 100px; width: 100%; display: block; background-color: #<%= color(course.id)%>"></div>
         <div class="card-body">
           <% year, semester = course.term! %>
           <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %></h6>
@@ -14,12 +14,7 @@
             <a href="/courses/<%= course.id %>/assignments"><%= course.name %>
               (<%= course.section %>)</a>
           </h4>
-          <div class="progress">
-            <% progress = 60 %>
-            <div class="progress-bar" role="progressbar" style="width: <%= progress %>%;" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
-              <span class="text-white"><%= progress %>%</span>
-            </div>
-          </div>
+          <%= progress_bar course.percentage_complete %>
           <% url = "/courses/#{course.id}/edit" %>
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
           <% url = "/courses/#{course.id}/share" %>

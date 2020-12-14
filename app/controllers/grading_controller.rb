@@ -3,7 +3,7 @@ class GradingController < AssignmentsViewController
 
   before_action lambda {
     @rubric = Rubric.find(params.require(:id))
-    @grade_items = @rubric.grade_items.presence || @rubric.generate_grade_items
+    @grade_items = @rubric.grade_items.presence
 
     @dependencies ||= Helli::Dependency.public_dependencies
     @status_colors ||= {

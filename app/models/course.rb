@@ -39,4 +39,10 @@ class Course < ApplicationRecord
   def self.of(uid)
     Course.where(user_id: uid).or(Course.where("#{uid} = ANY(collaborator_ids)"))
   end
+
+  def percentage_complete
+    return 0 if assignments.empty?
+
+    (assignments.sum(&:percentage_complete).to_f / assignments.count).to_i
+  end
 end

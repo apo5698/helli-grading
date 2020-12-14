@@ -26,6 +26,7 @@ class RubricsController < AssignmentsViewController
       rubric = Rubric.find(id)
       rubric.update(rubric_params.except(:criteria))
       rubric.update_criteria(rubric_params[:criteria])
+      Rubric.find(id).generate_grade_items
       flash[:success] = "Rubric #{rubric} has been updated."
     else
       flash[:error] = 'Not implemented.'

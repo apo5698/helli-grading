@@ -10,6 +10,7 @@
           <% assignment_url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
           <h4 class="card-title"><a href=<%= assignment_url %>><%= assignment.name %></a></h4>
           <h6 class="card-subtitle mb-2 text-muted"><%= Assignment.categories[assignment.category] %></h6>
+          <%= progress_bar assignment.percentage_complete %>
           <p class="card-text">
             <%= assignment.description %>
           </p>

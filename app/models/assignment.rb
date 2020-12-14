@@ -198,4 +198,12 @@ class Assignment < ApplicationRecord
       p.grade.update(feedback_comments: feedback.join('; '))
     end
   end
+
+  # percentage = 1 - number_of_unresolved / total
+  def percentage_complete
+    return 0 if grade_items.empty?
+
+    unresolved = grade_items.where(status: %w[Inactive Unresolved])
+    ((1 - unresolved.count.to_f / grade_items.count) * 100).to_i
+  end
 end
