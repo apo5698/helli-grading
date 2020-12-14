@@ -9,18 +9,28 @@
         <div style="height: 100px; width: 100%; display: block; background-color: #<%= color(course.id)%>"></div>
         <div class="card-body">
           <% year, semester = course.term! %>
-          <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %></h6>
+          <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %>
+            <% unless current_user?(course.user_id) %>
+            <span class="text-muted"><i class="fas fa-user-friends"></i></span>
+            <% end %>
+          </h6>
           <h4 class="card-title">
             <a href="/courses/<%= course.id %>/assignments"><%= course.name %>
               (<%= course.section %>)</a>
+
           </h4>
           <%= progress_bar course.percentage_complete %>
           <% url = "/courses/#{course.id}/edit" %>
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
           <% url = "/courses/#{course.id}/share" %>
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Share</a>
-          <% url = "/courses/#{course.id}" %>
-          <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
+          <% if current_user?(course.user_id) %>
+            <% url = "/courses/#{course.id}" %>
+            <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
+          <% else %>
+            <% url = "/courses/#{course.id}/share?uid=#{session[:user_id]}" %>
+            <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure?">Withdraw</a>
+        <% end %>
         </div>
       </div>
     </div>

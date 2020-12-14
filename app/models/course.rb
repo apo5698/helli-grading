@@ -13,7 +13,7 @@ class Course < ApplicationRecord
   end
 
   def term!
-    t = term || ENV['CURRENT_TERM'].to_i
+    t = term || current_term
     year = 2020 + t / 4
     semester = SEMESTERS[(t - 2020) % 4]
     [year, semester]
@@ -23,8 +23,16 @@ class Course < ApplicationRecord
     User.find(user_id)
   end
 
+  def owner?(user)
+    user_id == user.id
+  end
+
   def collaborators
     collaborator_ids.map { |id| User.find(id) }
+  end
+
+  def permitted_users(user_on_top = nil)
+    [user_on_top, owner].uniq + collaborators.keep_if { |c| c != user_on_top }
   end
 
   def role(uid)
@@ -37,13 +45,17 @@ class Course < ApplicationRecord
     end
   end
 
-  def self.of(uid)
-    Course.where(user_id: uid).or(Course.where("#{uid} = ANY(collaborator_ids)"))
-  end
-
   def percentage_complete
     return 0 if assignments.empty?
 
     (assignments.sum(&:percentage_complete).to_f / assignments.count).to_i
+  end
+
+  def current_term
+    ENV['CURRENT_TERM'].to_i
+  end
+
+  def self.of(uid)
+    Course.where(user_id: uid).or(Course.where("#{uid} = ANY(collaborator_ids)"))
   end
 end

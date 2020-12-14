@@ -74,7 +74,7 @@ class CoursesController < ApplicationController
   #  GET /courses/:course_id/share
   def share
     @course = Course.find(params[:course_id])
-    @permitted_users = [current_user, @course.owner].uniq + @course.collaborators.keep_if { |c| c != current_user }
+    @permitted_users = @course.permitted_users(current_user)
   end
 
   #  PUT /courses/:course_id/share
@@ -83,10 +83,10 @@ class CoursesController < ApplicationController
     user = User.find_by(email: params.require(:email))
     if user.nil?
       flash[:error] = 'User does not exist.'
-    elsif user.id == @course.user_id || user.id.in?(@course.collaborator_ids)
+    elsif user.in?(@course.permitted_users)
       flash[:error] = 'User has already been added.'
     else
-      @course.collaborator_ids << user.id if user
+      @course.collaborator_ids << user.id
       flash[:success] = "User #{user} has been added as collaborator."
     end
     @course.save!

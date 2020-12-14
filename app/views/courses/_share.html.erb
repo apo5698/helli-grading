@@ -37,7 +37,7 @@
           </div>
           <div class="col-2 text-right">
             <!-- Test if the person can be deleted-->
-            <% if @course.role(user.id) != 'Owner' and user.id != session[:user_id] %>
+            <% if !@course.owner?(user) and !current_user?(user.id) %>
               <%= link_to '<i class="fas fa-user-minus"></i>'.html_safe, "/courses/#{@course.id}/share?uid=#{user.id}",
                           data: {:confirm => 'Are you sure?'}, :method => :delete %>
             <% end %>
