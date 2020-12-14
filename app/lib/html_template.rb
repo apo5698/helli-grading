@@ -73,7 +73,7 @@ module HTMLTemplate
     color = case percentage
             when 100
               'bg-success'
-            when 50..99
+            when 70..99
               'bg-danger'
             else
               ''

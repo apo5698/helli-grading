@@ -16,7 +16,7 @@
       <div class="form-group row">
         <%= f.label :term, "Term", class: "col-lg-2 col-form-label" %>
         <div class="col-lg-10">
-          <%= f.text_field :term, class: "form-control-plaintext", readonly: true, value: "2021 Spring" %>
+          <%= f.text_field :term, class: "form-control-plaintext", readonly: true, value: @course.term! %>
         </div>
       </div>
       <div class="row">

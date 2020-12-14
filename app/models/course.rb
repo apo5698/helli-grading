@@ -13,8 +13,9 @@ class Course < ApplicationRecord
   end
 
   def term!
-    year = 2020 + term / 4
-    semester = SEMESTERS[(term - 2020) % 4]
+    t = term || ENV['CURRENT_TERM'].to_i
+    year = 2020 + t / 4
+    semester = SEMESTERS[(t - 2020) % 4]
     [year, semester]
   end
 
