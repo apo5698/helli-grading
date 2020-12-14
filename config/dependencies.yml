@@ -1,15 +1,20 @@
-# Downloading path
-root: vendor/dependencies
+# Available properties ('+' means required):
+#   + type (direct/git)
+#   + version
+#   + source (url)
+#   ? checksum (required for direct)
+#   - executable (or filename)
+#   - visibility (public/private, default private)
 
-# Available properties: version, source, source_type, executable
 cs-checkstyle:
+  type: git
   version: 16
   source: https://github.ncsu.edu/engr-csc116-staff/cs-checkstyle.git
-  source_type: git
   executable: checkstyle
 
 junit:
+  type: direct
   version: 1.6.2
   source: https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar
-  source_type: direct
+  checksum: 0
   visibility: public
