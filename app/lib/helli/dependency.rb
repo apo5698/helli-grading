@@ -64,8 +64,9 @@ module Helli
       # noinspection RubyCaseWithoutElseBlockInspection
       case type
       when 'direct'
-        FileUtils.mkdir_p(File.dirname(path))
-        Helli::Attachment.download_from_url(source, path)
+        dir = File.dirname(path)
+        FileUtils.mkdir_p(dir)
+        Helli::Attachment.download_from_url(source, dir)
       when 'git'
         # keep submodules clean
         if Rails.env.test?
