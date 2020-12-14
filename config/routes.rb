@@ -14,8 +14,9 @@ Rails.application.routes.draw do
   resources :users
 
   resources :courses do
-    get :share, action: :show_share
-    put :share, action: :share
+    get :share, action: :share
+    put :share, action: :add_share
+    delete :share, action: :delete_share
 
     resources :assignments do
       member do

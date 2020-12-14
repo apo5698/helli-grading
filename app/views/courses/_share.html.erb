@@ -1,0 +1,52 @@
+<% title = "Share #{@course} with people" %>
+<div class="modal-header">
+  <h5 class="modal-title"><%= title %></h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<%= form_with url: "/courses/#{@course.id}/share", method: :put do |f| %>
+  <div class="modal-body">
+    <%= render partial: '/layouts/modal_flash' %>
+    <fieldset>
+      <div class="form-group row">
+        <div class="col-lg-12">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-lg fa-envelope"></i></span>
+            </div>
+            <%= f.email_field :email, class: "form-control", placeholder: "Enter the user's email to share" %>
+            <div class="input-group-append">
+              <%= f.submit "Add", class: "input-group-text" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% @permitted_users.each do |user| %>
+        <% if user.id != session[:user_id] %>
+          <hr>
+        <% end %>
+        <div class="row">
+          <div class="col-6">
+            <%= user %>
+            <small class="form-text text-muted"><%= user.email %></small>
+          </div>
+          <div class="col-4 text-right">
+            <%= @course.role(user.id) %>
+          </div>
+          <div class="col-2 text-right">
+            <!-- Test if the person can be deleted-->
+            <% if @course.role(user.id) != 'Owner' and user.id != session[:user_id] %>
+              <%= link_to '<i class="fas fa-user-minus"></i>'.html_safe, "/courses/#{@course.id}/share?uid=#{user.id}",
+                          data: {:confirm => 'Are you sure?'}, :method => :delete %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  </div>
+<% end %>

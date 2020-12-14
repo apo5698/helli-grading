@@ -22,7 +22,8 @@
           </div>
           <% url = "/courses/#{course.id}/edit" %>
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
-          <a href="#" class="card-link">Share</a>
+          <% url = "/courses/#{course.id}/share" %>
+          <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Share</a>
           <% url = "/courses/#{course.id}" %>
           <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
         </div>
