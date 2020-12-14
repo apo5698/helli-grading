@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 rm db/schema.rb
 brew services restart postgresql
 rails db:environment:set RAILS_ENV=development

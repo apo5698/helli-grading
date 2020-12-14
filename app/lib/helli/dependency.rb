@@ -1,86 +1,87 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'yaml'
 
-# External dependencies are used for grading (compile, execute, javadoc, etc.) and loaded from
-# the dependencies file on server initialization (see config/initializers/dependencies.rb)
-class Helli::Dependency < ActiveRecord::Base
-  self.table_name = 'dependencies'
+module Helli
+  # External dependencies are used for grading (compile, execute, javadoc, etc.) and loaded from
+  # the dependencies file on server initialization (see config/initializers/dependencies.rb)
+  class Dependency < ActiveRecord::Base
+    self.inheritance_column = nil
+    self.table_name = 'dependencies'
 
-  validates :name, presence: true, uniqueness: true
-  validates :version, :source_type, presence: true
+    CONFIG = 'config/dependencies.yml'
+    ROOT = 'vendor/dependencies'
 
-  after_validation do
-    self.executable = File.basename(source) if executable.blank?
-    self.path = "#{ENV['DEPENDENCIES_ROOT']}/#{source_type}/#{name}/#{executable}"
-  end
+    validates :name, presence: true, uniqueness: true
+    validates :version, :type, presence: true
 
-  before_destroy { FileUtils.remove_entry_secure(File.dirname(path)) }
+    before_destroy { FileUtils.remove_entry_secure(File.dirname(path)) }
 
-  enum visibility: {
-    private: :private,
-    public: :public
-  }, _prefix: true
+    enum type: {
+      direct: 'direct',
+      git: 'git'
+    }
 
-  # Downloads or updates all dependencies.
-  def self.download_all
-    Helli::Command::Git::Submodule.update
-    all.find_each(&:download)
-  end
+    enum visibility: {
+      private: 'private',
+      public: 'public'
+    }, _prefix: true
 
-  # Loads dependencies from the YAML file.
-  def self.load(path)
-    # +load_file()+ return +false+ if file is empty, not +nil+ or empty hash
-    dependencies = YAML.load_file(path)
-    raise Helli::EmptyFileError, 'empty dependencies file' unless dependencies
-
-    ENV['DEPENDENCIES_CONFIG'] = path
-    ENV['DEPENDENCIES_ROOT'] = dependencies.delete('root')
-
-    dependencies.each do |name, prop|
-      find_or_initialize_by(name: name).update(
-        version: prop['version'],
-        source: prop['source'],
-        source_type: prop['source_type'],
-        executable: prop['executable'],
-        visibility: prop['visibility'] || :private
-      )
+    # Loads dependencies from config to database.
+    def self.load
+      YAML.load_file(CONFIG, fallback: {}).each do |name, prop|
+        find_or_initialize_by(name: name).update(
+          type: prop['type'],
+          version: prop['version'],
+          source: prop['source'],
+          executable: prop['executable'] || File.basename(prop['source']),
+          checksum: prop['checksum'],
+          visibility: prop['visibility'] || visibilities[:private]
+        )
+      end
     end
 
-    dependencies
-  end
+    # Downloads or updates all dependencies.
+    def self.download_all
+      Helli::Command::Git::Submodule.update
+      all.find_each(&:download)
+    end
 
-  # Returns the dependencies config file path.
-  def self.config
-    ENV['DEPENDENCIES_CONFIG']
-  end
+    # Initialize all dependencies from config.
+    def self.initialize
+      load
+      download_all
+    end
 
-  # Returns the root path of dependencies.
-  def self.root
-    ENV['DEPENDENCIES_ROOT']
-  end
+    # Returns all public dependencies.
+    def self.public_dependencies
+      where(visibility: visibilities[:public])
+    end
 
-  # Returns all public dependencies.
-  def self.public_dependencies
-    where(visibility: :public)
-  end
-
-  # Downloads the dependency from its source.
-  def download
-    case source_type
-    when 'direct'
-      FileUtils.mkdir_p(File.dirname(path))
-      Helli::Attachment.download_from_url(source, path)
-    when 'git'
-      # keep submodules clean
-      if Rails.env.test?
+    # Downloads the dependency from its source.
+    def download
+      # noinspection RubyCaseWithoutElseBlockInspection
+      case type
+      when 'direct'
         dir = File.dirname(path)
-        FileUtils.remove_entry_secure(dir) if Dir.exist?(dir)
-        Helli::Command::Git.clone!(source, dir)
-      else
-        Helli::Command::Git::Submodule.add(source, File.join(self.class.root, source_type, name))
+        FileUtils.mkdir_p(dir)
+        Helli::Attachment.download_from_url(source, dir)
+      when 'git'
+        # keep submodules clean
+        if Rails.env.test?
+          dir = File.dirname(path)
+          FileUtils.remove_entry_secure(dir) if Dir.exist?(dir)
+          Helli::Command::Git.clone!(source, dir)
+        else
+          Helli::Command::Git::Submodule.add(source, File.join(ROOT, type, name))
+        end
       end
-    else
-      raise NotImplementedError, "#{source_type} is not supported for downloading"
+    end
+
+    # Returns the local path.
+    def path
+      Rails.root.join(ROOT, type, name, executable).to_s
     end
   end
 end

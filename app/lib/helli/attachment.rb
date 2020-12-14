@@ -1,3 +1,4 @@
+require 'open-uri'
 require 'zip'
 
 module Helli
@@ -117,9 +118,33 @@ module Helli
       end
 
       # Downloads a file from a URL.
-      def download_from_url(url, dest)
-        File.open(dest, 'wb') do |f|
-          URI.open(url, 'rb') { |o| f.write(o.read) }
+      #
+      # @param [String] url downloading URL
+      # @param [String] dest destination
+      # @param [String] filename custom filename
+      # @return [String] download path, or nil if file exists
+      def download_from_url(url, dest, filename: nil)
+        path = File.join(dest, filename || File.basename(url))
+        data = URI.parse(url).open
+        # noinspection RubyYardParamTypeMatch
+        return if File.exist?(path) && md5(filename: path) == md5(io: data)
+
+        IO.copy_stream(data, path)
+        path
+      end
+
+      # Calculates MD5 hash from a file.
+      #
+      # @param [IO] io IO object
+      # @param [String] filename filename
+      # @return [String] hash value of the MD5 digest
+      def md5(io: nil, filename: nil)
+        if io
+          Digest::MD5.hexdigest(io.read).to_s
+        elsif filename
+          Digest::MD5.file(filename).hexdigest
+        else
+          raise ArgumentError
         end
       end
 
