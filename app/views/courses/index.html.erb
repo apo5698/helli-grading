@@ -20,7 +20,6 @@
           <h4 class="card-title">
             <a href="/courses/<%= course.id %>/assignments"><%= course.name %>
               (<%= course.section %>)</a>
-
           </h4>
           <%= progress_bar course.percentage_complete %>
           <% url = "/courses/#{course.id}/edit" %>

@@ -1,20 +1,20 @@
-<% breadcrumb_for request.path.delete_suffix(@rubric.id.to_s) %>
+<% breadcrumb_for request.path.delete_suffix(@rubric_item.id.to_s) %>
 
 <%= render 'assignment_sidebar' %>
 <h2 class="mb-3">Automated Grading</h2>
 
 <ul class="nav nav-tabs" id="autograding">
-  <% @rubrics.each do |rubric| %>
+  <% @rubric_items.each do |rubric_item| %>
     <li class="nav-item">
-      <a href="<%= course_assignment_grading_path(@course, @assignment, rubric) %>"
-         class="nav-link" id="autograding-<%= rubric.id %>">
-        <%= rubric %>
+      <a href="<%= course_assignment_grading_path(@course, @assignment, rubric_item) %>"
+         class="nav-link" id="autograding-<%= rubric_item.id %>">
+        <%= rubric_item %>
       </a>
     </li>
   <% end %>
 </ul>
 
-<div class="tab-pane show active" id="autograding-<%= @rubric.id %>">
+<div class="tab-pane show active" id="autograding-<%= @rubric_item.id %>">
   <%= render partial: 'grading/options' %>
 
   <h3>Result</h3>
@@ -22,7 +22,7 @@
     <%= render partial: 'grading/result' %>
   </div>
   <div class="float-right mt-2 mb-4">
-    <%= link_to 'Reset grading status', course_assignment_grading_path(@course, @assignment, @rubric),
+    <%= link_to 'Reset grading status', course_assignment_grading_path(@course, @assignment, @rubric_item),
                 method: :delete, data: { confirm: 'All grading results will be cleared. Proceed?' } %>
   </div>
 </div>
@@ -30,7 +30,7 @@
 <% content_for :js do %>
   <!--suppress JSUnusedAssignment-->
   <script>
-    $('#autograding-<%= @rubric.id %>').tab('show');
+    $('#autograding-<%= @rubric_item.id %>').tab('show');
 
     // show/hide options
     $('input:checkbox').change(function () {

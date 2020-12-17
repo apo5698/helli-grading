@@ -80,7 +80,7 @@ module HTMLTemplate
             end
 
     "<div class='progress'>
-     <div class='progress-bar #{color}' role='progressbar' style='width: #{percentage}%;' aria-valuenow='#{percentage}' aria-valuemin='0' aria-valuemax='100'>
+     <div class='progress-bar progress-bar-striped #{color}' role='progressbar' style='width: #{percentage}%;' aria-valuenow='#{percentage}' aria-valuemin='0' aria-valuemax='100'>
      <span class='text-white'>#{percentage}%</span>
      </div>
      </div>".html_safe

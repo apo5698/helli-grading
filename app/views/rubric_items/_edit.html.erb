@@ -11,8 +11,8 @@
       </tr>
       </thead>
       <tbody>
-      <% default_set = rubric.default_set %>
-      <% criteria = rubric.rubric_criteria %>
+      <% default_set = rubric_item.default_set %>
+      <% criteria = rubric_item.rubric_criteria %>
       <% criteria = default_set if criteria.empty? %>
       <% criteria.each_with_index do |criterion, index| %>
         <%= f.fields_for index.to_s do |f1| %>
@@ -35,7 +35,7 @@
           </tr>
         <% end %>
       <% end %>
-      <tr class="text-muted" id="new_row_<%= rubric.id %>">
+      <tr class="text-muted" id="new_row_<%= rubric_item.id %>">
         <td colspan="6">
           + New
         </td>

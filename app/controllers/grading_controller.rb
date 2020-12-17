@@ -2,8 +2,8 @@ class GradingController < AssignmentsViewController
   before_action -> { @title = 'Automated Grading' }
 
   before_action lambda {
-    @rubric = Rubric.find(params.require(:id))
-    @grade_items = @rubric.grade_items.presence
+    @rubric_item = RubricItem.find(params.require(:id))
+    @grade_items = @rubric_item.grade_items.presence
 
     @dependencies ||= Helli::Dependency.public_dependencies
     @status_colors ||= {
@@ -14,13 +14,13 @@ class GradingController < AssignmentsViewController
       error: :error,
       no_submission: :warning
     }
-    @checkstyle_rules = Rubric::Checkstyle::RULES
+    @checkstyle_rules = RubricItem::Checkstyle::RULES
   }, except: :index
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading
   def index
-    if @submissions.present? && @rubrics.present?
-      redirect_to action: :show, id: @assignment.rubrics.first.id
+    if @submissions.present? && @rubric_items.present?
+      redirect_to action: :show, id: @assignment.rubric_items.first.id
       return
     end
 
@@ -30,7 +30,7 @@ class GradingController < AssignmentsViewController
       messages << 'No submission uploaded. '\
                   "#{helpers.link_to 'Upload a submission zip file',
                                      course_assignment_submissions_path(@course, @assignment)}".html_safe
-    elsif @rubrics.empty?
+    elsif @rubric_items.empty?
       messages << 'No rubric specified. '\
                   "#{helpers.link_to 'Create a rubric',
                                      course_assignment_rubrics_path(@course, @assignment)}".html_safe
@@ -79,7 +79,7 @@ class GradingController < AssignmentsViewController
     threads.each(&:join)
 
     respond_to do |format|
-      format.js { flash.now[:success] = "Run #{@rubric} complete." }
+      format.js { flash.now[:success] = "Run #{@rubric_item} complete." }
     end
   end
 

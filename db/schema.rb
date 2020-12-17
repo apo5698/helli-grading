@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_13_015056) do
+ActiveRecord::Schema.define(version: 2020_12_14_205629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -79,7 +79,6 @@ ActiveRecord::Schema.define(version: 2020_12_13_015056) do
 
   create_table "grade_items", force: :cascade do |t|
     t.bigint "participant_id"
-    t.bigint "rubric_id"
     t.string "status", null: false
     t.text "stdout", default: "", null: false
     t.text "stderr", default: "", null: false
@@ -88,9 +87,9 @@ ActiveRecord::Schema.define(version: 2020_12_13_015056) do
     t.text "feedback", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_id", "rubric_id"], name: "index_grade_items_on_participant_id_and_rubric_id", unique: true
+    t.bigint "rubric_item_id"
     t.index ["participant_id"], name: "index_grade_items_on_participant_id"
-    t.index ["rubric_id"], name: "index_grade_items_on_rubric_id"
+    t.index ["rubric_item_id"], name: "index_grade_items_on_rubric_item_id"
   end
 
   create_table "grades", force: :cascade do |t|
@@ -124,25 +123,35 @@ ActiveRecord::Schema.define(version: 2020_12_13_015056) do
   end
 
   create_table "rubric_criteria", force: :cascade do |t|
-    t.bigint "rubric_id"
     t.string "action", null: false
     t.decimal "point", precision: 5, scale: 2, default: "0.0", null: false
     t.string "criterion", null: false
     t.text "feedback", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["rubric_id"], name: "index_rubric_criteria_on_rubric_id"
+    t.bigint "rubric_item_id"
+    t.index ["rubric_item_id"], name: "index_rubric_criteria_on_rubric_item_id"
   end
 
-  create_table "rubrics", force: :cascade do |t|
-    t.bigint "assignment_id"
+  create_table "rubric_items", force: :cascade do |t|
     t.string "type", null: false
     t.string "primary_file"
     t.string "secondary_file"
     t.decimal "maximum_grade", precision: 5, scale: 2, default: "0.0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "rubric_id"
+    t.index ["rubric_id"], name: "index_rubric_items_on_rubric_id"
+  end
+
+  create_table "rubrics", force: :cascade do |t|
+    t.bigint "assignment_id"
+    t.bigint "user_id"
+    t.boolean "published", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["assignment_id"], name: "index_rubrics_on_assignment_id"
+    t.index ["user_id"], name: "index_rubrics_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|

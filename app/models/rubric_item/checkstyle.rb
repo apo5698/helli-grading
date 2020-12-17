@@ -1,6 +1,6 @@
-class Rubric
+class RubricItem
   # Rubric for running checkstyle.
-  class Checkstyle < Rubric
+  class Checkstyle < RubricItem
     mattr_accessor :title, :usage, :required_fields, :default_set
 
     self.title = 'Checkstyle'

@@ -1,6 +1,6 @@
-class Rubric
+class RubricItem
   # Rubric for compiling a Java file.
-  class Compile < Rubric
+  class Compile < RubricItem
     mattr_accessor :title, :usage, :required_fields, :default_set
 
     self.title = 'Compile'

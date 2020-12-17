@@ -1,6 +1,6 @@
-class Rubric
+class RubricItem
   # Rubric for calculating zyBooks grades.
-  class Zybooks < Rubric
+  class Zybooks < RubricItem
     mattr_accessor :title, :usage, :required_fields, :default_set
 
     self.title = 'zyBooks'

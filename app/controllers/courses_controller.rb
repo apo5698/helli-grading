@@ -5,13 +5,6 @@ class CoursesController < ApplicationController
     @course = Course.find(id) if id
   }
 
-  def access_allowed?
-    id = params[:id] || params[:course_id]
-    @course = Course.find(id) if id
-
-    session[:user_id]
-  end
-
   #  GET /courses
   def index
     @courses = Course.of(session[:user_id])
@@ -97,10 +90,14 @@ class CoursesController < ApplicationController
 
   #  DELETE /courses/:course_id/share
   def delete_share
-    user = User.find(params.require(:uid))
-    @course.collaborator_ids.delete(user.id)
-    @course.save!
-    flash[:success] = "User #{user} has been removed from collaborators."
+    if current_user.in?(@course.permitted_users)
+      user = User.find(params.require(:uid))
+      @course.collaborator_ids.delete(user.id)
+      @course.save!
+      flash[:success] = "User #{user} has been removed from collaborators."
+    else
+      flash[:error] = 'You are not allowed to perform this action.'
+    end
 
     redirect_to '/courses'
   end

@@ -41,7 +41,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rubrics do
+      resources :rubric_items do
         collection do
           put :update
         end
@@ -56,4 +56,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :rubrics
 end

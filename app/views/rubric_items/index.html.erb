@@ -1,0 +1,60 @@
+<% breadcrumb_for request.path %>
+
+<%= render 'assignment_sidebar' %>
+
+<h2>Rubric</h2>
+<hr>
+<% if @rubric_items.empty? %>
+  <div class="center">No rubrics added.</div>
+<% else %>
+  <div class="accordion" id="rubrics_accordion">
+    <div class="card">
+      <% @rubric_items.each do |r| %>
+        <%= render partial: 'show', locals: { rubric_item: r } %>
+      <% end %>
+    </div>
+  </div>
+  <%= link_to('Save all', course_assignment_rubric_items_path, method: :put) %>
+<% end %>
+<%= form_with model: @rubric do |form| %>
+  <%= form.fields_for :rubric_item do |f| %>
+    <div class="row d-flex justify-content-center p-3">
+      <div class="col-lg-4">
+        <div class="input-group">
+          <%= f.select :type,
+                       RubricItem.subclasses.map { |sc| { sc.title => sc.model_name.name } }.reduce(:merge),
+                       {}, class: "custom-select" %>
+          <div class="input-group-append">
+            <%= f.submit 'New', class: "btn btn-outline-secondary", id: 'new-rubric',
+                         data: { toggle: "tooltip", title: "Be sure you have all items saved before creating new ones." } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<% content_for(:js) do %>
+  <script>
+    $('form[id="Rubric::Zybooks"]').submit(function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      let file = $(this).find('input[type=file]').prop('files')[0];
+
+      Papa.parse(file, {
+        header: true,
+        transformHeader: h => h.replace(/(?<=Total) \(\d+\)/, ''),
+        skipEmptyLines: true,
+        complete: function (results) {
+          $.ajax({
+            url: '<%= course_assignment_grades_path(@course, @assignment) + '/zybooks' %>',
+            type: 'POST',
+            data: JSON.stringify(results.data),
+            contentType: 'application/json'
+          });
+        }
+      });
+
+    });
+  </script>
+<% end %>

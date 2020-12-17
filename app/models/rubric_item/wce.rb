@@ -1,5 +1,5 @@
-class Rubric
-  class Wce < Rubric
+class RubricItem
+  class Wce < RubricItem
     mattr_accessor :title, :usage, :required_fields, :default_set
 
     self.title = 'Compile & Execute'
