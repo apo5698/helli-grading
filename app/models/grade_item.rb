@@ -58,7 +58,7 @@ class GradeItem < ApplicationRecord
       primary, secondary = download('java', "participant_#{participant.id}")
 
       begin
-        process, error = rubric.run(primary, secondary, options)
+        captures, error = rubric.run(primary, secondary, options)
       rescue StandardError => e
         msg = e.message
         gi_result = {
@@ -71,13 +71,12 @@ class GradeItem < ApplicationRecord
 
       source_filename = File.basename(primary)
       source_file_contents = File.read(primary)
-      exitstatus = process.exitstatus
+      exitstatus = captures[2].exitstatus
 
       # grade_item attributes
       gi_status = :success
-      gi_stdout = process.stdout
-      gi_stdout << "\n\n#{process.other.presence}".strip
-      gi_stderr = process.stderr
+      gi_stdout = captures[0]
+      gi_stderr = captures[1]
       gi_error = error
       gi_grade = 0
       gi_feedback = []
@@ -112,7 +111,10 @@ class GradeItem < ApplicationRecord
             gi_feedback << c.feedback
           end
         elsif c.execute?
-          if exitstatus.zero?
+          if exitstatus.nil?
+            gi_status = :unresolved
+            gi_feedback << Helli::Message.resolve_manually("Execution expired")
+          elsif exitstatus.zero?
             # exit 0 -> can execute: success
             gi_grade += c.point
             gi_feedback << 'Success'

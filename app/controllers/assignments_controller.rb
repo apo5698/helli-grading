@@ -1,5 +1,5 @@
 class AssignmentsController < AssignmentsViewController
-  before_action -> { @pattern = Helli::Command::Java::FILENAME_REGEXP_STR }
+  before_action -> { @pattern = Helli::Java::FILENAME_REGEXP_STR }
   #  GET /courses/:course_id/assignments
   def index
     @title = controller_name.classify.pluralize

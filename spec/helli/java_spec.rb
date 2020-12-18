@@ -1,23 +1,23 @@
-describe Helli::Command::Java do
+describe Helli::Java do
   fixtures = 'spec/fixtures/java'
   before(:all) { Dir.glob("#{fixtures}/**/*.class").each { |f| File.delete(f) } }
 
   describe '.javac' do
     context 'when file has no error' do
       Dir.glob("#{fixtures}/wce/compile/valid/*.java").each do |file|
-        process = described_class.javac(file)
-        it('returns zero') { expect(process.exitstatus).to be_zero }
-        it('stdout is empty') { expect(process.stdout).to be_blank }
-        it('stderr is empty') { expect(process.stderr).to be_blank }
+        captures = described_class.javac(file)
+        it('stdout is empty') { expect(captures[0]).to be_blank }
+        it('stderr is empty') { expect(captures[1]).to be_blank }
+        it('returns zero') { expect(captures[2].exitstatus).to be_zero }
       end
     end
 
     context 'when file has errors' do
       Dir.glob("#{fixtures}/wce/compile/invalid/*.java").each do |file|
-        process = described_class.javac(file)
-        it('returns non-zero') { expect(process.exitstatus).not_to be_zero }
-        it('stdout is empty') { expect(process.stdout).to be_blank }
-        it('stderr is not empty') { expect(process.stderr).not_to be_blank }
+        captures = described_class.javac(file)
+        it('stdout is empty') { expect(captures[0]).to be_blank }
+        it('stderr is not empty') { expect(captures[1]).not_to be_blank }
+        it('returns non-zero') { expect(captures[2].exitstatus).not_to be_zero }
       end
     end
 
@@ -41,20 +41,20 @@ describe Helli::Command::Java do
     context 'when file has no error' do
       Dir.glob("#{fixtures}/wce/execute/valid/*.java").each do |file|
         described_class.javac(file)
-        process = described_class.java(file)
-        it('returns zero') { expect(process.exitstatus).to be_zero }
-        it('stdout is not empty') { expect(process.stdout).not_to be_blank }
-        it('stderr is empty') { expect(process.stderr).to be_blank }
+        captures = described_class.java(file)
+        it('stdout is not empty') { expect(captures[0]).not_to be_blank }
+        it('stderr is empty') { expect(captures[1]).to be_blank }
+        it('returns zero') { expect(captures[2].exitstatus).to be_zero }
       end
     end
 
     context 'when file has errors' do
       Dir.glob("#{fixtures}/wce/execute/invalid/*.java").each do |file|
         described_class.javac(file)
-        process = described_class.java(file)
-        it('returns non-zero') { expect(process.exitstatus).not_to be_zero }
-        it('stdout is empty') { expect(process.stdout).to be_blank }
-        it('stdout is not empty') { expect(process.stderr).not_to be_blank }
+        captures = described_class.java(file)
+        it('stdout is empty') { expect(captures[0]).to be_blank }
+        it('stdout is not empty') { expect(captures[1]).not_to be_blank }
+        it('returns non-zero') { expect(captures[2].exitstatus).not_to be_zero }
       end
     end
 
@@ -85,19 +85,19 @@ describe Helli::Command::Java do
   describe '.checkstyle' do
     context 'when file has no warnings' do
       Dir.glob("#{fixtures}/checkstyle/valid/*.java").each do |file|
-        process = described_class.checkstyle(file)
-        it('checkstyle successfully') { expect(process.exitstatus).to be_zero }
-        it('stdout is not empty') { expect(process.stdout).not_to be_blank }
-        it('stderr is empty') { expect(process.stderr).to be_blank }
+        captures = described_class.checkstyle(file)
+        it('stdout is not empty') { expect(captures[0]).not_to be_blank }
+        it('stderr is empty') { expect(captures[1]).to be_blank }
+        it('checkstyle successfully') { expect(captures[2].exitstatus).to be_zero }
       end
     end
 
     context 'when file has warnings' do
       Dir.glob("#{fixtures}/checkstyle/invalid/*.java").each do |file|
-        process = described_class.checkstyle(file)
-        it('checkstyle successfully') { expect(process.exitstatus).to be_zero }
-        it('stdout is not empty') { expect(process.stdout).not_to be_blank }
-        it('stderr is empty') { expect(process.stderr).to be_blank }
+        captures = described_class.checkstyle(file)
+        it('stdout is not empty') { expect(captures[0]).not_to be_blank }
+        it('stderr is empty') { expect(captures[1]).to be_blank }
+        it('checkstyle successfully') { expect(captures[2].exitstatus).to be_zero }
       end
     end
   end
