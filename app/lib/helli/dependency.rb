@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'open-uri'
 require 'yaml'
 
 module Helli
@@ -44,7 +43,6 @@ module Helli
 
     # Downloads or updates all dependencies.
     def self.download_all
-      Helli::Command::Git::Submodule.update
       all.find_each(&:download)
     end
 
@@ -68,14 +66,8 @@ module Helli
         FileUtils.mkdir_p(dir)
         Helli::Attachment.download_from_url(source, dir)
       when 'git'
-        # keep submodules clean
-        if Rails.env.test?
-          dir = File.dirname(path)
-          FileUtils.remove_entry_secure(dir) if Dir.exist?(dir)
-          Helli::Command::Git.clone!(source, dir)
-        else
-          Helli::Command::Git::Submodule.add(source, File.join(ROOT, type, name))
-        end
+        FileUtils.mkdir_p(File.dirname(path))
+        ::Open3.capture3('git submodule update --init --recursive')
       end
     end
 

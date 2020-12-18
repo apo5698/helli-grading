@@ -108,7 +108,6 @@ GEM
       activesupport
     childprocess (3.0.0)
     coderay (1.1.3)
-    colorize (0.8.1)
     concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     coveralls (0.8.23)
@@ -142,6 +141,8 @@ GEM
       i18n (>= 1.6, < 2)
     ffi (1.13.1)
     formatador (0.2.5)
+    git (1.7.0)
+      rchardet (~> 1.8)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     guard (2.16.2)
@@ -235,6 +236,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rchardet (1.8.0)
     redis (4.2.5)
     regexp_parser (1.8.2)
     responders (3.0.1)
@@ -370,17 +372,18 @@ DEPENDENCIES
   binding_of_caller
   bootsnap
   capybara
-  colorize
   coveralls
   database_cleaner
   devise
   dotenv-rails
   factory_bot_rails
   faker
+  git
   guard-rspec
   pg
   puma
   rails
+  rainbow
   redis
   rspec-its
   rspec-rails

@@ -23,5 +23,8 @@ module Ags
 
     # Creates folders for logs.
     FileUtils.mkdir_p(Rails.root.join('log', Rails.env))
+
+    # Current Git repository
+    $git = Git.open(Dir.pwd)
   end
 end
