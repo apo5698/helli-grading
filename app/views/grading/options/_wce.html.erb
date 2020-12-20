@@ -27,7 +27,7 @@
       <!-- hidden -->
       <div class="mt-2" id="_options_lib_enabled" style="display: none">
         <div class="form-group">
-          <% @dependencies.each do |d| %>
+          <% Helli::Dependency.public_dependencies.each do |d| %>
             <div class="custom-control custom-checkbox">
               <%= lib.check_box(d.name, { class: 'custom-control-input' }) %>
               <%= lib.label(d.name, d.name, class: 'custom-control-label') %>

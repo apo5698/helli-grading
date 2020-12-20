@@ -5,7 +5,6 @@ class GradingController < AssignmentsViewController
     @rubric = Rubric.find(params.require(:id))
     @grade_items = @rubric.grade_items.presence || @rubric.generate_grade_items
 
-    @dependencies ||= Helli::Dependency.public_dependencies
     @status_colors ||= {
       inactive: :light,
       success: :success,
@@ -14,7 +13,6 @@ class GradingController < AssignmentsViewController
       error: :error,
       no_submission: :warning
     }
-    @checkstyle_rules = Rubric::Checkstyle::RULES
   }, except: :index
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading
