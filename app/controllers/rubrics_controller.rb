@@ -26,7 +26,7 @@ class RubricsController < AssignmentsViewController
       rubric = Rubric.find(id)
       rubric.update(rubric_params.except(:criteria))
       rubric.update_criteria(rubric_params[:criteria])
-      flash[:success] = "Rubric #{rubric} has been updated."
+      flash[:success] = "Rubric '#{rubric}' updated."
     else
       flash[:error] = 'Not implemented.'
     end
@@ -35,9 +35,11 @@ class RubricsController < AssignmentsViewController
   end
 
   def destroy
-    Rubric.destroy(params[:id])
+    rubric = Rubric.find(params[:id])
+    name = rubric.to_s
+    rubric.destroy!
 
-    flash[:success] = 'Selected rubric deleted.'
+    flash[:success] = "Rubric '#{name}' deleted."
     redirect_back fallback_location: { action: :index }
   end
 

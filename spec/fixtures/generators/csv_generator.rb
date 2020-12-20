@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'helli/csv/adapter'
-
 module CSVGenerator
-  @moodle_header ||= Helli::CSV::MoodleGradingWorksheetAdapter::HEADER
-  @zybooks_header ||= Helli::CSV::ZybooksActivityReportAdapter::HEADER
-  @datetime_format ||= Helli::CSV::MoodleGradingWorksheetAdapter::DATETIME_FORMAT
+  @moodle_header ||= Helli::CSV::Adapter::MoodleGradingWorksheet::HEADER
+  @zybooks_header ||= Helli::CSV::Adapter::ZybooksActivityReport::HEADER
+  @datetime_format ||= Helli::CSV::Adapter::MoodleGradingWorksheet::DATETIME_FORMAT
 
   class << self
     def moodle(participants = rand(20..30), no_submission: rand(1..5))

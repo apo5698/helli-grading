@@ -67,4 +67,15 @@ module HTMLTemplate
       new_breadcrumb << { title: title, url: url }
     end
   end
+
+  def grading_status_colors
+    {
+      inactive: :light,
+      success: :success,
+      resolved: :info,
+      unresolved: :danger,
+      error: :error,
+      no_submission: :warning
+    }
+  end
 end

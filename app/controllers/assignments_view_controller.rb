@@ -1,26 +1,30 @@
+# frozen_string_literal: true
+
 # Controller for all views of single assignment
 class AssignmentsViewController < ApplicationController
   before_action lambda {
     @course = Course.find(params.require(:course_id))
+  }
 
-    id = params[:assignment_id] || params[:id]
-    @assignment = Assignment.find(id) if id
+  before_action lambda {
+    assignment_id = params[:assignment_id] || params[:id]
+    return unless assignment_id
 
-    if @assignment
-      # records
-      @participants = @assignment.participants.order(:created_at)
-      @submissions = @assignment.submissions
-      @rubrics = @assignment.rubrics
-      @grades = @assignment.grades.order(:created_at)
+    @assignment = Assignment.find(assignment_id)
 
-      # statuses
-      @has_program = @assignment.programs.present?
-      @has_input_files = @assignment.input_files.attached?
-      @has_grades_uploaded = @grades.any?
-      @has_submission = @submissions.present?
-      @has_rubric = @rubrics.present? && @rubrics.all? { |r| r.rubric_criteria.present? }
-      @has_grades_filled = @grades.pluck(:grade).any?
-    end
+    # records
+    @participants = @assignment.participants.order(:created_at)
+    @submissions = @assignment.submissions
+    @rubrics = @assignment.rubrics
+    @grades = @assignment.grades.order(:created_at)
+
+    # statuses
+    @has_program = @assignment.programs.present?
+    @has_input_files = @assignment.input_files.attached?
+    @has_grades_uploaded = @grades.any?
+    @has_submission = @submissions.present?
+    @has_rubric = @rubrics.present? && @rubrics.all? { |r| r.rubric_criteria.present? }
+    @has_grades_filled = @grades.pluck(:grade).any?
   }
 
   # #  GET /

@@ -24,7 +24,7 @@ class Grade < ApplicationRecord
 
   # Converts attributes to their original form in grade worksheet.
   def csv_string(attribute)
-    datetime_format = Helli::CSV::MoodleGradingWorksheetAdapter::DATETIME_FORMAT
+    datetime_format = Helli::CSV::Adapter::MoodleGradingWorksheet::DATETIME_FORMAT
 
     str = {
       identifier: "Participant #{identifier}",

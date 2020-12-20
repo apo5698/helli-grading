@@ -16,7 +16,7 @@ class Rubric
 
       lib = opts[:lib].transform_values(&:to_b)
 
-      process = Helli::Command::Java.javac(
+      captures = Helli::Java.javac(
         primary_file,
         junit: lib.delete(:enabled) && lib[:junit].to_b,
         args: opts[:args][:javac]
@@ -24,9 +24,9 @@ class Rubric
 
       # only matches "* error(s)" at the end of stderr
       # match returns +nil+ if no match found
-      error = process.exitstatus.zero? ? 0 : process.stderr.match(/\d+(?= errors?)/)[0] || 0
+      error = captures[2].exitstatus.zero? ? 0 : captures[1].match(/\d+(?= errors?)/)[0] || 0
 
-      [process, error]
+      [captures, error]
     end
   end
 end
