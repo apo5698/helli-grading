@@ -11,8 +11,6 @@ class RubricItemsController < AssignmentsViewController
   #  POST /courses/:course_id/assignments/:assignment_id/rubric_items
   def create
     @rubric = Rubric.find_or_create(@assignment.id)
-    puts "我在这里"
-    puts params
     @rubric_item = @rubric.create_rubric_item(rubric_item_params)
 
     flash[:success] = "Rubric item for #{@rubric_item.type} created."
@@ -38,7 +36,7 @@ class RubricItemsController < AssignmentsViewController
   end
 
   def destroy
-    Rubric.destroy(params[:id])
+    RubricItem.destroy(params[:id])
 
     flash[:success] = 'Selected rubric deleted.'
     redirect_back fallback_location: { action: :index }

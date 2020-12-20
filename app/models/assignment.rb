@@ -2,10 +2,13 @@ class Assignment < ApplicationRecord
   serialize :grades_scale, HashSerializer
   serialize :zybooks_scale, HashIntegerKeysSerializer
 
+  belongs_to :course
+
   has_many :participants, dependent: :destroy
   has_one :rubric, dependent: :destroy
   has_many :rubric_items, through: :rubric, dependent: :destroy
   has_many :grade_items, through: :rubric_items
+  has_many :participants
   has_many :grades, through: :participants
   has_many :ts_files, dependent: :destroy
 
@@ -13,6 +16,14 @@ class Assignment < ApplicationRecord
 
   validates :name, :category, presence: true
   validates :name, uniqueness: { scope: %i[course_id] }
+
+  amoeba do
+    enable
+    exclude_association :rubric
+    exclude_association :grade_items
+    exclude_association :grades
+    exclude_association :participants
+  end
 
   before_create do
     if exercise?
@@ -30,6 +41,37 @@ class Assignment < ApplicationRecord
 
   def to_s
     name
+  end
+
+  def dup_to(to, course_copy = false)
+    # assignment object itself
+    new_assignment = amoeba_dup
+    new_assignment.course_id = to.to_i
+    if course_copy
+      new_assignment.description = ''
+    else
+      new_assignment.name = "Copy of #{name}"
+      i = 2
+      until valid?
+        new_assignment.name = "Copy of #{name} #{i}"
+        i += 1
+      end
+      new_assignment.description = "Copied from course #{course}"
+    end
+    new_assignment.save
+
+    # rubric (amoeba_dup doesn't work)
+    new_rubric = Rubric.create(assignment_id: new_assignment.id)
+    rubric_items.each do |ri|
+      new_ri = ri.dup
+      new_ri.rubric_id = new_rubric.id
+      new_ri.save
+      ri.rubric_criteria.each do |rc|
+        new_rc = rc.dup
+        new_rc.rubric_item_id = new_ri.id
+        new_rc.save
+      end
+    end
   end
 
   # Adds a program to the assignment.

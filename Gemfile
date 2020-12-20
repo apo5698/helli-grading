@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.1'
 
+gem 'amoeba'
 gem 'active_model_serializers'
 gem 'activerecord-session_store'
 gem 'aws-sdk-s3'

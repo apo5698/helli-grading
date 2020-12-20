@@ -3,6 +3,10 @@ class Rubric < ApplicationRecord
   has_many :rubric_items, dependent: :destroy
   has_many :rubric_criteria, through: :rubric_items, class_name: 'RubricCriterion'
 
+  amoeba do
+    enable
+  end
+
   def self.find_or_create(assignment_id)
     rubric = Rubric.find_by(assignment_id: assignment_id)
     rubric ||= Rubric.create(assignment_id: assignment_id)

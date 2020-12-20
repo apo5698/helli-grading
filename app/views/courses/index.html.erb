@@ -6,7 +6,7 @@
   <% @courses.each do |course| %>
     <div class="col-lg-4 pb-3">
       <div class="card h-100">
-        <div style="height: 100px; width: 100%; display: block; background-color: #<%= color(course.id)%>"></div>
+        <div style="height: 100px; width: 100%; display: block; background-color: <%= "##{color(course.id)}" %>"></div>
         <div class="card-body">
           <% year, semester = course.term! %>
           <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %>
@@ -26,6 +26,8 @@
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
           <% url = "/courses/#{course.id}/share" %>
           <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Share</a>
+          <% url = "/courses/#{course.id}/copy" %>
+          <a href="<%= url %>" class="card-link">Copy</a>
           <% if current_user?(course.user_id) %>
             <% url = "/courses/#{course.id}" %>
             <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure to delete <%= course %>?">Delete</a>

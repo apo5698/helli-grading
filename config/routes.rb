@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     put :share, action: :add_share
     delete :share, action: :delete_share
 
+    member do
+      get :copy, action: :copy
+    end
+
     resources :assignments do
       member do
         put :programs, action: :program_add
@@ -25,6 +29,9 @@ Rails.application.routes.draw do
 
         put :input_files, action: :input_file_add
         delete :input_files, action: :input_file_delete
+
+        get :copy, action: :copy
+        post :copy_to, action: :copy_to
       end
 
       resources :submissions, except: [:show] do

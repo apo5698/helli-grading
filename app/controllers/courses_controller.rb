@@ -102,6 +102,13 @@ class CoursesController < ApplicationController
     redirect_to '/courses'
   end
 
+  def copy
+    @course.super_dup
+
+    flash[:success] = "Course #{@course} has been successfully copied over."
+    redirect_to action: :index
+  end
+
   private
 
   def course_params

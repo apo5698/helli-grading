@@ -12,6 +12,22 @@ class Course < ApplicationRecord
     "#{name} (#{section}) #{term![1]} #{term![0]}"
   end
 
+  def super_dup
+    # course object itself
+    new_course = dup
+    new_course.name = "Copy of #{name}"
+    i = 2
+    until valid?
+      new_course.name = "Copy of #{name} #{i}"
+      i += 1
+    end
+    new_course.save
+    # copy assignments over
+    assignments.each do |a|
+      a.dup_to(new_course.id, true)
+    end
+  end
+
   def term!(to_add = 0)
     t = (term || current_term) + to_add
     year = 2020 + t / 4

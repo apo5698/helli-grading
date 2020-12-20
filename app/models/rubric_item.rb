@@ -8,6 +8,10 @@ class RubricItem < ApplicationRecord
 
   @@feedbacks = RubricCriterion::FEEDBACKS
 
+  amoeba do
+    enable
+  end
+
   def to_s
     "[#{title}](#{primary_file || '?'})"
   end

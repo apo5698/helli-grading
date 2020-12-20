@@ -111,9 +111,27 @@ class AssignmentsController < AssignmentsViewController
     redirect_back(fallback_location: '')
   end
 
+  def copy
+    @other_courses = Course.of(session[:user_id]).reject { |course| course == @course }
+    @other_courses |= []
+  end
+
+  def copy_to
+    selected_courses.each do |course_id|
+      @assignment.dup_to(course_id)
+    end
+
+    flash[:success] = "Assignment #{@assignment} has been successfully copied over."
+    redirect_to action: :index
+  end
+
   private
 
   def assignment_params
     params.require(:assignment).permit(:name, :category, :description)
+  end
+
+  def selected_courses
+    params.require(:courses).permit!.keep_if { |_, v| v == "1" }.keys
   end
 end
