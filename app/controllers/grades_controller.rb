@@ -17,7 +17,7 @@ class GradesController < AssignmentsViewController
        .map { |k, _| { k => g.csv_string(k) } }.reduce(:merge)
     end
 
-    csv = Helli::CSV.write(grades, @csv_header.values)
+    csv = Helli::CSV::Parser.write(grades, @csv_header.values)
 
     send_data(
       csv,
