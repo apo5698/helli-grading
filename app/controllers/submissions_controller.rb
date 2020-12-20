@@ -21,15 +21,14 @@ class SubmissionsController < AssignmentsViewController
 
     if zip_file.nil?
       flash[:error] = 'Upload failed (no file chosen).'
-    else
-      begin
-        count = Helli::Attachment.upload_moodle_zip(zip_file, @assignment).count
-        flash[:success] = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
-      rescue StandardError => e
-        flash[:error] = e.message
-      end
+      return
     end
 
+    count = Helli::Attachment.upload_moodle_zip(zip_file, @assignment).count
+    flash[:success] = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
+  rescue StandardError => e
+    flash[:error] = e.message
+  ensure
     redirect_back fallback_location: { action: :index }
   end
 

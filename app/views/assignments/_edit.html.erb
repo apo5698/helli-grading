@@ -15,7 +15,7 @@
     <fieldset>
       <div class="form-group">
         <%= f.label :name, 'Name' %>
-        <%= f.text_field :name, class: 'form-control' %>
+        <%= f.text_field :name, class: 'form-control', required: true %>
       </div>
       <div class="row">
         <div class="form-group col-lg-auto">
@@ -24,7 +24,7 @@
         </div>
         <div class="form-group col-lg-auto">
           <%= f.label :category, 'Category' %>
-          <%= f.select :category, Assignment.categories.invert, { include_blank: true }, class: 'form-control' %>
+          <%= f.select :category, Assignment.categories.invert, {}, class: 'form-control', required: true %>
         </div>
       </div>
       <div class="form-group">

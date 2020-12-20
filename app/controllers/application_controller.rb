@@ -1,6 +1,29 @@
 class ApplicationController < ActionController::Base
   before_action :catch_denied_access
-  before_action -> { @title = 'AGS-dev' }
+
+  before_action lambda {
+    @title = 'AGS-dev'
+  }
+
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    app_logger.error(e.message)
+    flash[:error] = e.message
+    redirect_back fallback_location: ''
+  end
+
+  # Returns a logger with params and custom tags.
+  #
+  # @param [Hash] tags custom tags
+  # @return [::Logger] a Logger object
+  def app_logger(**tags)
+    logger_tags =
+      { url: request.url,
+        ip: request.ip,
+        user_id: session[:user_id],
+        params: params.to_unsafe_h }.merge(tags)
+
+    Helli::Logger.new(logger_tags)
+  end
 
   private
 

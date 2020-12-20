@@ -18,13 +18,9 @@ class CoursesController < ApplicationController
 
   #  POST /courses
   def create
-    course = Course.create(course_params)
-    messages = course.errors.full_messages
-    if messages.blank?
-      flash[:success] = "#{course} has been successfully created."
-    else
-      flash_modal_errors(messages)
-    end
+    course = Course.create!(course_params)
+
+    flash[:success] = "Course '#{course}' created."
     redirect_to action: index, course: course_params, course_id: course.id
   end
 
@@ -41,22 +37,19 @@ class CoursesController < ApplicationController
   #  DELETE /courses/:id
   def update
     course = Course.find(params[:id])
-    course.update_attributes(course_params)
+    course.update!(course_params)
 
-    messages = course.errors.full_messages
-    if messages.blank?
-      flash[:success] = "#{course} has been successfully updated."
-    else
-      flash_modal_errors(messages)
-    end
+    flash[:success] = "Course '#{course}' updated."
     redirect_to action: index, course: course_params, course_id: course.id
   end
 
   def destroy
     course = Course.find(params[:id])
-    flash[:success] = "#{course} has been successfully deleted."
-    course.destroy
-    redirect_to '/courses'
+    name = course.name
+    course.destroy!
+
+    flash[:success] = "Course '#{name}' deleted."
+    redirect_back fallback_location: { action: :index }
   end
 
   def show_share; end
