@@ -22,14 +22,14 @@ class CoursesController < ApplicationController
 
   #  POST /courses
   def create
-    course = Course.create(course_params.merge(user_id: session[:user_id]))
-    messages = course.errors.full_messages
-    if messages.blank?
-      flash[:success] = "#{course} has been successfully created."
-    else
-      flash_modal_errors(messages)
+    begin
+      course = Course.create!(course_params.merge(user_id: session[:user_id]))
+      flash[:success] = "Course #{course.name} created."
+    rescue StandardError => e
+      flash[:error] = e.message
     end
-    redirect_to action: index, course: course_params, course_id: course.id
+
+    redirect_back fallback_location: { action: :index }
   end
 
   #  GET /courses/:id -> GET /courses
