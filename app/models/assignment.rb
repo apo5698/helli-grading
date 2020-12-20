@@ -202,7 +202,7 @@ class Assignment < ApplicationRecord
   end
 
   def calculate_grades
-    gi_max = rubrics.sum(&:maximum_grade)
+    gi_max = rubric_items.sum(&:maximum_grade)
     zybooks_scores = zybooks_scale.keys
 
     participants.each do |p|
