@@ -21,7 +21,7 @@ class Rubric
         junit: lib.delete(:enabled) && lib[:junit].to_b,
         args: opt[:args].delete(:enabled).to_b ? opt[:args][:java] : '',
         stdin: opt[:stdin].delete(:enabled).to_b ? opt[:stdin][:data] : '',
-        timeout: opt[:timeout].delete(:enabled).to_b ? opt[:timeout][:timeout] : 5
+        timeout: opt[:timeout].delete(:enabled).to_b ? opt[:timeout][:timeout].to_i : 5
       )
       stderr = captures[1]
 
