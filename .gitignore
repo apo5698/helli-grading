@@ -37,3 +37,6 @@
 # miscellaneous
 .DS_Store
 .vscode
+
+# keep empty directories
+!.keep
