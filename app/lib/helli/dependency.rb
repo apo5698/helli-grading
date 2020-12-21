@@ -46,8 +46,8 @@ module Helli
       all.find_each(&:download)
     end
 
-    # Initialize all dependencies from config.
-    def self.initialize
+    # Loads and downloads all dependencies from config.
+    def self.setup
       load
       download_all
     end

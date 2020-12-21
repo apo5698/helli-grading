@@ -39,7 +39,7 @@ describe Helli::Dependency, ignore_clean: true do
     end
 
     # reset dependencies
-    described_class.initialize
+    described_class.setup
   end
 
   describe '#name' do
