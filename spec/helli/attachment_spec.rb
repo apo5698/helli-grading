@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe Helli::Attachment do
-  url = 'https://github.com/apo5698/ags/raw/master/spec/fixtures/test_files/16bytes.bin'
-  dest = 'spec/fixtures/test_files/test'
+  url = 'https://file-examples-com.github.io/uploads/2017/02/file_example_JSON_1kb.json'
+  dest = 'spec/fixtures/helli/attachment/test'
 
   before do
     FileUtils.rm_rf(dest) if Dir.exist?(dest)
@@ -27,7 +27,7 @@ describe Helli::Attachment do
     end
 
     context 'when file exists' do
-      it 'does not download file' do
+      it 'does not modify file' do
         path = described_class.download_from_url(url, dest)
         mtime1 = File.mtime(path)
         described_class.download_from_url(url, dest)
@@ -44,8 +44,8 @@ describe Helli::Attachment do
   end
 
   describe '.md5' do
-    file_a = %w[spec/fixtures/test_files/1byte.bin spec/fixtures/test_files/1byte_2.bin]
-    file_b = %w[spec/fixtures/test_files/16bytes.bin spec/fixtures/test_files/16bytes_2.bin]
+    file_a = %w[spec/fixtures/helli/attachment/1byte.bin spec/fixtures/helli/attachment/1byte_2.bin]
+    file_b = %w[spec/fixtures/helli/attachment/16bytes.bin spec/fixtures/helli/attachment/16bytes_2.bin]
     files = [file_a, file_b]
 
     context 'when files are identical' do

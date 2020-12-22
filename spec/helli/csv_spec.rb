@@ -2,9 +2,9 @@
 
 describe Helli::CSV do
   describe described_class::Parser do
-    moodle_original = CSVGenerator.moodle
+    moodle_original = RandomCSVGenerator.moodle
     moodle_header = Helli::CSV::Adapter::MoodleGradingWorksheet::HEADER
-    zybooks_original = CSVGenerator.zybooks
+    zybooks_original = RandomCSVGenerator.zybooks
     zybooks_header = Helli::CSV::Adapter::ZybooksActivityReport::HEADER
 
     describe '.parse' do

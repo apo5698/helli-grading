@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module CSVGenerator
+module RandomCSVGenerator
   @moodle_header ||= Helli::CSV::Adapter::MoodleGradingWorksheet::HEADER
   @zybooks_header ||= Helli::CSV::Adapter::ZybooksActivityReport::HEADER
   @datetime_format ||= Helli::CSV::Adapter::MoodleGradingWorksheet::DATETIME_FORMAT

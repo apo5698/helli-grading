@@ -1,5 +1,5 @@
 describe Helli::Java do
-  fixtures = 'spec/fixtures/java'
+  fixtures = 'spec/fixtures/helli/java'
   before(:all) { Dir.glob("#{fixtures}/**/*.class").each { |f| File.delete(f) } }
 
   describe '.javac' do
