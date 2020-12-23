@@ -10,7 +10,7 @@ class GradeItemsController < AssignmentsViewController
     @grade_item.feedback = params[:feedback]
     @grade_item.save!
 
-    flash[:success] = "#{@grade_item.participant.name} #{@grade_item.rubric} updated."
+    flash[:success] = "#{@grade_item.participant.name} #{@grade_item.rubric_item} updated."
     redirect_back fallback_location: { controller: :grading }
   end
 

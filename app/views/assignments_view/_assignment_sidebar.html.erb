@@ -17,7 +17,7 @@
         <%= @has_submission ? badge_checkmark : badge_exclamation %>
       </a>
     </li>
-    <% url = course_assignment_rubrics_path(@course, @assignment) %>
+    <% url = course_assignment_rubric_items_path(@course, @assignment) %>
     <li class="nav-item">
       <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
         Rubric

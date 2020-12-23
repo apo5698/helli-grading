@@ -1,8 +1,8 @@
 class GradeItem < ApplicationRecord
   belongs_to :participant
-  belongs_to :rubric
+  belongs_to :rubric_item
 
-  delegate :to_s, to: :rubric
+  delegate :to_s, to: :rubric_item
   delegate :<=>, :name, to: :participant
 
   # default status if not specified
@@ -21,19 +21,19 @@ class GradeItem < ApplicationRecord
   # Find the source file by rubric filename.
   # TODO: Find similar filename if no match found.
   def primary_file
-    participant.files.find_by_filename(rubric.primary_file)
+    participant.files.find_by_filename(rubric_item.primary_file)
   end
 
   # Find the attachment by rubric filename.
   # TODO: Find similar filename if no match found.
   def secondary_file
-    participant.files.find_by_filename(rubric.secondary_file)
+    participant.files.find_by_filename(rubric_item.secondary_file)
   end
 
   # Downloads all files needed. Returns path of rubric's primary and secondary files.
   def download(*dir)
     # copy input files
-    Helli::Attachment.download(rubric.assignment.input_files, *dir)
+    Helli::Attachment.download(rubric_item.rubric.assignment.input_files, *dir)
     [Helli::Attachment.download_one(primary_file, *dir), Helli::Attachment.download(secondary_file, *dir)]
   end
 
@@ -58,7 +58,7 @@ class GradeItem < ApplicationRecord
       primary, secondary = download('java', "participant_#{participant.id}")
 
       begin
-        captures, error = rubric.run(primary, secondary, options)
+        captures, error = rubric_item.run(primary, secondary, options)
       rescue StandardError => e
         msg = e.message
         gi_result = {
@@ -81,7 +81,7 @@ class GradeItem < ApplicationRecord
       gi_grade = 0
       gi_feedback = []
 
-      rubric.rubric_criteria.each do |c|
+      rubric_item.rubric_criteria.each do |c|
         if c.max_point?
           # max points are assigned by default
           gi_grade += c.point

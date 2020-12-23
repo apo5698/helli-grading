@@ -15,7 +15,7 @@ class AssignmentsViewController < ApplicationController
     # records
     @participants = @assignment.participants.order(:created_at)
     @submissions = @assignment.submissions
-    @rubrics = @assignment.rubrics
+    @rubric_items = @assignment.rubric_items
     @grades = @assignment.grades.order(:created_at)
 
     # statuses
@@ -23,7 +23,7 @@ class AssignmentsViewController < ApplicationController
     @has_input_files = @assignment.input_files.attached?
     @has_grades_uploaded = @grades.any?
     @has_submission = @submissions.present?
-    @has_rubric = @rubrics.present? && @rubrics.all? { |r| r.rubric_criteria.present? }
+    @has_rubric = @rubric_items.present? && @rubric_items.all? { |r| r.rubric_criteria.present? }
     @has_grades_filled = @grades.pluck(:grade).any?
   }
 

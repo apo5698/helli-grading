@@ -10,14 +10,17 @@
           <% assignment_url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
           <h4 class="card-title"><a href=<%= assignment_url %>><%= assignment.name %></a></h4>
           <h6 class="card-subtitle mb-2 text-muted"><%= Assignment.categories[assignment.category] %></h6>
+          <%= progress_bar assignment.percentage_complete %>
           <p class="card-text">
             <%= assignment.description %>
           </p>
           <p class="card-text">
             <% url = "/courses/#{@course.id}/assignments/#{assignment.id}/edit" %>
             <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Edit</a>
+            <% url = "/courses/#{@course.id}/assignments/#{assignment.id}/copy" %>
+            <a href="<%= url %>" class="card-link" data-remote="true" data-toggle="modal" data-target="#modal-window">Copy to</a>
             <% url = "/courses/#{@course.id}/assignments/#{assignment.id}" %>
-            <a href="<%= url %>" class="card-link" data-method="delete">Delete</a>
+            <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure to remove <%= assignment %> from <%= @course %>">Delete</a>
           </p>
         </div>
       </div>

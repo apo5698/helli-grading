@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
     session[:user_id]
   end
 
+  def current_user
+    User.find(session[:user_id])
+  end
+
   def catch_denied_access
     return if access_allowed?
 

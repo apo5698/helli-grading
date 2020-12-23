@@ -1,9 +1,9 @@
 class RubricCriterion < ApplicationRecord
-  belongs_to :rubric
+  belongs_to :rubric_item
 
   after_create do
-    rubric.maximum_grade += point if award?
-    rubric.save!
+    rubric_item.maximum_grade += point if award?
+    rubric_item.save!
   end
 
   enum action: {

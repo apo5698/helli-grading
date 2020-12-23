@@ -1,8 +1,5 @@
 <div class="mb-2">
-  <h3 class="inline-header">Input Files (Optional)</h3>
-  <span class="align-middle">
-    <%= badge_checkmark if @has_input_files %>
-  </span>
+  <h3 class="inline-header">Input Files <small class="text-muted">(Optional)</small></h3>
 </div>
 
 <%= form_with(url: { action: :input_file_add }, method: :put) do |f| %>

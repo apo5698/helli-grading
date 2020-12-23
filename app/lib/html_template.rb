@@ -1,4 +1,5 @@
 module HTMLTemplate
+
   def tooltip(title)
     "data-toggle='tooltip' title='#{title}'"
   end
@@ -60,12 +61,36 @@ module HTMLTemplate
           name = class_name.find(p)
         end
 
-        new_breadcrumb << { title: name, url: path = File.join(path, p) }
+        new_breadcrumb << {title: name, url: path = File.join(path, p)}
       end
     else
       # only once
-      new_breadcrumb << { title: title, url: url }
+      new_breadcrumb << {title: title, url: url}
     end
+  end
+
+  def progress_bar(percentage)
+    color = case percentage
+            when 100
+              'bg-success'
+            when 70..99
+              'bg-danger'
+            else
+              ''
+            end
+
+    "<div class='progress'>
+     <div class='progress-bar progress-bar-striped #{color}' role='progressbar' style='width: #{percentage}%;' aria-valuenow='#{percentage}' aria-valuemin='0' aria-valuemax='100'>
+     <span class='text-white'>#{percentage}%</span>
+     </div>
+     </div>".html_safe
+  end
+
+  def color(seed)
+    # IN USE: https://woven-words.com/2012/06/29/story-of-the-color-sky/
+    colors = %w[75a3e1 f3d769 f6f4df de5b08 335b44 965b03 c2dfef 7b5ca7 5d5855 63aed5 8fb8a3 f0c2c7 c99a3a bd5700 7e5f12 3e7e19 da5990 e38401 4f95c5]
+
+    colors[Random.new(seed).rand(colors.count)]
   end
 
   def grading_status_colors

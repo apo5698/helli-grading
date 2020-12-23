@@ -14,8 +14,13 @@ Rails.application.routes.draw do
   resources :users
 
   resources :courses do
-    get :share, action: :show_share
-    put :share, action: :share
+    get :share, action: :share
+    put :share, action: :add_share
+    delete :share, action: :delete_share
+
+    member do
+      get :copy, action: :copy
+    end
 
     resources :assignments do
       member do
@@ -24,6 +29,9 @@ Rails.application.routes.draw do
 
         put :input_files, action: :input_file_add
         delete :input_files, action: :input_file_delete
+
+        get :copy, action: :copy
+        post :copy_to, action: :copy_to
       end
 
       resources :submissions, except: [:show] do
@@ -40,7 +48,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :rubrics do
+      resources :rubric_items do
         collection do
           put :update
         end
@@ -55,4 +63,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :rubrics
 end

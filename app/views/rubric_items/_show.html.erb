@@ -1,26 +1,26 @@
-<div class="list-group-item-action card-header" data-toggle="collapse" data-target="#rubric-<%= rubric.id %>">
-  <% has_file = rubric.primary_file || rubric.secondary_file %>
-  <% has_criteria = rubric.rubric_criteria.present? %>
+<div class="list-group-item-action card-header" data-toggle="collapse" data-target="#rubric_item-<%= rubric_item.id %>">
+  <% has_file = rubric_item.primary_file || rubric_item.secondary_file %>
+  <% has_criteria = rubric_item.rubric_criteria.present? %>
   <% tooltip_title = [] %>
   <% tooltip_title << 'No input file' unless has_file %>
   <% tooltip_title << 'No criteria' unless has_criteria %>
   <%= has_file && has_criteria ? badge_checkmark : badge_exclamation(tooltip_title.join("\n")) %>
-  <span><%= rubric %></span>
+  <span><%= rubric_item %></span>
 </div>
-<div id="rubric-<%= rubric.id %>" class="collapse show" data-parent="#rubrics_accordion">
+<div id="rubric_item-<%= rubric_item.id %>" class="collapse show" data-parent="#rubrics_accordion">
   <div class="card-body">
-    <%= form_with url: course_assignment_rubric_path(@course, @assignment, rubric), method: :put, id: rubric.type do |form| %>
-      <%= form.fields_for :rubric do |f| %>
+    <%= form_with url: course_assignment_rubric_item_path(@course, @assignment, rubric_item), method: :put, id: rubric_item.type do |form| %>
+      <%= form.fields_for :rubric_item do |f| %>
         <p class="card-text">
-          <b>Usage: </b><%= rubric.usage %>
+          <b>Usage: </b><%= rubric_item.usage %>
         </p>
-        <% required_fields = rubric.required_fields %>
+        <% required_fields = rubric_item.required_fields %>
         <div class="row">
           <% if required_fields.include?(:primary_file) %>
             <div class="col-auto">
               <div class="form-group">
                 <%= f.label :primary_file, 'Primary file' %>
-                <%= f.select :primary_file, @assignment.programs, { selected: rubric.primary_file },
+                <%= f.select :primary_file, @assignment.programs, { selected: rubric_item.primary_file },
                              { class: 'form-control', required: true } %>
               </div>
             </div>
@@ -29,12 +29,12 @@
             <div class="col-auto">
               <div class="form-group">
                 <%= f.label :secondary_file, "Secondary file" %>
-                <%= f.select :secondary_file, @assignment.programs, { selected: rubric.secondary_file },
+                <%= f.select :secondary_file, @assignment.programs, { selected: rubric_item.secondary_file },
                              { class: 'form-control', required: true } %>
               </div>
             </div>
           <% end %>
-          <% if rubric.is_a?(Rubric::Zybooks) %>
+          <% if rubric_item.is_a?(RubricItem::Zybooks) %>
             <div class="col" style="max-width: 800px">
               <div class="form-group">
                 <div class="input-group">
@@ -52,11 +52,11 @@
         </div>
         <div class="row">
           <div class="col-lg-12">
-            <%= render partial: 'rubrics/edit', locals: { rubric: rubric, form: f } %>
+            <%= render partial: 'rubric_items/edit', locals: { rubric_item: rubric_item, form: f } %>
           </div>
         </div>
         <%= f.submit "Save", class: "btn btn-link" %>
-        <%= link_to 'Delete', course_assignment_rubric_path(@course, @assignment, rubric),
+        <%= link_to 'Delete', course_assignment_rubric_item_path(@course, @assignment, rubric_item),
                     class: 'btn btn-link', method: :delete %>
       <% end %>
     <% end %>

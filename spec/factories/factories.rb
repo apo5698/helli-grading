@@ -12,6 +12,13 @@ FactoryBot.define do
     name { "CSC #{Faker::Number.between(from: 111, to: 116)}" }
     section { format('%<section>03d', section: Faker::Number.between(from: 1, to: 10)) }
     term { Faker::Number.digit }
+    user do
+      User.create(
+        name: Faker::Number.name,
+        email: Faker::Internet.email,
+        password: '123456',
+        password_confirmation: '123456')
+    end
   end
 
   factory :exercise, class: 'Assignment' do

@@ -1,6 +1,6 @@
-class Rubric
+class RubricItem
   # Rubric for executing a Java file.
-  class Execute < Rubric
+  class Execute < RubricItem
     mattr_accessor :title, :usage, :required_fields, :default_set
 
     self.title = 'Execute'

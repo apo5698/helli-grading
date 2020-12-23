@@ -1,10 +1,4 @@
-class RubricsController < AssignmentsViewController
-  before_action lambda {
-    @title = controller_name.classify.pluralize
-    @actions = RubricCriterion.actions.invert
-    @criteria = RubricCriterion.criteria.invert
-  }
-
+class RubricsController < ApplicationController
   #  GET /courses/:course_id/assignments/:assignment_id/rubrics
   def index; end
 

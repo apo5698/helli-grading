@@ -1,7 +1,7 @@
-<%= form_with url: course_assignment_grading_path(@course, @assignment, @rubric), method: :put do |form| %>
+<%= form_with url: course_assignment_grading_path(@course, @assignment, @rubric_item), method: :put do |form| %>
   <%= form.fields_for :options do |f| %>
     <div class="form-group" style="max-width: 500px">
-      <%= render partial: "grading/options/#{@rubric.type.downcase.sub('rubric::', '')}", locals: { form: f } %>
+      <%= render partial: "grading/options/#{@rubric_item.type.downcase.sub('rubricitem::', '')}", locals: { form: f } %>
     </div>
   <% end %>
   <div class="form-group d-flex align-items-center">
