@@ -92,4 +92,15 @@ module HTMLTemplate
 
     colors[Random.new(seed).rand(colors.count)]
   end
+
+  def grading_status_colors
+    {
+      inactive: :light,
+      success: :success,
+      resolved: :info,
+      unresolved: :danger,
+      error: :error,
+      no_submission: :warning
+    }
+  end
 end

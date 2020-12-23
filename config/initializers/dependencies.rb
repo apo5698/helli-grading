@@ -1,14 +1,4 @@
-return unless Rails.env.production?
+# only load dependencies when running server
+return unless defined?(Puma::DSL) || defined?(Rails::Server)
 
-begin
-  ActiveRecord::Base.connection
-rescue ActiveRecord::NoDatabaseError
-  return
-else
-  Rails.configuration.to_prepare do
-    if Helli::Dependency.table_exists?
-      Helli::Dependency.load(ENV['DEPENDENCIES_FILE'] || 'config/dependencies.yml')
-      Helli::Dependency.download_all
-    end
-  end
-end
+Helli::Dependency.setup

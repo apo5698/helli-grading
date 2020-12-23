@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 describe Helli::CSV do
-  describe Helli::CSV::Parser do
+  describe described_class::Parser do
     moodle_original = CSVGenerator.moodle
-    moodle_header = Helli::CSV::MoodleGradingWorksheetAdapter::HEADER
+    moodle_header = Helli::CSV::Adapter::MoodleGradingWorksheet::HEADER
     zybooks_original = CSVGenerator.zybooks
-    zybooks_header = Helli::CSV::ZybooksActivityReportAdapter::HEADER
+    zybooks_header = Helli::CSV::Adapter::ZybooksActivityReport::HEADER
 
     describe '.parse' do
       describe 'MoodleGradingWorksheet' do
-        moodle_parsed = described_class.parse(moodle_original, Helli::CSV::MoodleGradingWorksheetAdapter)
+        moodle_parsed = described_class.parse(moodle_original, Helli::CSV::Adapter::MoodleGradingWorksheet)
 
         it('has the same length') { expect(moodle_original.count).to eq(moodle_parsed.count) }
 
@@ -24,7 +24,7 @@ describe Helli::CSV do
                        when :grade_can_be_changed
                          actual == true ? 'Yes' : 'No'
                        when :last_modified_grade, :last_modified_submission
-                         actual&.strftime(Helli::CSV::MoodleGradingWorksheetAdapter::DATETIME_FORMAT) || '-'
+                         actual&.strftime(Helli::CSV::Adapter::MoodleGradingWorksheet::DATETIME_FORMAT) || '-'
                        else
                          actual
                        end
@@ -36,7 +36,7 @@ describe Helli::CSV do
       end
 
       describe 'zybooksActivityReport' do
-        zybooks_parsed = described_class.parse(zybooks_original, Helli::CSV::ZybooksActivityReportAdapter)
+        zybooks_parsed = described_class.parse(zybooks_original, Helli::CSV::Adapter::ZybooksActivityReport)
 
         it('has the same length') { expect(zybooks_original.count).to eq(zybooks_parsed.count) }
 

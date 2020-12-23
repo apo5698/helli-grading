@@ -21,10 +21,10 @@ class RubricItem
       options.transform_values!(&:to_b)
 
       # checkstyle errors are in stdout, not stderr
-      process = Helli::Command::Java.checkstyle(primary_file)
+      captures = Helli::Java.checkstyle(primary_file)
 
       # warnings begin with [WARN]
-      warnings = process.stdout.split("\n").grep(/^\[WARN\]\s.+$/)
+      warnings = captures[0].split("\n").grep(/^\[WARN\]\s.+$/)
 
       # invert match: remove unselected rules and keep those selected
       if warnings.count.positive?
@@ -34,12 +34,12 @@ class RubricItem
 
       # hide full path in production
       if Rails.env.production?
-        process.stdout = warnings.map do |line|
+        captures[0] = warnings.map do |line|
           line.sub(Rails.root.join(primary_file).to_s, File.basename(primary_file))
         end.join("\n")
       end
 
-      [process, warnings.count]
+      [captures, warnings.count]
     end
   end
 end

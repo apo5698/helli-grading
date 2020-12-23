@@ -22,14 +22,10 @@ class CoursesController < ApplicationController
 
   #  POST /courses
   def create
-    begin
-      course = Course.create!(course_params.merge(user_id: session[:user_id]))
-      flash[:success] = "Course #{course.name} created."
-    rescue StandardError => e
-      flash[:error] = e.message
-    end
+    course = Course.create!(course_params)
 
-    redirect_back fallback_location: { action: :index }
+    flash[:success] = "Course '#{course}' created."
+    redirect_to action: index, course: course_params, course_id: course.id
   end
 
   #  GET /courses/:id -> GET /courses
@@ -45,23 +41,20 @@ class CoursesController < ApplicationController
   #  PUT /courses/:id
   def update
     course = Course.find(params[:id])
-    course.update_attributes(course_params)
+    course.update!(course_params)
 
-    messages = course.errors.full_messages
-    if messages.blank?
-      flash[:success] = "#{course} has been successfully updated."
-    else
-      flash_modal_errors(messages)
-    end
+    flash[:success] = "Course '#{course}' updated."
     redirect_to action: index, course: course_params, course_id: course.id
   end
 
   #  DELETE /courses/:id
   def destroy
     course = Course.find(params[:id])
-    flash[:success] = "#{course} has been successfully deleted."
-    course.destroy
-    redirect_to '/courses'
+    name = course.name
+    course.destroy!
+
+    flash[:success] = "Course '#{name}' deleted."
+    redirect_back fallback_location: { action: :index }
   end
 
   #  GET /courses/:course_id/share

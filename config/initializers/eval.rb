@@ -14,6 +14,14 @@ NilClass.class_eval do
   end
 end
 
+Object.class_eval do
+  def instance_variables_inspect
+    instance_variables.reduce({}) do |hash, var|
+      hash.merge(Hash[var.to_s.delete_prefix('@').to_sym, instance_variable_get(var)])
+    end
+  end
+end
+
 String.class_eval do
   def to_b
     ActiveModel::Type::Boolean.new.cast(downcase)

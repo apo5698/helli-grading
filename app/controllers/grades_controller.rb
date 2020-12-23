@@ -1,11 +1,8 @@
-require 'helli/csv/adapter'
-require 'helli/csv/parser'
-
 class GradesController < AssignmentsViewController
   before_action lambda {
     @grades_scale = @assignment.grades_scale
     @zybooks_scale = @assignment.zybooks_scale
-    @csv_header = Helli::CSV::MoodleGradingWorksheetAdapter::HEADER
+    @csv_header = Helli::CSV::Adapter::MoodleGradingWorksheet::HEADER
   }
 
   # Downloads grades as a csv file.
@@ -31,34 +28,34 @@ class GradesController < AssignmentsViewController
   #  POST /courses/:course_id/assignments/:assignment_id/grades
   def create
     begin
-      worksheet = Helli::CSV::Parser.parse(params[:_json], Helli::CSV::MoodleGradingWorksheetAdapter)
+      worksheet = Helli::CSV::Parser.parse(params[:_json], Helli::CSV::Adapter::MoodleGradingWorksheet)
       @assignment.generate_records(worksheet)
       flash[:success] = "Moodle grade worksheet uploaded (#{params[:_json].length} participants)."
     rescue StandardError => e
       flash[:error] = e.message
     end
 
-    redirect_back(fallback_location: { action: :show })
+    redirect_back fallback_location: { action: :show }
   end
 
   #  POST /courses/:course_id/assignments/:assignment_id/grades/zybooks
   def zybooks
     if @participants.empty?
-      flash[:error] = 'Moodle grade worksheet not uploaded.'
-    else
-      begin
-        data = CSV.parse(params[:_json], Helli::CSV::ZybooksActivityReportAdapter)
-        data.each do |e|
-          # safe navigator: a student may drop so +Student+ could be +nil+
-          student_id = Student.find_by(email: e[:email])&.id
-          @participants.find_by(student_id: student_id)&.update!(zybooks_total: e[:total]) if student_id
-        end
-        flash[:success] = 'zyBooks activity report uploaded.'
-      rescue StandardError => e
-        flash[:error] = e.message
-      end
+      flash[:error] = 'Moodle grade worksheet is not uploaded.'
+      return
     end
 
+    data = Helli::CSV::Parser.parse(params[:_json], Helli::CSV::Adapter::ZybooksActivityReport)
+    data.each do |d|
+      student = Student.find_by(email: d[:email])
+      # safe navigator: a student may drop so +Student+ could be +nil+
+      @participants.find_by(student_id: student.id)&.update!(zybooks_total: d[:total]) if student
+    end
+
+    flash[:success] = 'zyBooks activity report uploaded.'
+  rescue Helli::ParseError => e
+    flash[:error] = e.message
+  ensure
     redirect_back fallback_location: { action: :show }
   end
 
@@ -66,6 +63,8 @@ class GradesController < AssignmentsViewController
 
   #  DELETE /courses/:course_id/assignments/:assignment_id/grades
   def destroy
+    # RuboCop: Avoid using `update_all` because it skips validations.
+    # But we're clearing grades so it's fine :)
     @grades.update_all(grade: nil, feedback_comments: nil)
 
     flash[:success] = 'All grades have been cleared.'
@@ -95,7 +94,7 @@ class GradesController < AssignmentsViewController
     attributes = { grades_scale: grades_scale }
     if @assignment.exercise?
       zybooks_scale = params.require(:zybooks_scale).transform_values(&:to_i).permit!.to_h
-      attributes.merge!(zybooks_scale: zybooks_scale)
+      attributes[:zybooks_scale] = zybooks_scale
     end
 
     @assignment.update!(attributes)
@@ -104,7 +103,7 @@ class GradesController < AssignmentsViewController
 
     msg = "Grades is exported using #{grades_scale[:program]}% for program"
     msg << " and #{grades_scale[:zybooks]}% for zyBooks" if @assignment.exercise?
-    flash[:success] = msg + '.'
+    flash[:success] = msg << '.'
 
     redirect_back fallback_location: { action: :index }
   end

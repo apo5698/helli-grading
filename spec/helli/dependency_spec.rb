@@ -1,30 +1,14 @@
 # frozen_string_literal: true
 
-# required for running this spec only
-require 'helli/error'
-
 describe Helli::Dependency, ignore_clean: true do
-  let(:config) { described_class.config }
-  let(:root) { described_class.root }
+  let(:root) { described_class::ROOT }
 
-  let(:direct) { create(:dependency, source_type: 'direct', executable: '') }
-  let(:git) { create(:dependency, source_type: 'git', source: '') }
-
-  describe '.root' do
-    it('sets up the root path') { expect(root).not_to be_nil }
-  end
+  let(:direct) { create(:dependency) }
+  let(:git) { create(:dependency, type: 'git') }
 
   describe '.load' do
-    it 'sets the root path from file' do
-      expect(root).to eq(YAML.load_file(config)['root'])
-    end
-
     it 'creates records in database' do
-      expect(described_class.pluck(:name)).to eq(described_class.load(config).keys)
-    end
-
-    it 'cannot load empty file' do
-      expect { described_class.load('spec/fixtures/dependencies/empty.yml') }.to raise_error(Helli::EmptyFileError)
+      expect(described_class.pluck(:name)).to eq(described_class.load.keys)
     end
   end
 
@@ -34,13 +18,13 @@ describe Helli::Dependency, ignore_clean: true do
     it('removes all downloaded dependencies') { FileUtils.remove_entry_secure(root) }
 
     described_class.all.each do |d|
-      it("removes #{d.name}") { expect(File).not_to exist("#{root}/#{d.source_type}/#{d.name}") }
+      it("removes #{d.name}") { expect(File).not_to exist("#{root}/#{d.type}/#{d.name}") }
     end
 
     it('downloads all dependencies') { described_class.download_all }
 
     described_class.all.each do |d|
-      it("downloads #{d.name}") { expect(File).to exist("#{root}/#{d.source_type}/#{d.name}") }
+      it("downloads #{d.name}") { expect(File).to exist("#{root}/#{d.type}/#{d.name}") }
     end
   end
 
@@ -54,7 +38,8 @@ describe Helli::Dependency, ignore_clean: true do
       end
     end
 
-    reload_dependencies
+    # reset dependencies
+    described_class.setup
   end
 
   describe '#name' do
@@ -63,11 +48,11 @@ describe Helli::Dependency, ignore_clean: true do
 
   describe '#path' do
     it 'concatenates local path (git)' do
-      expect(git.path).to eq("#{root}/#{git.source_type}/#{git.name}/#{git.executable}")
+      expect(git.path).to eq(Rails.root.join(root, git.type, git.name, git.executable).to_s)
     end
 
     it 'concatenates local path (direct)' do
-      expect(direct.path).to eq("#{root}/#{direct.source_type}/#{direct.name}/#{direct.executable}")
+      expect(direct.path).to eq(Rails.root.join(root, direct.type, direct.name, direct.executable).to_s)
     end
   end
 
@@ -77,7 +62,7 @@ describe Helli::Dependency, ignore_clean: true do
     described_class.all.each do |d|
       it "downloads #{d.name}" do
         d.download
-        expect(File).to exist("#{root}/#{d.source_type}/#{d.name}")
+        expect(File).to exist("#{root}/#{d.type}/#{d.name}")
       end
     end
   end

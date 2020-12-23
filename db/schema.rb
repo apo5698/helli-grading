@@ -65,15 +65,15 @@ ActiveRecord::Schema.define(version: 2020_12_14_205629) do
   end
 
   create_table "dependencies", force: :cascade do |t|
-    t.string "name"
-    t.string "version"
-    t.string "source"
-    t.string "source_type"
-    t.string "executable"
-    t.string "path"
-    t.string "visibility"
+    t.string "name", null: false
+    t.string "version", null: false
+    t.string "source", null: false
+    t.string "type", null: false
+    t.string "executable", null: false
+    t.string "visibility", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "checksum"
     t.index ["name"], name: "index_dependencies_on_name", unique: true
   end
 

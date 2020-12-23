@@ -27,7 +27,7 @@
       <!-- hidden -->
       <div class="mt-2" id="_options_lib_enabled" style="display: none">
         <div class="form-group">
-          <% @dependencies.each do |d| %>
+          <% Helli::Dependency.public_dependencies.each do |d| %>
             <div class="custom-control custom-checkbox">
               <%= lib.check_box(d.name, { class: 'custom-control-input' }) %>
               <%= lib.label(d.name, d.name, class: 'custom-control-label') %>
@@ -128,6 +128,29 @@
             <!-- Disable Grammarly by data-gramm="false" -->
             <%= match.text_area(:data, class: 'form-control code', rows: 10, spellcheck: false, data: { gramm: false }) %>
             <small class="form-text text-muted"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= form.fields_for :timeout do |timeout| %>
+    <div class="form-group">
+      <div class="custom-control custom-checkbox">
+        <%= timeout.check_box :enabled, { class: 'custom-control-input' } %>
+        <%= timeout.label :enabled, 'Timeout', { class: 'custom-control-label' } %>
+        <small class="form-text text-muted mt-0">
+          Maximum execution time in seconds (default 5).
+        </small>
+        <!-- hidden -->
+        <div class="mt-2" id="_options_timeout_enabled" style="display: none">
+          <div class="d-flex">
+            <div class="input-group code">
+              <%= timeout.text_field(:timeout, class: 'form-control code', placeholder: '5') %>
+              <div class="input-group-append">
+                <div class="input-group-text">sec</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

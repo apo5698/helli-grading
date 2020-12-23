@@ -34,15 +34,9 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  def reload_dependencies
-    # This will also remove all local files (see Helli::Dependency#before_destroy)
-    Helli::Dependency.delete_all
-
-    Helli::Dependency.load('config/dependencies.yml')
-    Helli::Dependency.download_all
-  end
-
-  reload_dependencies
+  # Load dependencies
+  Helli::Dependency.delete_all
+  Helli::Dependency.setup
 
   # Automatically adding metadata
   config.infer_spec_type_from_file_location!

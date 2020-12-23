@@ -20,5 +20,8 @@ module Ags
     # the framework and any gems in your application.
 
     # config.active_job.queue_adapter = :sidekiq
+
+    # Creates folders for logs.
+    FileUtils.mkdir_p(Rails.root.join('log', Rails.env))
   end
 end
