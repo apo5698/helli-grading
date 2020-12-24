@@ -5,7 +5,7 @@ class RubricItem
     self.title = 'Compile & Execute'
     self.usage = 'Compiles and executes a Java file.'
     self.required_fields = [:primary_file]
-    self.default_set = Rubric::Compile.default_set + Rubric::Execute.default_set
+    self.default_set = RubricItem::Compile.default_set + RubricItem::Execute.default_set
 
     # TODO: implement
     # +test_file+ not used

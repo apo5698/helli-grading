@@ -23,7 +23,7 @@ class GradingController < AssignmentsViewController
     elsif @rubric_items.empty?
       messages << 'No rubric specified. '\
                   "#{helpers.link_to 'Create a rubric',
-                                     course_assignment_rubrics_path(@course, @assignment)}".html_safe
+                                     course_assignment_rubric_items_path(@course, @assignment)}".html_safe
     end
 
     flash_errors messages
@@ -47,7 +47,7 @@ class GradingController < AssignmentsViewController
     if @grade_items.empty?
       flash[:error] = 'The rubric has not been completed. '\
                       "#{helpers.link_to 'Complete',
-                                         course_assignment_rubrics_path(@course, @assignment)}.".html_safe
+                                         course_assignment_rubric_items_path(@course, @assignment)}.".html_safe
       redirect_back fallback_location: { action: :show }
       return
     end
