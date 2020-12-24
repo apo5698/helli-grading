@@ -8,12 +8,12 @@ default: &default
 
 development:
   <<: *default
-  database: ags_development
+  database: helli_development
 
 test:
   <<: *default
-  database: ags_test
+  database: helli_test
 
 production:
   <<: *default
-  database: ags
+  database: helli

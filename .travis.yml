@@ -11,7 +11,7 @@ before_install:
   - echo -e "machine github.ncsu.edu\n  login $GITHUB_NCSU_EDU_USERNAME\n  password $GITHUB_NCSU_EDU_PASSWORD" > ~/.netrc
   - git submodule update --init --recursive
   - cp config/database.yml.example config/database.yml
-  - psql -c 'create database ags_test;' -U postgres
+  - psql -c 'create database helli_test;' -U postgres
   - sed -i 's/^repo_token:$/& $COVERALLS_REPO_TOKEN/' .coveralls.yml
 services:
   - postgresql

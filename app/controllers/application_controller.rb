@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :catch_denied_access
 
   before_action lambda {
-    @title = 'AGS-dev'
+    @title = 'Helli Dev'
   }
 
   rescue_from ActiveRecord::RecordInvalid do |e|

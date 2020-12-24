@@ -5,4 +5,8 @@ module SelectorHelpers
   def click_icon(**options)
     find('i', **options).click
   end
+
+  def close_flash
+    find(:css, 'button[data-dismiss=alert]').click
+  end
 end
