@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :catch_denied_access, except: %i[new create]
 
   def new
-    flash[:error] = 'AGS has closed public registration.'
+    flash[:error] = 'Helli has closed public registration.'
     redirect_back(fallback_location: '')
     # render layout: 'pre_application'
   end
