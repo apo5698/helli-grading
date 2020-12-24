@@ -8,7 +8,7 @@ class Assignment < ApplicationRecord
   has_one :rubric, dependent: :destroy
   has_many :rubric_items, through: :rubric, dependent: :destroy
   has_many :grade_items, through: :rubric_items
-  has_many :participants
+  has_many :participants, dependent: :destroy
   has_many :grades, through: :participants
   has_many :ts_files, dependent: :destroy
 
