@@ -4,7 +4,7 @@ class GradingController < AssignmentsViewController
   before_action lambda {
     @rubric_item = RubricItem.find(params.require(:id))
     @grade_items = @rubric_item.grade_items.presence || @rubric_item.generate_grade_items
-    @status_colors ||= helpers.grading_status_colors
+    @status_colors ||= Color.of(:grade_item_status)
   }, except: :index
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading

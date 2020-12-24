@@ -1,9 +1,7 @@
 <% msg = flash.alert || flash.notice %>
 <% return unless msg %>
 
-<% colors = { alert: 'primary', notice: 'success' }.freeze %>
-
-<div class="alert alert-<%= colors[flash.keys.first.to_sym] %> alert-dismissible" role="alert">
+<div class="alert alert-<%= Color.of(:flash, flash.keys.first) %> alert-dismissible" role="alert">
   <%= msg %>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>

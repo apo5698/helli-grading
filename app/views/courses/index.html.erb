@@ -6,7 +6,7 @@
   <% @courses.each do |course| %>
     <div class="col-lg-4 pb-3">
       <div class="card h-100">
-        <div style="height: 100px; width: 100%; display: block; background-color: <%= "##{color(course.id)}" %>"></div>
+        <div style="height: 100px; width: 100%; display: block; background-color: <%= "##{Color.rand(course.id)}" %>"></div>
         <div class="card-body">
           <% year, semester = course.term! %>
           <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %>
