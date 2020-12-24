@@ -24,7 +24,7 @@ class CoursesController < ApplicationController
   def create
     course = Course.create!(course_params)
 
-    flash[:success] = "Course '#{course}' created."
+    flash.notice = "Course '#{course}' created."
     redirect_to action: index, course: course_params, course_id: course.id
   end
 
@@ -43,7 +43,7 @@ class CoursesController < ApplicationController
     course = Course.find(params[:id])
     course.update!(course_params)
 
-    flash[:success] = "Course '#{course}' updated."
+    flash.notice = "Course '#{course}' updated."
     redirect_to action: index, course: course_params, course_id: course.id
   end
 
@@ -53,7 +53,7 @@ class CoursesController < ApplicationController
     name = course.name
     course.destroy!
 
-    flash[:success] = "Course '#{name}' deleted."
+    flash.notice = "Course '#{name}' deleted."
     redirect_back fallback_location: { action: :index }
   end
 
@@ -69,12 +69,12 @@ class CoursesController < ApplicationController
     email = params.require(:email)
     user = User.find_by(email: email)
     if user.nil?
-      flash[:error] = "User #{email} does not exist."
+      flash.alert = "User #{email} does not exist."
     elsif user.in?(@course.permitted_users)
-      flash[:error] = "User #{user} has already been added to #{@course}."
+      flash.alert = "User #{user} has already been added to #{@course}."
     else
       @course.collaborator_ids << user.id
-      flash[:success] = "User #{user} has been added as collaborator."
+      flash.notice = "User #{user} has been added as collaborator."
     end
     @course.save!
 
@@ -87,9 +87,9 @@ class CoursesController < ApplicationController
       user = User.find(params.require(:uid))
       @course.collaborator_ids.delete(user.id)
       @course.save!
-      flash[:success] = "User #{user} has been removed from collaborators."
+      flash.notice = "User #{user} has been removed from collaborators."
     else
-      flash[:error] = 'You are not allowed to perform this action.'
+      flash.alert = 'You are not allowed to perform this action.'
     end
 
     redirect_to '/courses'
@@ -98,7 +98,7 @@ class CoursesController < ApplicationController
   def copy
     @course.super_dup
 
-    flash[:success] = "Course #{@course} has been successfully copied over."
+    flash.notice = "Course #{@course} has been successfully copied over."
     redirect_to action: :index
   end
 

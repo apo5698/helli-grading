@@ -32,7 +32,7 @@ class GradingController < AssignmentsViewController
   #  GET /courses/:course_id/assignments/:assignment_id/grading/:id
   def show
     if @grade_items.blank?
-      flash[:error] = 'Rubrics not completed.'
+      flash.alert = 'Rubrics not completed.'
       redirect_back fallback_location: ''
       return
     end
@@ -45,7 +45,7 @@ class GradingController < AssignmentsViewController
   #  PUT /courses/:course_id/assignments/:assignment_id/grading/:id
   def update
     if @grade_items.empty?
-      flash[:error] = 'The rubric has not been completed. '\
+      flash.alert = 'The rubric has not been completed. '\
                       "#{helpers.link_to 'Complete',
                                          course_assignment_rubric_items_path(@course, @assignment)}.".html_safe
       redirect_back fallback_location: { action: :show }
@@ -79,7 +79,7 @@ class GradingController < AssignmentsViewController
     GradeItem.where(rubric_id: id).destroy_all
     title = Rubric.find(id)
 
-    flash[:success] = "Grading results for #{title} has been reset."
+    flash.notice = "Grading results for #{title} has been reset."
     redirect_back fallback_location: { action: :show }
   end
 end

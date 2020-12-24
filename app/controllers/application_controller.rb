@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordInvalid do |e|
     app_logger.error(e.message)
-    flash[:error] = e.message
+    flash.alert = e.message
     redirect_back fallback_location: ''
   end
 
@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
   def catch_denied_access
     return if access_allowed?
 
-    flash[:error] = 'Access denied.'
+    flash.alert = 'Access denied.'
     redirect_back fallback_location: '/'
   end
 

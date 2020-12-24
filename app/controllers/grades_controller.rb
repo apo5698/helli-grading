@@ -30,9 +30,9 @@ class GradesController < AssignmentsViewController
     begin
       worksheet = Helli::CSV::Parser.parse(params[:_json], Helli::CSV::Adapter::MoodleGradingWorksheet)
       @assignment.generate_records(worksheet)
-      flash[:success] = "Moodle grade worksheet uploaded (#{params[:_json].length} participants)."
+      flash.notice = "Moodle grade worksheet uploaded (#{params[:_json].length} participants)."
     rescue StandardError => e
-      flash[:error] = e.message
+      flash.alert = e.message
     end
 
     redirect_back fallback_location: { action: :show }
@@ -41,7 +41,7 @@ class GradesController < AssignmentsViewController
   #  POST /courses/:course_id/assignments/:assignment_id/grades/zybooks
   def zybooks
     if @participants.empty?
-      flash[:error] = 'Moodle grade worksheet is not uploaded.'
+      flash.alert = 'Moodle grade worksheet is not uploaded.'
       return
     end
 
@@ -52,9 +52,9 @@ class GradesController < AssignmentsViewController
       @participants.find_by(student_id: student.id)&.update!(zybooks_total: d[:total]) if student
     end
 
-    flash[:success] = 'zyBooks activity report uploaded.'
+    flash.notice = 'zyBooks activity report uploaded.'
   rescue Helli::ParseError => e
-    flash[:error] = e.message
+    flash.alert = e.message
   ensure
     redirect_back fallback_location: { action: :show }
   end
@@ -67,7 +67,7 @@ class GradesController < AssignmentsViewController
     # But we're clearing grades so it's fine :)
     @grades.update_all(grade: nil, feedback_comments: nil)
 
-    flash[:success] = 'All grades have been cleared.'
+    flash.notice = 'All grades have been cleared.'
     redirect_back fallback_location: { action: :index }
   end
 
@@ -75,7 +75,7 @@ class GradesController < AssignmentsViewController
   def update
     # check if all grade items have been resolved
     if @assignment.grade_items.any?(&:unresolved?)
-      flash[:error] = 'There are unresolved grade results. '\
+      flash.alert = 'There are unresolved grade results. '\
         "#{helpers.link_to 'Resolve.',
                            course_assignment_grading_index_path(@course, @assignment)}".html_safe
       redirect_back fallback_location: { action: :index }
@@ -86,7 +86,7 @@ class GradesController < AssignmentsViewController
 
     # check if percentage values are valid
     if grades_scale.values.sum != 100
-      flash[:error] = 'Sum of percentage must be 100%.'
+      flash.alert = 'Sum of percentage must be 100%.'
       redirect_back fallback_location: { action: :index }
       return
     end
@@ -103,7 +103,7 @@ class GradesController < AssignmentsViewController
 
     msg = "Grades is exported using #{grades_scale[:program]}% for program"
     msg << " and #{grades_scale[:zybooks]}% for zyBooks" if @assignment.exercise?
-    flash[:success] = msg << '.'
+    flash.notice = msg << '.'
 
     redirect_back fallback_location: { action: :index }
   end

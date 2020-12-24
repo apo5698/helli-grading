@@ -1,6 +1,6 @@
 class TsFilesController < AssignmentsViewController
   before_action lambda {
-    flash[:error] = 'Not implemented.'
+    flash.alert = 'Not implemented.'
     redirect_back fallback_location: { controller: :assignments }
   }
 
@@ -11,10 +11,10 @@ class TsFilesController < AssignmentsViewController
   def upload
     files = params[:files]
     if files.blank?
-      flash[:error] = 'No file chosen.'
+      flash.alert = 'No file chosen.'
     else
       files.each { |file| TsFilesHelper.upload(file, @assignment.id) }
-      flash[:success] = "Successfully uploaded #{files.count} #{'file'.pluralize(files.count)}."
+      flash.notice = "Successfully uploaded #{files.count} #{'file'.pluralize(files.count)}."
     end
     redirect_back(fallback_location: '')
   end
@@ -22,14 +22,14 @@ class TsFilesController < AssignmentsViewController
   def destroy_selected
     selected = params[:files]&.select { |_, v| v.to_i == 1 }
     if selected.nil?
-      flash[:error] = 'No file found.'
+      flash.alert = 'No file found.'
     elsif selected.empty?
-      flash[:error] = 'No file selected.'
+      flash.alert = 'No file selected.'
     else
       selected.each do |selected_id, _|
         @ts_file.files.find(selected_id).purge
       end
-      flash[:success] = 'Selected file(s) deleted.'
+      flash.notice = 'Selected file(s) deleted.'
     end
     redirect_back(fallback_location: '')
   end

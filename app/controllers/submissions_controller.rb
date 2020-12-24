@@ -20,14 +20,14 @@ class SubmissionsController < AssignmentsViewController
     zip_file = params[:zip]
 
     if zip_file.nil?
-      flash[:error] = 'Upload failed (no file chosen).'
+      flash.alert = 'Upload failed (no file chosen).'
       return
     end
 
     count = Helli::Attachment.upload_moodle_zip(zip_file, @assignment).count
-    flash[:success] = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
+    flash.notice = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
   rescue StandardError => e
-    flash[:error] = e.message
+    flash.alert = e.message
   ensure
     redirect_back fallback_location: { action: :index }
   end
@@ -36,7 +36,7 @@ class SubmissionsController < AssignmentsViewController
     if params[:id].present?
       # single file
       Helli::Attachment.delete_by_id(params[:id])
-      flash[:success] = 'Submission deleted.'
+      flash.notice = 'Submission deleted.'
     else
       # multiple files
       selected = params.require(:participants).permit!.to_h
@@ -45,7 +45,7 @@ class SubmissionsController < AssignmentsViewController
       raise 'No participant selected.' if selected.empty?
 
       selected.each { |id| Participant.find(id).files.purge }
-      flash[:success] = 'Selected submissions deleted.'
+      flash.notice = 'Selected submissions deleted.'
     end
 
     redirect_back fallback_location: { action: :index }

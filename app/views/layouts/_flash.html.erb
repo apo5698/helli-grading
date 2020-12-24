@@ -1,34 +1,11 @@
-<% if flash[:warning] %>
-  <div class="alert alert-dismissible alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="new-line"><%= flash[:warning] %></span>
-  </div>
-<% end %>
+<% msg = flash.alert || flash.notice %>
+<% return unless msg %>
 
-<% if flash[:danger] %>
-  <div class="alert alert-dismissible alert-danger">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="new-line"><%= flash[:danger] %></span>
-  </div>
-<% end %>
+<% colors = { alert: 'primary', notice: 'success' }.freeze %>
 
-<% if flash[:success] %>
-  <div class="alert alert-dismissible alert-success">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="new-line"><%= flash[:success] %></span>
-  </div>
-<% end %>
-
-<% if flash[:info] %>
-  <div class="alert alert-dismissible alert-info">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="new-line"><%= flash[:info] %></span>
-  </div>
-<% end %>
-
-<% if flash[:error] %>
-  <div class="alert alert-dismissible alert-primary">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="new-line"><%= flash[:error] %></span>
-  </div>
-<% end %>
+<div class="alert alert-<%= colors[flash.keys.first.to_sym] %> alert-dismissible" role="alert">
+  <%= msg %>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>

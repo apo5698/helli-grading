@@ -20,7 +20,7 @@ class AssignmentsController < AssignmentsViewController
   def create
     Assignment.create!(assignment_params.merge(course_id: params.require(:course_id)))
 
-    flash[:success] = "Assignment '#{assignment_params[:name]}' created."
+    flash.notice = "Assignment '#{assignment_params[:name]}' created."
     redirect_back fallback_location: { action: :index }
   end
 
@@ -34,7 +34,7 @@ class AssignmentsController < AssignmentsViewController
     assignment = Assignment.find(params.require(:id))
     assignment.update!(assignment_params.merge(course_id: params.require(:course_id)))
 
-    flash[:success] = "Assignment '#{assignment.name}' updated."
+    flash.notice = "Assignment '#{assignment.name}' updated."
     redirect_to action: index, assignment: assignment_params, id: assignment.id
   end
 
@@ -44,7 +44,7 @@ class AssignmentsController < AssignmentsViewController
     name = assignment.name
     assignment.destroy
 
-    flash[:success] = "Assignment '#{name}' deleted."
+    flash.notice = "Assignment '#{name}' deleted."
     redirect_back fallback_location: { action: :index }
   end
 
@@ -53,8 +53,10 @@ class AssignmentsController < AssignmentsViewController
     name = params.require(:name)
     @assignment.add_program(name)
     @assignment.save!
-
-    flash[:success] = "Program '#{name}' added."
+    flash.notice = "Program '#{name}' added."
+  rescue ArgumentError => e
+    flash.alert = e.message
+  ensure
     redirect_back fallback_location: { action: :show }
   end
 
@@ -63,8 +65,10 @@ class AssignmentsController < AssignmentsViewController
     name = params.require(:name)
     @assignment.delete_program(name)
     @assignment.save!
-    flash[:success] = "Program '#{name}' deleted."
-
+    flash.notice = "Program '#{name}' deleted."
+  rescue ArgumentError => e
+    flash.alert = e.message
+  ensure
     redirect_back fallback_location: { action: :show }
   end
 
@@ -73,7 +77,7 @@ class AssignmentsController < AssignmentsViewController
     file = params.require(:file)
     @assignment.input_files.attach(file)
 
-    flash[:success] = "Input file '#{file.original_filename}' added."
+    flash.notice = "Input file '#{file.original_filename}' added."
     redirect_back fallback_location: { action: :show }
   end
 
@@ -82,7 +86,7 @@ class AssignmentsController < AssignmentsViewController
     filename = params.require(:name)
     @assignment.input_files.delete_by_filename(filename)
 
-    flash[:success] = "Input file '#{filename}' deleted."
+    flash.notice = "Input file '#{filename}' deleted."
     redirect_back fallback_location: { action: :show }
   end
 
@@ -96,7 +100,7 @@ class AssignmentsController < AssignmentsViewController
       @assignment.dup_to(course_id)
     end
 
-    flash[:success] = "Assignment #{@assignment} has been successfully copied over."
+    flash.notice = "Assignment #{@assignment} has been successfully copied over."
     redirect_to action: :index
   end
 

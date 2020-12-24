@@ -13,7 +13,7 @@ class RubricItemsController < AssignmentsViewController
     @rubric = Rubric.find_or_create(@assignment.id)
     @rubric_item = @rubric.create_rubric_item(rubric_item_params)
 
-    flash[:success] = "Rubric item for #{@rubric_item.type} created."
+    flash.notice = "Rubric item for #{@rubric_item.type} created."
     redirect_back fallback_location: { action: :index }
   end
 
@@ -27,9 +27,9 @@ class RubricItemsController < AssignmentsViewController
       rubric_item.update(rubric_item_params.except(:criteria))
       rubric_item.update_criteria(rubric_item_params[:criteria])
       RubricItem.find(id).generate_grade_items
-      flash[:success] = "Rubric #{rubric_item} has been updated."
+      flash.notice = "Rubric #{rubric_item} has been updated."
     else
-      flash[:error] = 'Not implemented.'
+      flash.alert = 'Not implemented.'
     end
 
     redirect_back fallback_location: { action: :index }
@@ -38,7 +38,7 @@ class RubricItemsController < AssignmentsViewController
   def destroy
     RubricItem.destroy(params[:id])
 
-    flash[:success] = 'Selected rubric deleted.'
+    flash.notice = 'Selected rubric deleted.'
     redirect_back fallback_location: { action: :index }
   end
 
