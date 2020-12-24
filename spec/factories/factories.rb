@@ -51,4 +51,11 @@ FactoryBot.define do
     type { Wce }
     primary_file { Dir.glob('spec/fixtures/java/wce/**/*.java').sample }
   end
+
+  factory :user do
+    name { Faker::Name.name }
+    email { Faker::Internet.email }
+    password { '123456' }
+    password_confirmation { '123456' }
+  end
 end
