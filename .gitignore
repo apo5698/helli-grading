@@ -15,6 +15,7 @@
 # precompiled javascript packs
 /public/assets
 /public/packs
+/public/packs-test
 
 # rails
 /log

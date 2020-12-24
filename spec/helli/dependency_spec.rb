@@ -1,68 +1,61 @@
 # frozen_string_literal: true
 
 describe Helli::Dependency, ignore_clean: true do
-  let(:root) { described_class::ROOT }
+  root = described_class::ROOT
 
   let(:direct) { create(:dependency) }
   let(:git) { create(:dependency, type: 'git') }
 
   describe '.load' do
+    it 'has no dependency before testing' do
+      described_class.destroy_all
+      expect(described_class).not_to be_exists
+    end
+
     it 'creates records in database' do
-      expect(described_class.pluck(:name)).to eq(described_class.load.keys)
+      names = described_class.load.keys
+      expect(described_class.pluck(:name).sort).to eq(names.sort)
     end
   end
 
-  describe '.download_all' do
-    it('has all dependencies downloaded before tests') { expect(File).to exist(root) }
-
-    it('removes all downloaded dependencies') { FileUtils.remove_entry_secure(root) }
-
-    described_class.all.each do |d|
-      it("removes #{d.name}") { expect(File).not_to exist("#{root}/#{d.type}/#{d.name}") }
-    end
-
-    it('downloads all dependencies') { described_class.download_all }
-
-    described_class.all.each do |d|
-      it("downloads #{d.name}") { expect(File).to exist("#{root}/#{d.type}/#{d.name}") }
-    end
-  end
-
-  describe '#destroy' do
-    described_class.all.each do |d|
-      it("#{d.name} is downloaded locally") { expect(File).to exist(d.path) }
-
-      it "removes #{d.name} local files" do
-        d.destroy
-        expect(File).not_to exist(d.path)
+  describe '.download_all .delete_all_downloads' do
+    it 'deletes all downloads' do
+      described_class.delete_all_downloads
+      described_class.find_each do |d|
+        expect(Dir).not_to exist(d.dir)
       end
     end
 
-    # reset dependencies
-    described_class.setup
+    it 'downloads all dependencies' do
+      described_class.download_all
+      described_class.find_each do |d|
+        expect(File).to exist(d.path)
+      end
+    end
+  end
+
+  describe '.public_dependencies' do
+    it 'returns all public dependencies' do
+      expect(described_class.public_dependencies).to eq(described_class.where(visibility: :public))
+    end
   end
 
   describe '#name' do
     it('is invalid if name exists') { expect(build(:dependency, name: git.name)).to be_invalid }
   end
 
-  describe '#path' do
-    it 'concatenates local path (git)' do
-      expect(git.path).to eq(Rails.root.join(root, git.type, git.name, git.executable).to_s)
-    end
-
-    it 'concatenates local path (direct)' do
-      expect(direct.path).to eq(Rails.root.join(root, direct.type, direct.name, direct.executable).to_s)
+  describe '#dir' do
+    it 'returns directory where it is downloaded' do
+      described_class.find_each do |d|
+        expect(d.dir).to eq(Rails.root.join(root, d.type, d.name).to_s)
+      end
     end
   end
 
-  describe '#download' do
-    it('ensures all local files removed') { FileUtils.remove_entry_secure(root) }
-
-    described_class.all.each do |d|
-      it "downloads #{d.name}" do
-        d.download
-        expect(File).to exist("#{root}/#{d.type}/#{d.name}")
+  describe '#path' do
+    it 'returns full path including directory and executable' do
+      described_class.find_each do |d|
+        expect(d.path).to eq(Rails.root.join(root, d.type, d.name, d.executable).to_s)
       end
     end
   end

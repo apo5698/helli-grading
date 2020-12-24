@@ -3,3 +3,12 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+
+Metrics/BlockLength:
+  Enabled: false
+
+RSpec/Capybara/FeatureMethods:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false

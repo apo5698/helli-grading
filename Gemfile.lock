@@ -268,6 +268,8 @@ GEM
       rspec-expectations (~> 3.9)
       rspec-mocks (~> 3.9)
       rspec-support (~> 3.9)
+    rspec-steps (2.1.1)
+      rspec (>= 3.0, < 3.99)
     rspec-support (3.10.0)
     rubocop (1.4.2)
       parallel (~> 1.10)
@@ -390,11 +392,13 @@ DEPENDENCIES
   redis
   rspec-its
   rspec-rails
+  rspec-steps
   rubocop
   rubocop-faker
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  ruby-progressbar
   rubyzip
   sass-rails
   selenium-webdriver

@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
-module CSVGenerator
+class RandomCSV
   @moodle_header ||= Helli::CSV::Adapter::MoodleGradingWorksheet::HEADER
   @zybooks_header ||= Helli::CSV::Adapter::ZybooksActivityReport::HEADER
   @datetime_format ||= Helli::CSV::Adapter::MoodleGradingWorksheet::DATETIME_FORMAT
 
+  attr_accessor :data
+
   class << self
+    # @return [RandomCSV]
     def moodle(participants = rand(20..30), no_submission: rand(1..5))
       raise ArgumentError, 'participants should be greater than no_submission count' if participants < no_submission
 
-      list = []
+      data = []
       base_identifier = rand(10_000..9_999_999 - participants)
       datetime_now = DateTime.now
 
@@ -30,7 +33,7 @@ module CSVGenerator
         row[@moodle_header[:last_modified_grade]] = timestamp
         row[@moodle_header[:feedback_comments]] = ''
 
-        list << row
+        data << row
       end
 
       no_submission.times do |i|
@@ -49,14 +52,16 @@ module CSVGenerator
         row[@moodle_header[:last_modified_grade]] = moodle_datetime(nil)
         row[@moodle_header[:feedback_comments]] = ''
 
-        list << row
+        data << row
       end
 
-      list
+      instance = new
+      instance.data = data
+      instance
     end
 
     def zybooks(participants = rand(20..30))
-      list = []
+      data = []
 
       participants.times do
         row = {}
@@ -64,10 +69,20 @@ module CSVGenerator
         row[@zybooks_header[:email]] = ncsu_email(first_name, last_name)
         row[@zybooks_header[:total]] = Faker::Number.decimal(l_digits: 2, r_digits: 2)
 
-        list << row
+        data << row
       end
 
-      list
+      instance = new
+      instance.data = data
+      instance
+    end
+
+    def to_file
+
+    end
+
+    def write_to_file
+
     end
 
     private

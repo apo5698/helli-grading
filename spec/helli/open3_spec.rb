@@ -2,7 +2,7 @@
 
 describe Helli::Open3 do
   shell = 'sh'
-  path = 'spec/fixtures/open3'
+  path = 'spec/fixtures/helli/open3'
 
   stdout = 0
   stderr = 1
