@@ -105,6 +105,6 @@ class CoursesController < ApplicationController
   private
 
   def course_params
-    params.require(:course).permit(:name, :term, :section)
+    params.require(:course).permit(:name, :term, :section).merge(user: current_user)
   end
 end
