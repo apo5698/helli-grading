@@ -67,6 +67,10 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  # Helpers
+  config.include ControllerSpecHelpers, type: :controller
+  config.include SelectorHelpers, type: :feature
+
   # Capybara
   Capybara.server = :puma, { Silent: true }
   Capybara.javascript_driver = :selenium_chrome_headless

@@ -43,6 +43,7 @@ group :test do
   gem 'guard-rspec'
   gem 'rspec-its'
   gem 'rspec-rails'
+  gem 'rspec-steps'
   gem 'selenium-webdriver'
   gem 'webdrivers'
 end
