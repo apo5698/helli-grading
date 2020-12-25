@@ -70,7 +70,6 @@ RSpec.configure do |config|
 
   # Helpers
   config.include ControllerSpecHelpers, type: :controller
-  config.include SelectorHelpers, type: :feature
 
   # Capybara
   Capybara.server = :puma, { Silent: true }
