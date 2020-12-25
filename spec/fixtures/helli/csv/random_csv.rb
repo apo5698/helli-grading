@@ -23,7 +23,7 @@ class RandomCSV
         first_name = self.first_name
         last_name = self.last_name
         row[@moodle_header[:full_name]] = "#{first_name} #{last_name}"
-        row[@moodle_header[:email_address]] = ncsu_email(first_name, last_name)
+        row[@moodle_header[:email_address]] = f1l7_email(first_name, last_name)
         row[@moodle_header[:status]] = Grade.statuses[:submitted]
         row[@moodle_header[:grade]] = ''
         row[@moodle_header[:maximum_grade]] = '10.00'
@@ -43,7 +43,7 @@ class RandomCSV
         first_name = self.first_name
         last_name = self.last_name
         row[@moodle_header[:full_name]] = "#{first_name} #{last_name}"
-        row[@moodle_header[:email_address]] = ncsu_email(first_name, last_name)
+        row[@moodle_header[:email_address]] = f1l7_email(first_name, last_name)
         row[@moodle_header[:status]] = Grade.statuses[:no_submission]
         row[@moodle_header[:grade]] = ''
         row[@moodle_header[:maximum_grade]] = '10.00'
@@ -66,7 +66,7 @@ class RandomCSV
       participants.times do
         row = {}
 
-        row[@zybooks_header[:email]] = ncsu_email(first_name, last_name)
+        row[@zybooks_header[:email]] = f1l7_email(first_name, last_name)
         row[@zybooks_header[:total]] = Faker::Number.decimal(l_digits: 2, r_digits: 2)
 
         data << row
@@ -98,8 +98,8 @@ class RandomCSV
     end
 
     # <first letter of first name><first 7 letters of last name>@ncsu.edu
-    def ncsu_email(first_name, last_name)
-      "#{first_name[0]}#{last_name[0..6]}@ncsu.edu".downcase
+    def f1l7_email(first_name, last_name)
+      "#{first_name[0]}#{last_name[0..6]}@helli.app".downcase
     end
 
     # A random date within 7 days ago from today. Return '-' if due_date is +nil+.
