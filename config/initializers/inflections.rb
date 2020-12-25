@@ -13,6 +13,7 @@
 # These inflection rules are supported but not enabled by default:
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym 'AGS'
+  inflect.acronym 'CSC'
   inflect.acronym 'CSV'
   inflect.acronym 'HTML'
   inflect.acronym 'JSONB'
