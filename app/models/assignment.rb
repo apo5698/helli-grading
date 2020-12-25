@@ -186,10 +186,14 @@ class Assignment < ApplicationRecord
     participants.destroy_all
 
     worksheet.each do |row|
-      student = Student.create_or_find_by!(
-        name: row[:full_name],
-        email: row[:email_address]
-      )
+      begin
+        student = Student.create_or_find_by!(
+          name: row[:full_name],
+          email: row[:email_address]
+        )
+      rescue ActiveRecord::RecordNotFound
+        raise Student::EmailNotUnique.new(row[:full_name], row[:email_address])
+      end
 
       participant = Participant.create_or_find_by!(
         assignment_id: id,
