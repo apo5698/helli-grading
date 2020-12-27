@@ -5,8 +5,9 @@ module Helli
       #
       #   NCSUCSC116BalikFall2020_report_004_2020-09-23_2345.csv
       #
-      #     <SCHOOL><SUBJECT><course number><Instructor><SEMESTER><Year>_report_<section>_<year>-<month>-<day>_<time>.csv
+      #   <SCHOOL><SUBJECT><course number><Instructor><SEMESTER><Year>_report_<section>_<year>-<month>-<day>_<time>.csv
       #
+      #   Regexp:
       #     [A-Z]+\d+[A-Z][a-z]+[A-Z][a-z]+\d+_report_\d+_\d{4}-\d{2}-\d{2}_\d{4}.csv
       #
       # Only two columns are used:

@@ -5,15 +5,17 @@ module Helli
       #
       #   Grades-CSC 116 (004) FALL 2020-Day 11-293581.csv
       #
-      #     Grades-<SUBJECT> <course number> (section) <SEMESTER> <year>-<assignment>-<id>
+      #   Grades-<SUBJECT> <course number> (section) <SEMESTER> <year>-<assignment>-<id>
       #
+      #   Regexp:
       #     Grades-[A-Z]+ \d+ \(\d+\s*\) [A-Z]+ \d{4}-.+-\d+.csv
       #
       # All columns are used:
       #   "Identifier", "Full name", "Email address", "Status", "Grade", "Maximum Grade", "Grade can be changed",
       #   "Last modified (submission)", "Last modified (grade)", "Feedback comments"
       class MoodleGradingWorksheet < Base
-        # Wednesday, September 23, 2020, 9:00 PM
+        # Moodle datetime format. For example:
+        #   Wednesday, September 23, 2020, 9:00 PM
         DATETIME_FORMAT = '%A, %B %e, %Y, %l:%M %p'.freeze
 
         HEADER = {
