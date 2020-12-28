@@ -41,3 +41,6 @@
 
 # keep empty directories
 !.keep
+
+# yard generated files
+.yardoc
