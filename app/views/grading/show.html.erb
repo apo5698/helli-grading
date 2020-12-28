@@ -14,40 +14,7 @@
   <% end %>
 </ul>
 
-<div class="tab-pane show active" id="autograding-<%= @rubric_item.id %>">
-  <%= render partial: 'grading/options' %>
-
-  <h3>Result</h3>
-  <div id="autograding-result">
-    <%= render partial: 'grading/result' %>
-  </div>
-  <div class="float-right mt-2 mb-4">
-    <%= link_to 'Reset grading status', course_assignment_grading_path(@course, @assignment, @rubric_item),
-                method: :delete, data: { confirm: 'All grading results will be cleared. Proceed?' } %>
-  </div>
-</div>
-
-<% content_for :js do %>
-  <!--suppress JSUnusedAssignment-->
-  <script>
-    $('#autograding-<%= @rubric_item.id %>').tab('show');
-
-    // show/hide options
-    $('input:checkbox').change(function () {
-      toggleOptions($(this));
-    });
-
-    function toggleOptions(checkbox) {
-      let id = checkbox.prop('id');
-      let options = $(`div#${id}`);
-      if (checkbox.prop('checked')) {
-        options.show();
-      } else {
-        options.hide();
-      }
-    }
-  </script>
-<% end %>
+<%= react_component('GradingPagePerRubricItem', props: {rubricItem: react_grading_page_rubric_item(@course, @assignment, @rubric_item), gradeItems: react_grading_page_grade_items(@course, @assignment, @rubric_item, @grade_items)} ) %>
 
 <!--suppress CssUnusedSymbol-->
 <style>

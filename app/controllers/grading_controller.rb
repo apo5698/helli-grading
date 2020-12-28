@@ -69,15 +69,19 @@ class GradingController < AssignmentsViewController
     threads.each(&:join)
 
     respond_to do |format|
-      format.js { flash.now[:success] = "Run #{@rubric_item} complete." }
+      format.json { render json: '2333333' }
     end
+
+    # respond_to do |format|
+    #   format.js { flash.now[:success] = "Run #{@rubric_item} complete." }
+    # end
   end
 
   #  DELETE /courses/:course_id/assignments/:assignment_id/grading/:id
   def destroy
     id = params.require(:id)
-    GradeItem.where(rubric_id: id).destroy_all
-    title = Rubric.find(id)
+    GradeItem.where(rubric_item_id: id).destroy_all
+    title = RubricItem.find(id)
 
     flash[:success] = "Grading results for #{title} has been reset."
     redirect_back fallback_location: { action: :show }

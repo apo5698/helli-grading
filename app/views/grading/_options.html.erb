@@ -6,9 +6,11 @@
   <% end %>
   <div class="form-group d-flex align-items-center">
     <%# spinner = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>' %>
-    <%= form.submit('Run', class: 'btn btn-primary', data: { disable_with: "Running..." }) %>
+    <%#= form.submit('Run', class: 'btn btn-primary', data: { disable_with: "Running..." }) %>
+    <button type="button" class="btn btn-primary" data-disable-with="Running...">Run</button>
     <div class="d-inline ml-2">
       <span id="grading-status"></span>
     </div>
   </div>
 <% end %>
+

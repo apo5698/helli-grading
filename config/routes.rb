@@ -55,7 +55,9 @@ Rails.application.routes.draw do
       end
 
       resources :grading do
-        resources :grade_items, only: %i[edit update show], path: ''
+        resources :grade_items, only: %i[edit update show], path: '' do
+          put :run
+        end
       end
 
       resource :grades do
