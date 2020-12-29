@@ -83,12 +83,12 @@ module Helli
 
       # Word characters only
       def first_name
-        Faker::Name.first_name.gsub(/\W/, '')
+        Faker::Name.unique.first_name.gsub(/\W/, '')
       end
 
       # Word characters only
       def last_name
-        Faker::Name.last_name.gsub(/\W/, '')
+        Faker::Name.unique.last_name.gsub(/\W/, '')
       end
 
       # <first letter of first name><first 7 letters of last name>@ncsu.edu
