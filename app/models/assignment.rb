@@ -39,6 +39,10 @@ class Assignment < ApplicationRecord
     project: 'Project'
   }
 
+  # Raises if a submission does not match any participant.
+  # For example, a user submits Day 1 worksheet, but then Day 2 submissions is uploaded.
+  class StudentNotParticipated < Helli::Error; end
+
   def to_s
     name
   end
@@ -91,11 +95,6 @@ class Assignment < ApplicationRecord
     programs.delete(file)
   end
 
-  def grades_scale
-    # used for indexing
-    super
-  end
-
   # Sets the grades scale of the assignment. The sum of these values must be 100.
   #
   #   grades_scale = { program = 50, zybooks = 25, other = 25 }
@@ -141,11 +140,6 @@ class Assignment < ApplicationRecord
     raise ArgumentError, "the sum of values must be #{sum}" if program + zybooks + other != sum
 
     super({ program: program, zybooks: zybooks, other: other })
-  end
-
-  def zybooks_scale
-    # used for indexing
-    super
   end
 
   # Sets the zyBooks grades scale of the assignment. At least one scale should be provided.
