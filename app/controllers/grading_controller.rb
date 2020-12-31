@@ -76,8 +76,8 @@ class GradingController < AssignmentsViewController
   #  DELETE /courses/:course_id/assignments/:assignment_id/grading/:id
   def destroy
     id = params.require(:id)
-    GradeItem.where(rubric_id: id).destroy_all
-    title = Rubric.find(id)
+    GradeItem.where(rubric_item_id: id).destroy_all
+    title = RubricItem.find(id)
 
     flash.notice = "Grading results for #{title} has been reset."
     redirect_back fallback_location: { action: :show }
