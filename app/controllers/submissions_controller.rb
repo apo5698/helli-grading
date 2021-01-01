@@ -26,7 +26,7 @@ class SubmissionsController < AssignmentsViewController
 
     count = Helli::Attachment.upload_moodle_zip(zip_file, @assignment).count
     flash.notice = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
-  rescue Assignment::StudentNotParticipated => e
+  rescue Helli::StudentNotParticipated => e
     flash.alert = "Student #{e.message} does not participate in this assignment. Please check the submissions file."
   ensure
     redirect_back fallback_location: { action: :index }

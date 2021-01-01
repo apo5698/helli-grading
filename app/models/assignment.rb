@@ -39,10 +39,6 @@ class Assignment < ApplicationRecord
     project: 'Project'
   }
 
-  # Raises if a submission does not match any participant.
-  # For example, a user submits Day 1 worksheet, but then Day 2 submissions is uploaded.
-  class StudentNotParticipated < Helli::Error; end
-
   def to_s
     name
   end

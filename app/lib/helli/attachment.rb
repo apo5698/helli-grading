@@ -20,7 +20,7 @@ module Helli
         dirs.each do |dir|
           email = File.basename(dir)
           participant = assignment.participants.find { |p| p.email == email }
-          raise Assignment::StudentNotParticipated, email if participant.nil?
+          raise Helli::StudentNotParticipated, email if participant.nil?
 
           model = participant.files
           Dir.glob("#{dir}/**/*").select { |e| File.file?(e) }.each { |f| upload_local(model, f) }

@@ -23,5 +23,7 @@ module Helli
 
     # Creates folders for logs.
     FileUtils.mkdir_p(Rails.root.join('log', Rails.env))
+
+    config.autoloader = :classic
   end
 end
