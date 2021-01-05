@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Helli::Dependency, ignore_clean: true do
+describe Dependency, ignore_clean: true do
   root = described_class::ROOT
 
   let(:direct) { create(:dependency) }

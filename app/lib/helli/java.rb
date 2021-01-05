@@ -46,7 +46,7 @@ module Helli::Java
       destination = '.'
       classpath = [destination.dup]
       if junit
-        @junit ||= Helli::Dependency.find_by(name: 'junit').path
+        @junit ||= Dependency.find_by(name: 'junit').path
         classpath << "#{File.dirname(@junit)}/*"
       end
       classpath = classpath.join(CLASSPATH_SEPARATOR)
@@ -92,7 +92,7 @@ module Helli::Java
       classname = File.basename(classfile).delete_suffix(CLASS_FILE_EXTENSION)
 
       cmd = if junit
-              ['java', '-jar', Helli::Dependency.find_by(name: 'junit').path, '-cp', classpath, '-c', classname, args].join(' ')
+              ['java', '-jar', Dependency.find_by(name: 'junit').path, '-cp', classpath, '-c', classname, args].join(' ')
             else
               ['java', '-cp', classpath, classname, args].join(' ')
             end
@@ -113,7 +113,7 @@ module Helli::Java
     #     p[1]              #=> ""
     #     p[2].exitstatus   #=> 0
     def checkstyle(filename)
-      cmd = [Helli::Dependency.find_by(name: 'cs-checkstyle').path, File.basename(filename)].join(' ')
+      cmd = [Dependency.find_by(name: 'cs-checkstyle').path, File.basename(filename)].join(' ')
       Open3.capture3(cmd, chdir: File.dirname(filename))
     end
   end

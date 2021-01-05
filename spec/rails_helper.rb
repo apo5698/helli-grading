@@ -37,8 +37,8 @@ end
 
 RSpec.configure do |config|
   # Load dependencies
-  Helli::Dependency.delete_all
-  Helli::Dependency.setup
+  Dependency.delete_all
+  Dependency.setup
 
   # Automatically adding metadata
   config.infer_spec_type_from_file_location!
