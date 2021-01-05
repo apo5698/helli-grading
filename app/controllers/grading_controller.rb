@@ -54,23 +54,27 @@ class GradingController < AssignmentsViewController
 
     options = params.require(:options).permit!.to_h
 
-    threads = []
-    threads_count = ENV.fetch('AUTOGRADING_THREADS', ENV.fetch('RAILS_MAX_THREADS', 5)).to_i
-    # false: do not fill arrays with nil
-    @grade_items.in_groups(threads_count, false).each do |items|
-      threads << Thread.new do
-        items.each do |item|
-          item.run(options)
-        ensure
-          ActiveRecord::Base.connection_pool.release_connection
-        end
-      end
-    end
-    threads.each(&:join)
+    # threads = []
+    # threads_count = ENV.fetch('AUTOGRADING_THREADS', ENV.fetch('RAILS_MAX_THREADS', 5)).to_i
+    # # false: do not fill arrays with nil
+    # @grade_items.in_groups(threads_count, false).each do |items|
+    #   threads << Thread.new do
+    #     items.each do |item|
+    #       item.run(options)
+    #     ensure
+    #       ActiveRecord::Base.connection_pool.release_connection
+    #     end
+    #   end
+    # end
+    # threads.each(&:join)
 
-    respond_to do |format|
-      format.js { flash.now[:success] = "Run #{@rubric_item} complete." }
+    @grade_items.each do |item|
+      item.run(options)
     end
+
+    flash.notice = "Run #{@rubric_item} complete."
+  ensure
+    redirect_back fallback_location: :show
   end
 
   #  DELETE /courses/:course_id/assignments/:assignment_id/grading/:id
