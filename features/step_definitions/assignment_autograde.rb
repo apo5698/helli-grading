@@ -3,5 +3,5 @@
 When(/^I run (.+) for (.*\.java) without options$/) do |ri, file|
   click_link "[#{ri}](#{file})"
   click_button 'Run'
-  expect(page).not_to have_content('Inactive', wait: 10)
+  expect(page)._to have_flash(:notice, wait: 60)
 end

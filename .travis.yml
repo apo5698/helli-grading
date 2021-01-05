@@ -13,5 +13,11 @@ before_install:
   - cp config/database.yml.example config/database.yml
   - psql -c 'create database helli_test;' -U postgres
   - sed -i 's/^repo_token:$/& $COVERALLS_REPO_TOKEN/' .coveralls.yml
+  - nvm install node
+before_script:
+  - yarn
+  - RAILS_ENV=test bundle exec rails webpacker:compile
 services:
   - postgresql
+addons:
+  chrome: stable
