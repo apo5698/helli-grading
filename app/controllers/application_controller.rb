@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :catch_denied_access
+  skip_before_action :verify_authenticity_token
 
   before_action lambda {
     @title = 'Helli Dev'

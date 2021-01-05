@@ -28,15 +28,6 @@ class RubricsController < ApplicationController
     redirect_back fallback_location: { action: :index }
   end
 
-  def destroy
-    rubric = Rubric.find(params[:id])
-    name = rubric.to_s
-    rubric.destroy!
-
-    flash[:success] = "Rubric '#{name}' deleted."
-    redirect_back fallback_location: { action: :index }
-  end
-
   def show
     # code here
   end
