@@ -50,10 +50,10 @@ class AssignmentsController < AssignmentsViewController
 
   #  PUT /courses/:course_id/assignments/:id/programs
   def program_add
-    name = params.require(:name)
-    @assignment.add_program(name)
+    program = params.require(:program)
+    @assignment.add_program(program)
     @assignment.save!
-    flash.notice = "Program '#{name}' added."
+    flash.notice = "Program '#{program}' added."
   rescue ArgumentError => e
     flash.alert = e.message
   ensure
