@@ -20,6 +20,8 @@ module Helli
         dirs.each do |dir|
           email = File.basename(dir)
           participant = assignment.participants.find { |p| p.email == email }
+          raise Helli::StudentNotParticipated, email if participant.nil?
+
           model = participant.files
           Dir.glob("#{dir}/**/*").select { |e| File.file?(e) }.each { |f| upload_local(model, f) }
         end
@@ -55,47 +57,6 @@ module Helli
       # Deletes the attachment by id. Pass an array of ids if there are multiple to delete.
       def delete_by_id(id)
         Array(id).each { |i| ActiveStorage::Attachment.find(i).purge_later }
-      end
-
-      # TODO: refactor
-      # Add files to a zip file.
-      def self.zip(content_dir, zipfile_path)
-        raise 'method under refactoring'
-
-        FileUtils.remove_entry_secure(zipfile_path) if File.exist?(zipfile_path)
-        FileUtils.mkdir_p(File.dirname(zipfile_path))
-        Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
-          Dir.glob(File.join(content_dir, '**', '*')).each do |s|
-            dest = File.join(File.basename(File.dirname(s)), File.basename(s))
-            zipfile.add(dest, s)
-          end
-        end
-      end
-
-      # TODO: refactor
-      # Downloads submission contents by id from the source based on
-      # +config/environments/#{Rails.env}/config.active_storage.service+.
-      # All contents will be add into the specified zip file and will be deleted after zip creation.
-      # Returns the zip File object.
-      def self.download_submission_zip(course, assignment)
-        raise 'method under refactoring'
-
-        submissions = Submission.where(assignment_id: assignment.id)
-        zipfile = Tempfile.new(["#{course}_#{assignment}_#{assignment.id}@", '.zip'])
-        Dir.mktmpdir do |dir|
-          submissions.each do |sub|
-            student_path = File.join(dir, sub.student.to_s)
-            FileUtils.mkdir_p(student_path)
-            sub.files.each do |remote|
-              filepath = File.join(student_path, remote.filename.to_s)
-              File.open(filepath, 'wb') { |local| local.write(remote.download) }
-            end
-          end
-
-          zip(dir, zipfile.path)
-        end
-
-        zipfile
       end
 
       # Downloads attachments to the temp directory and returns their path as array.

@@ -91,11 +91,6 @@ class Assignment < ApplicationRecord
     programs.delete(file)
   end
 
-  def grades_scale
-    # used for indexing
-    super
-  end
-
   # Sets the grades scale of the assignment. The sum of these values must be 100.
   #
   #   grades_scale = { program = 50, zybooks = 25, other = 25 }
@@ -143,11 +138,6 @@ class Assignment < ApplicationRecord
     super({ program: program, zybooks: zybooks, other: other })
   end
 
-  def zybooks_scale
-    # used for indexing
-    super
-  end
-
   # Sets the zyBooks grades scale of the assignment. At least one scale should be provided.
   # The grades must be sorted in the same order as levels.
   #
@@ -186,10 +176,14 @@ class Assignment < ApplicationRecord
     participants.destroy_all
 
     worksheet.each do |row|
-      student = Student.create_or_find_by!(
-        name: row[:full_name],
-        email: row[:email_address]
-      )
+      begin
+        student = Student.create_or_find_by!(
+          name: row[:full_name],
+          email: row[:email_address]
+        )
+      rescue ActiveRecord::RecordNotFound
+        raise Student::EmailNotUnique.new(row[:full_name], row[:email_address])
+      end
 
       participant = Participant.create_or_find_by!(
         assignment_id: id,

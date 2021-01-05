@@ -7,7 +7,7 @@ class RubricsController < ApplicationController
     @rubric = Rubric.new(assignment_id: @assignment.id)
     @rubric.update!(rubric_params)
 
-    flash[:success] = "Rubric for #{@rubric.type} created."
+    flash.notice = "Rubric for #{@rubric.type} created."
     redirect_back fallback_location: { action: :index }
   end
 
@@ -20,9 +20,9 @@ class RubricsController < ApplicationController
       rubric = Rubric.find(id)
       rubric.update(rubric_params.except(:criteria))
       rubric.update_criteria(rubric_params[:criteria])
-      flash[:success] = "Rubric '#{rubric}' updated."
+      flash.notice = "Rubric '#{rubric}' updated."
     else
-      flash[:error] = 'Not implemented.'
+      flash.alert = 'Not implemented.'
     end
 
     redirect_back fallback_location: { action: :index }

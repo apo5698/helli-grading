@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.1'
+ruby '2.7.2'
 
 gem 'active_model_serializers'
 gem 'activerecord-session_store'
@@ -40,6 +40,7 @@ end
 group :test do
   gem 'capybara'
   gem 'coveralls', require: false
+  gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'guard-rspec'

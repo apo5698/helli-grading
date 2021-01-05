@@ -34,6 +34,7 @@
 *.class
 /coverage
 /spec/fixtures/dependency
+/features/fixtures
 
 # miscellaneous
 .DS_Store
@@ -42,9 +43,5 @@
 # keep empty directories
 !.keep
 
-/public/packs
-/public/packs-test
-/node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
+# yard generated files
+.yardoc

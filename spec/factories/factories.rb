@@ -1,11 +1,11 @@
 FactoryBot.define do
-  factory :dependency, class: 'Helli::Dependency' do
+  factory :dependency do
     name { Faker::App.name.downcase }
     version { Faker::App.semantic_version }
     source { Faker::Internet.url }
-    type { Helli::Dependency.types[:direct] }
+    type { Dependency.types[:direct] }
     executable { name.downcase }
-    visibility { Helli::Dependency.visibilities[:public] }
+    visibility { Dependency.visibilities[:public] }
   end
 
   factory :course do

@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :catch_denied_access, except: %i[new create]
 
   def new
-    flash[:error] = 'Helli has closed public registration.'
+    flash.alert = 'Helli has closed public registration.'
     redirect_back(fallback_location: '')
     # render layout: 'pre_application'
   end
@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     messages = user.errors.full_messages
     if messages.blank?
       session[:user_id] = user.id
-      flash[:success] = 'You have successfully signed in.'
+      flash.notice = 'You have successfully signed in.'
       redirect_to '/'
     else
       flash_errors(messages)
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
     messages = user.errors.full_messages << user.update_avatar(params[:user][:avatar])
     if messages.blank?
-      flash[:success] = 'Your profile has been updated.'
+      flash.notice = 'Your profile has been updated.'
     else
       flash_errors(messages)
     end
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
     if user.authenticate(params[:password_confirmation])
       user.destroy
       session[:user_id] = nil
-      flash[:success] = 'You account has been deleted.'
+      flash.notice = 'You account has been deleted.'
       redirect_to root_path
     else
       flash[:modal_error] = 'The password you entered does not match our record. Please try again.'

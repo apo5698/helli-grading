@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'helli/error'
+require 'helli/errors'
 require 'open3'
 
 # Java-related commands.
@@ -39,14 +39,14 @@ module Helli::Java
     #     p[1]              #=> "Invalid.java:4: error: ';' expected\n..."
     #     p[2].exitstatus   #=> 1
     def javac(filename, args: '', junit: false)
-      raise Helli::FileNotFoundError, filename unless File.exist?(filename)
-      raise Helli::UnsupportedFileTypeError, File.extname(filename) unless filename.end_with?(JAVA_FILE_EXTENSION)
+      raise Helli::FileNotFound, filename unless File.exist?(filename)
+      raise Helli::UnsupportedFileType, File.extname(filename) unless filename.end_with?(JAVA_FILE_EXTENSION)
 
       wd = File.dirname(filename)
       destination = '.'
       classpath = [destination.dup]
       if junit
-        @junit ||= Helli::Dependency.find_by(name: 'junit').path
+        @junit ||= Dependency.find_by(name: 'junit').path
         classpath << "#{File.dirname(@junit)}/*"
       end
       classpath = classpath.join(CLASSPATH_SEPARATOR)
@@ -78,21 +78,21 @@ module Helli::Java
     #     p[1]              #=> ""
     #     p[2].exitstatus   #=> 0
     def java(filename, args: '', stdin: '', junit: false, timeout: 5)
-      raise Helli::FileNotFoundError, filename unless File.exist?(filename)
+      raise Helli::FileNotFound, filename unless File.exist?(filename)
 
       unless [JAVA_FILE_EXTENSION, CLASS_FILE_EXTENSION].include?(File.extname(filename))
-        raise Helli::UnsupportedFileTypeError, File.extname(filename)
+        raise Helli::UnsupportedFileType, File.extname(filename)
       end
 
       classfile = filename.sub(File.extname(filename), CLASS_FILE_EXTENSION)
-      raise Helli::FileNotFoundError, classfile unless File.exist?(classfile)
+      raise Helli::FileNotFound, classfile unless File.exist?(classfile)
 
       wd = File.dirname(filename)
       classpath = '.'
       classname = File.basename(classfile).delete_suffix(CLASS_FILE_EXTENSION)
 
       cmd = if junit
-              ['java', '-jar', Helli::Dependency.find_by(name: 'junit').path, '-cp', classpath, '-c', classname, args].join(' ')
+              ['java', '-jar', Dependency.find_by(name: 'junit').path, '-cp', classpath, '-c', classname, args].join(' ')
             else
               ['java', '-cp', classpath, classname, args].join(' ')
             end
@@ -113,7 +113,7 @@ module Helli::Java
     #     p[1]              #=> ""
     #     p[2].exitstatus   #=> 0
     def checkstyle(filename)
-      cmd = [Helli::Dependency.find_by(name: 'cs-checkstyle').path, File.basename(filename)].join(' ')
+      cmd = [Dependency.find_by(name: 'cs-checkstyle').path, File.basename(filename)].join(' ')
       Open3.capture3(cmd, chdir: File.dirname(filename))
     end
   end

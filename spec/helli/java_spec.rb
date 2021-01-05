@@ -23,7 +23,7 @@ describe Helli::Java do
 
     context 'when file is not a java file' do
       it 'raises Helli::UnsupportedFileTypeError' do
-        expect { described_class.javac("#{fixtures}/misc/NotJava.txt") }.to raise_error(Helli::UnsupportedFileTypeError)
+        expect { described_class.javac("#{fixtures}/misc/NotJava.txt") }.to raise_error(Helli::UnsupportedFileType)
       end
     end
 
@@ -32,7 +32,7 @@ describe Helli::Java do
         filename = 'What.java'
         raise "remove /#{filename} to run this test" if File.exist?(filename)
 
-        expect { described_class.javac(filename) }.to raise_error(Helli::FileNotFoundError)
+        expect { described_class.javac(filename) }.to raise_error(Helli::FileNotFound)
       end
     end
   end
@@ -61,14 +61,14 @@ describe Helli::Java do
     context 'when file has not been compiled' do
       Dir.glob("#{fixtures}/wce/execute/valid/*.java").each do |file|
         it 'raises Helli::FileNotFoundError' do
-          expect { described_class.java(file) }.to raise_error(Helli::FileNotFoundError)
+          expect { described_class.java(file) }.to raise_error(Helli::FileNotFound)
         end
       end
     end
 
     context 'when file is not a java file' do
       it 'raises Helli::UnsupportedFileTypeError' do
-        expect { described_class.java("#{fixtures}/misc/NotJava.txt") }.to raise_error(Helli::UnsupportedFileTypeError)
+        expect { described_class.java("#{fixtures}/misc/NotJava.txt") }.to raise_error(Helli::UnsupportedFileType)
       end
     end
 
@@ -77,7 +77,7 @@ describe Helli::Java do
         filename = 'What.java'
         raise "remove /#{filename} to run this test" if File.exist?(filename)
 
-        expect { described_class.java(filename) }.to raise_error(Helli::FileNotFoundError)
+        expect { described_class.java(filename) }.to raise_error(Helli::FileNotFound)
       end
     end
   end
