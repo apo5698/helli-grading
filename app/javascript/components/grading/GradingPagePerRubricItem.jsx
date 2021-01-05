@@ -41,12 +41,7 @@ class GradingPagePerRubricItem extends React.Component {
       finishedCount: this.state.finishedCount + 1
     });
     if (this.state.finishedCount === this.state.totalCount) {
-      $.rails.enableElement(document.querySelector('input[data-disable-with]'));
-      this.setState({
-        submitting: false,
-        finishedCount: 0,
-        totalCount: -1
-      });
+      window.location.reload();
     }
   }
 
