@@ -1,15 +1,30 @@
-require 'securerandom'
-
 class User < ApplicationRecord
-  has_secure_password
+  # Devise's models
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable,
+         :confirmable, :lockable, :timeoutable, :trackable, :omniauthable
 
+  # Relations
   has_many :courses, dependent: :destroy
   has_many :assignments, through: :courses
 
+  # Validations
   validates :name, presence: true
+  validates :username, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
-  validates :password, confirmation: true, length: { minimum: 6 }, allow_blank: true
+  validates :password, presence: true
 
+  # User's role
+  enum role: {
+    admin: 'Admin',
+    instructor: 'Instructor',
+    ta: 'Teaching assistant',
+    student: 'Student'
+  }
+
+  # Returns user's name.
+  #
+  # @return [String] name
   def to_s
     name
   end

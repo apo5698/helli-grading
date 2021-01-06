@@ -1,17 +1,18 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  resources :ts_files
   root to: 'home#index'
 
   get 'help', to: 'home#help'
   get 'about', to: 'home#about'
+
+  devise_for :users
 
   resource :settings do
     get :json
   end
 
   resources :sessions, only: %i[new create destroy]
-
-  resources :users
 
   resources :courses do
     get :share, action: :share
