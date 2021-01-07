@@ -13,7 +13,7 @@ class SubmissionsController < AssignmentsViewController
       "#{helpers.link_to 'upload the grade worksheet', link}"
     end
 
-    flash_errors messages
+    flash.alert = messages
   end
 
   def create

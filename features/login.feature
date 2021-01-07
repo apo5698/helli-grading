@@ -4,19 +4,19 @@ Feature: Login
   So that I am able to use it to grade homework
 
   Scenario Outline: Valid credentials
-    Given I have registered using name <name>, email <email>, and password <password>
+    Given I have registered using name <name>, username <username>, email <email>, and password <password>
     When I log into Helli using email <email> and password <password>
     Then I should be able to view my homepage
     Examples:
-      | name         | email             | password |
-      | Dingdong Yao | dyao3@ncsu.edu    | 123456   |
-      | Yulin Zhang  | yzhan114@ncsu.edu | 123456   |
+      | name         | username | email             | password |
+      | Dingdong Yao | dyao3    | dyao3@ncsu.edu    | 123456   |
+      | Yulin Zhang  | yzhan114 | yzhan114@ncsu.edu | 123456   |
 
   Scenario Outline: Invalid credentials
-    Given I have registered using name <name>, email <email>, and password <password>
+    Given I have registered using name <name>, username <username>, email <email>, and password <password>
     When I log into Helli using email <email> and a wrong password <wrong_password>
     Then I should not be logged in
     Examples:
-      | name         | email             | password | wrong_password |
-      | Dingdong Yao | dyao3@ncsu.edu    | 123456   | qwerty         |
-      | Yulin Zhang  | yzhan114@ncsu.edu | 123456   | qwerty         |
+      | name         | username | email             | password | wrong_password |
+      | Dingdong Yao | dyao3    | dyao3@ncsu.edu    | 123456   | qwerty         |
+      | Yulin Zhang  | yzhan114 | yzhan114@ncsu.edu | 123456   | qwerty         |

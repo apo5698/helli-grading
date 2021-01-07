@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 When(/^I go to courses page and create a course called (.+ \d+) \((.+)\)$/) do |course, section|
-  click_link 'Courses'
+  within '#sidebar' do
+    click_link 'Courses'
+  end
   expect(page).to have_current_path(courses_path)
 
   find('#create-course').click

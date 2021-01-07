@@ -70,6 +70,10 @@ describe User do
   end
 
   describe 'after sign up' do
+    # rubocop:disable Lint/MissingCopEnableDirective
+    # rubocop:disable RSpec/LetSetup
+    let!(:unconfirmed_user) { create(:unconfirmed_user) }
+
     it 'sends confirmation email' do
       expect(Devise.mailer.deliveries.size).to eq(1)
     end
