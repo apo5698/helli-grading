@@ -60,9 +60,46 @@ FactoryBot.define do
   end
 
   factory :user do
-    name { Faker::Name.name }
-    email { Faker::Internet.email }
+    name { 'User' }
+    username { 'user' }
+    email { 'user@helli.app' }
     password { '123456' }
     password_confirmation { '123456' }
+  end
+
+  factory :admin, class: 'User' do
+    name { 'Admin' }
+    username { 'admin' }
+    email { 'admin@helli.app' }
+    password { '123456' }
+    password_confirmation { '123456' }
+    role { :admin }
+  end
+
+  factory :instructor, class: 'User' do
+    name { 'Instructor' }
+    username { 'instructor' }
+    email { 'instructor@helli.app' }
+    password { '123456' }
+    password_confirmation { '123456' }
+    role { :instructor }
+  end
+
+  factory :ta, class: 'User' do
+    name { 'Teaching Assistant' }
+    username { 'ta' }
+    email { 'ta@helli.app' }
+    password { '123456' }
+    password_confirmation { '123456' }
+    role { :ta }
+  end
+
+  factory :student, class: 'User' do
+    name { 'Student' }
+    username { 'student' }
+    email { 'student@helli.app' }
+    password { '123456' }
+    password_confirmation { '123456' }
+    role { :student }
   end
 end
