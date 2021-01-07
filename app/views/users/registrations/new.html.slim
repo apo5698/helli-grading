@@ -1,0 +1,30 @@
+.card.mt-3
+  .card-body
+    = form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
+      = render "users/shared/error_messages", resource: resource
+      .form-group
+        = f.label :name, class: 'form-label required'
+        = f.text_field :name, class: 'form-control', autofocus: true, autocomplete: "name"
+      .form-group
+        = f.label :username, class: 'form-label required'
+        = f.text_field :username, class: 'form-control', autofocus: true, autocomplete: "username"
+      .form-group
+        = f.label :email, class: 'form-label required'
+        = f.email_field :email, class: 'form-control', autofocus: true, autocomplete: "email"
+      .form-group
+        = f.label :password, class: 'form-label required'
+        = f.password_field :password, class: 'form-control', autocomplete: "new-password"
+        - if @minimum_password_length
+          small.form-text.text-muted
+            | At least&nbsp;
+            = @minimum_password_length
+            | &nbsp;characters
+      .form-group
+        = f.label :password_confirmation, class: 'form-label required'
+        = f.password_field :password_confirmation, class: 'form-control', autocomplete: "new-password"
+      = f.submit "Sign up", class: 'btn btn-primary btn-block'
+.card.mt-3
+  .card-body.text-center
+    | Already have an account?&nbsp;
+    = link_to "Log in", new_user_session_path
+    | .

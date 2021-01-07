@@ -1,0 +1,21 @@
+doctype html
+html[lang="en"]
+  head
+    title
+      | Helli Dev
+    = csrf_meta_tags
+    = csp_meta_tag
+    meta[name="viewport" content="width=device-width, initial-scale=1.0"]
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = render partial: '/layouts/bootstrap'
+  body
+    .container
+      = render partial: "/layouts/flash"
+      .row
+        .col-lg
+        .col-lg
+          .text-center
+            i.fas.fa-toilet-paper.fa-4x.mb-3
+          = yield
+        .col-lg

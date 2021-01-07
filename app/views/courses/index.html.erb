@@ -32,7 +32,7 @@
             <% url = "/courses/#{course.id}" %>
             <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure to delete <%= course %>?">Delete</a>
           <% else %>
-            <% url = "/courses/#{course.id}/share?uid=#{session[:user_id]}" %>
+            <% url = "/courses/#{course.id}/share?uid=#{current_user.id}" %>
             <a href="<%= url %>" class="card-link" data-method="delete" data-confirm="Are you sure to withdraw from <%= course %>?">Withdraw</a>
           <% end %>
         </div>

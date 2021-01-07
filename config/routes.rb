@@ -1,18 +1,27 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'home#index'
+  root 'home#index'
 
-  get 'help', to: 'home#help'
-  get 'about', to: 'home#about'
+  # User
+  devise_scope :user do
+    get 'login' => 'users/sessions#new', as: :new_user_session
+    post 'login' => 'users/sessions#create', as: :user_session
+    delete 'logout' => 'users/sessions#destroy', as: :destroy_user_session
 
-  devise_for :users
+    get 'register' => 'users/registrations#new', as: :new_user_registration
+    post 'register' => 'users/registrations#create', as: :user_registration
+  end
+
+  devise_for :users, skip: [:sessions]
+
+  resources :home, only: :index
+  resources :help, only: :index
+  resources :about, only: :index
 
   resource :settings do
     get :json
   end
-
-  resources :sessions, only: %i[new create destroy]
 
   resources :courses do
     get :share, action: :share

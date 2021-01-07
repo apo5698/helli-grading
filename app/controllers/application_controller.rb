@@ -1,15 +1,14 @@
 class ApplicationController < ActionController::Base
-  before_action :catch_denied_access
+  include Devise::Controllers::Helpers
+
   skip_before_action :verify_authenticity_token
 
-  before_action lambda {
-    @title = 'Helli Dev'
-  }
+  before_action :authenticate_user!
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from ActiveRecord::RecordInvalid do |e|
-    app_logger.error(e.message)
     flash.alert = e.message
-    redirect_back fallback_location: ''
+    redirect_back fallback_location: root_path
   end
 
   # Returns a logger with params and custom tags.
@@ -20,38 +19,17 @@ class ApplicationController < ActionController::Base
     logger_tags =
       { url: request.url,
         ip: request.ip,
-        user_id: session[:user_id],
+        user_id: current_user.id,
         params: params.to_unsafe_h }.merge(tags)
 
     Helli::Logger.new(logger_tags)
   end
 
-  private
+  protected
 
-  def access_allowed?
-    session[:user_id]
-  end
-
-  def current_user
-    User.find(session[:user_id])
-  end
-
-  def catch_denied_access
-    return if access_allowed?
-
-    flash.alert = 'Access denied.'
-    redirect_back fallback_location: '/'
-  end
-
-  def flash_errors(messages)
-    return if messages.blank?
-
-    flash.now[:error] = (messages.uniq.reject(&:blank?).join('.<br>') << '.').html_safe
-  end
-
-  def flash_modal_errors(messages)
-    return if messages.blank?
-
-    flash.now[:modal_error] = (messages.uniq.reject(&:blank?).join('.<br>') << '.').html_safe
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_in, keys: %i[email password])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[name username email password password_confirmation])
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[name username email password password_confirmation])
   end
 end
