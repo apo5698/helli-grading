@@ -63,8 +63,8 @@ FactoryBot.define do
     name { 'User' }
     username { 'user' }
     email { 'user@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     confirmed_at { Time.zone.now }
   end
 
@@ -72,16 +72,16 @@ FactoryBot.define do
     name { 'Unconfirmed User' }
     username { 'unconfirmed_user' }
     email { 'unconfirmed_user@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
   end
 
   factory :admin, class: 'User' do
     name { 'Admin' }
     username { 'admin' }
     email { 'admin@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :admin }
     confirmed_at { Time.zone.now }
   end
@@ -90,8 +90,8 @@ FactoryBot.define do
     name { 'Instructor' }
     username { 'instructor' }
     email { 'instructor@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :instructor }
     confirmed_at { Time.zone.now }
   end
@@ -100,8 +100,8 @@ FactoryBot.define do
     name { 'Teaching Assistant' }
     username { 'ta' }
     email { 'ta@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :ta }
     confirmed_at { Time.zone.now }
   end
@@ -110,8 +110,8 @@ FactoryBot.define do
     name { 'Student' }
     username { 'student' }
     email { 'student@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :student }
     confirmed_at { Time.zone.now }
   end
