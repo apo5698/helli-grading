@@ -278,12 +278,22 @@ Devise.setup do |config|
 
   # github.ncsu.edu
   # See https://github.com/omniauth/omniauth-github
-  config.omniauth :github, ENV['GITHUB_NCSU_CLIENT_ID'], ENV['GITHUB_NCSU_CLIENT_SECRET'],
+  if Rails.env.production?
+    github_client_id = ENV['GITHUB_NCSU_CLIENT_ID']
+    github_client_secret = ENV['GITHUB_NCSU_CLIENT_SECRET']
+  else
+    github_client_id = ENV['GITHUB_NCSU_DEVELOPMENT_CLIENT_ID']
+    github_client_secret = ENV['GITHUB_NCSU_DEVELOPMENT_CLIENT_SECRET']
+  end
+
+  github_domain = ENV['GITHUB_OAUTH_DOMAIN'] || 'ncsu.edu'
+
+  config.omniauth :github, github_client_id, github_client_secret,
                   scope: 'user',
                   client_options: {
-                    site: 'https://github.ncsu.edu/api/v3',
-                    authorize_url: 'https://github.ncsu.edu/login/oauth/authorize',
-                    token_url: 'https://github.ncsu.edu/login/oauth/access_token'
+                    site: "https://github.#{github_domain}/api/v3",
+                    authorize_url: "https://github.#{github_domain}/login/oauth/authorize",
+                    token_url: "https://github.#{github_domain}/login/oauth/access_token"
                   }
 
   # google.com
