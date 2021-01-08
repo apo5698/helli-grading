@@ -36,19 +36,26 @@ class User < ApplicationRecord
   # @param [Symbol] provider OAuth2 provider
   # @return [User] user
   def self.from_omniauth(auth, provider)
-    raise "Unknown OAuth2 provider #{provider}" unless providers.key?(provider)
+    raise "Unknown OAuth provider #{provider}" unless providers.key?(provider)
 
-    where(email: auth.info.email).first_or_create do |user|
-      user.provider = auth.provider
-      user.uid = auth.uid
+    user = find_or_initialize_by(provider: auth.provider, uid: auth.uid)
+    return user if user.persisted?
 
-      user.name = auth.info.name
-      user.username = auth.info.nickname || auth.info.email
-      random_password = Devise.friendly_token[0, 20]
-      user.password = random_password
-      user.password_confirmation = random_password
-      user.skip_confirmation!
-    end
+    user.name = auth.info.name
+    user.email = auth.info.email
+    user.username = auth.info.nickname || auth.info.email
+
+    random_password = Devise.friendly_token
+    user.password = random_password
+    user.password_confirmation = random_password
+    user.random_password = true
+
+    user.skip_confirmation!
+
+    raise Helli::OAuthUserExists if user.invalid?
+
+    user.save
+    user
   end
 
   # Returns user's name.

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'helli/errors'
+
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: User.providers.keys
 
@@ -17,6 +19,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     user = User.from_omniauth(auth, provider)
     sign_in_and_redirect user, event: :authentication
     set_flash_message(:notice, :success, kind: User.providers[provider]) if is_navigational_format?
+  rescue Helli::OAuthUserExists
+    redirect_to '/422'
   end
 
   # More info at:

@@ -32,5 +32,7 @@ module Helli
 
       Dependency.setup
     end
+
+    config.exceptions_app = routes
   end
 end

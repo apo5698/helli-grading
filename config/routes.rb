@@ -3,6 +3,11 @@
 Rails.application.routes.draw do
   root 'home#index'
 
+  # Error pages
+  %w[404 422 500].each do |status|
+    get status, to: 'errors#show', status: status
+  end
+
   # User
   devise_scope :user do
     get 'login' => 'users/sessions#new', as: :new_user_session
