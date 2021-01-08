@@ -13,7 +13,9 @@ Rails.application.routes.draw do
     post 'register' => 'users/registrations#create', as: :user_registration
   end
 
-  devise_for :users, skip: [:sessions]
+  devise_for :users, skip: [:sessions], controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
 
   resources :home, only: :index
   resources :help, only: :index

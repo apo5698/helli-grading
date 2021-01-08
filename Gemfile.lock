@@ -260,6 +260,9 @@ GEM
     omniauth (1.9.1)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
+    omniauth-github (1.4.0)
+      omniauth (~> 1.5)
+      omniauth-oauth2 (>= 1.4.0, < 2.0)
     omniauth-google-oauth2 (0.8.1)
       jwt (>= 2.0)
       oauth2 (~> 1.1)
@@ -489,6 +492,7 @@ DEPENDENCIES
   git
   guard-rspec
   omniauth
+  omniauth-github
   omniauth-google-oauth2
   pg
   puma

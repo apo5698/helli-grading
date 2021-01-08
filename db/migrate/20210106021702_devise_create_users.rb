@@ -10,6 +10,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.0]
       t.string :username, null: false, default: '', index: { unique: true }
       t.string :email, null: false, default: '', index: { unique: true }
       t.string :encrypted_password, null: false, default: ''
+      t.boolean :random_password, null: false, default: false
 
       # Permission
       t.string :role, null: false, default: 'Student'
@@ -38,6 +39,10 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.0]
       t.integer :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
       t.string :unlock_token, index: { unique: true } # Only if unlock strategy is :email or :both
       t.datetime :locked_at
+
+      # Omniauthable
+      t.string :provider
+      t.string :uid
 
       t.timestamps null: false
     end

@@ -1,12 +1,23 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  # You should configure your model like this:
-  # devise :omniauthable, omniauth_providers: [:twitter]
+  skip_before_action :verify_authenticity_token, only: User.providers.keys
 
-  # You should also create an action method in this controller like this:
-  # def twitter
-  # end
+  User.providers.each_key do |provider|
+    define_method provider do
+      authenticate(provider)
+    end
+  end
+
+  protected
+
+  def authenticate(provider)
+    provider = provider.to_sym
+    auth = request.env['omniauth.auth']
+    user = User.from_omniauth(auth, provider)
+    sign_in_and_redirect user, event: :authentication
+    set_flash_message(:notice, :success, kind: User.providers[provider]) if is_navigational_format?
+  end
 
   # More info at:
   # https://github.com/heartcombo/devise#omniauth
