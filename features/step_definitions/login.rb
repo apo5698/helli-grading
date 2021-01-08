@@ -15,7 +15,7 @@ end
 Given(/^I have logged in$/) do
   user = FactoryBot.create(:user)
   visit new_user_session_path
-  within 'form' do
+  within 'form#new_user' do
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
   end
@@ -24,7 +24,7 @@ end
 
 When(/^I log into Helli using email (.*) and password (.*)$/) do |email, password|
   visit new_user_session_path
-  within 'form' do
+  within 'form#new_user' do
     fill_in 'Email', with: email
     fill_in 'Password', with: password
   end
@@ -33,7 +33,7 @@ end
 
 When(/^I log into Helli using email (.*) and a wrong password (.*)$/) do |email, wrong_password|
   visit new_user_session_path
-  within 'form' do
+  within 'form#new_user' do
     fill_in 'Email', with: email
     fill_in 'Password', with: wrong_password
   end
