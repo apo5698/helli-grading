@@ -26,7 +26,7 @@ class GradingController < AssignmentsViewController
                                      course_assignment_rubric_items_path(@course, @assignment)}".html_safe
     end
 
-    flash_errors messages
+    flash.alert = messages
   end
 
   #  GET /courses/:course_id/assignments/:assignment_id/grading/:id
