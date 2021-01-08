@@ -115,4 +115,14 @@ FactoryBot.define do
     role { :student }
     confirmed_at { Time.zone.now }
   end
+
+  # See https://github.com/thoughtbot/factory_bot/wiki/How-factory_bot-interacts-with-ActiveRecord
+  #
+  factory :java_source, class: 'Program' do
+    initialize_with { new(name: 'Helli.java') }
+  end
+  #
+  factory :java_test, class: 'Program' do
+    initialize_with { new(name: 'HelliTest.java') }
+  end
 end

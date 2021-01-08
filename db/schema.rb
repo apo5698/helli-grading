@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_06_021702) do
+ActiveRecord::Schema.define(version: 2021_01_08_213858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -120,6 +120,17 @@ ActiveRecord::Schema.define(version: 2021_01_06_021702) do
     t.index ["assignment_id", "student_id"], name: "index_participants_on_assignment_id_and_student_id", unique: true
     t.index ["assignment_id"], name: "index_participants_on_assignment_id"
     t.index ["student_id"], name: "index_participants_on_student_id"
+  end
+
+  create_table "programs", force: :cascade do |t|
+    t.bigint "assignment_id"
+    t.bigint "parent_program_id"
+    t.string "name", null: false
+    t.string "extension", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["assignment_id"], name: "index_programs_on_assignment_id"
+    t.index ["parent_program_id"], name: "index_programs_on_parent_program_id"
   end
 
   create_table "rubric_criteria", force: :cascade do |t|
