@@ -24,7 +24,7 @@
       </div>
 
       <% @permitted_users.each do |user| %>
-        <% if user.id != session[:user_id] %>
+        <% if user.id != current_user.id %>
           <hr>
         <% end %>
         <div class="row">

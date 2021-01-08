@@ -91,7 +91,7 @@ class AssignmentsController < AssignmentsViewController
   end
 
   def copy
-    @other_courses = Course.of(session[:user_id]).reject { |course| course == @course }
+    @other_courses = Course.of(current_user.id).reject { |course| course == @course }
     @other_courses |= []
   end
 

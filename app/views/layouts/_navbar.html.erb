@@ -5,7 +5,7 @@
     </svg>
   </button>
 
-  <%= link_to('Helli Dev', '', { class: 'navbar-brand' }) %>
+  <%= link_to('Helli Dev', root_path, { class: 'navbar-brand' }) %>
 
   <div class="mr-auto"></div>
 
@@ -17,8 +17,7 @@
       <div class="dropdown-menu dropdown-menu-right">
         <%= link_to('Profile', '#', { class: 'dropdown-item' }) %>
         <div class="dropdown-divider"></div>
-        <% session_path = session_path(session[:user_id]) %>
-        <%= link_to('Logout', session_path, { class: 'dropdown-item', method: :delete }) %>
+        <%= link_to('Logout', destroy_user_session_path, { class: 'dropdown-item', method: :delete }) %>
       </div>
     </li>
   </ul>
@@ -26,8 +25,9 @@
 
 <% content_for :js do %>
   <script>
-    $('a[href="<%=session_path %>"]').click(() => {
-      localStorage.clear();
-    });
+    $('a[href="<%= destroy_user_session_path %>"]')
+      .click(() => {
+        localStorage.clear();
+      });
   </script>
 <% end %>

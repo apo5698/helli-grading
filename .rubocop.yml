@@ -4,6 +4,9 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+Lint/MissingCopEnableDirective:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
 

@@ -3,6 +3,6 @@ module ApplicationHelper
   include GradingHelper
 
   def current_user?(uid)
-    uid == session[:user_id]
+    uid == current_user.id
   end
 end

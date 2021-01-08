@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
 
   #  GET /courses
   def index
-    @courses = Course.of(session[:user_id])
+    @courses = Course.of(current_user.id)
     return unless flash[:modal_error]
 
     @course = Course.find_by(id: params[:course_id])

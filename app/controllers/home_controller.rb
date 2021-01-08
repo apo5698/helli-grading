@@ -1,12 +1,12 @@
 class HomeController < ApplicationController
-  before_action :catch_denied_access, except: :index
+  # Suppress Devise error message
+  skip_before_action :authenticate_user!
+
   before_action -> { @title = controller_name.classify }
 
+  #  GET /
   def index
-    if session[:user_id]
-      @user_email = User.find(session[:user_id]).email
-    else
-      redirect_to '/sessions/new'
-    end
+    # Suppress Devise error message
+    redirect_to new_user_session_path unless user_signed_in?
   end
 end
