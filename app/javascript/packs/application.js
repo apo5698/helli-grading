@@ -17,13 +17,7 @@ import './event';
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import ReactOnRails from 'react-on-rails';
-
-import GradingPagePerRubricItem from '../components/grading/GradingPagePerRubricItem';
-
-// This is how react_on_rails can see the HelloWorld in the browser.
-ReactOnRails.register({
-  GradingPagePerRubricItem
-});
+// Support component names relative to this directory:
+var componentRequireContext = require.context("components", true);
+var ReactRailsUJS = require("react_ujs");
+ReactRailsUJS.useContext(componentRequireContext);

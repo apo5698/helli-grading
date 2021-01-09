@@ -20,7 +20,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     sign_in_and_redirect user, event: :authentication
     set_flash_message(:notice, :success, kind: User.providers[provider]) if is_navigational_format?
   rescue Helli::OAuthUserExists
-    redirect_to '/422'
+    @provider = User.providers[provider]
+    render 'errors/422', layout: 'pre_application', status: :unprocessable_entity
   end
 
   # More info at:

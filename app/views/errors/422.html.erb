@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The change you wanted was rejected (422)</title>
+  <title>Sign-in using <%= @provider %> failed</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
   .rails-default-error-page {
@@ -58,10 +58,12 @@
   <!-- This file lives in public/422.html -->
   <div class="dialog">
     <div>
-      <h1>The change you wanted was rejected.</h1>
-      <p>Maybe you tried to change something you didn't have access to.</p>
+      <h1>Sign-in using <%= @provider %> auth failed</h1>
+      <p class="text-muted">The Email associated with this <%= @provider %> account has already been taken.</p>
+      <p>Try logging in using your Helli account. You will be able to link this <%= @provider %> account with your Helli account in your profile page.</p>
+      <p><a href="/login" class="btn btn-primary">Sign in</a></p>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
+    <p><a href="mailto: dyao3@ncsu.edu" style="color: #730E15">Contact a Helli administrator</a> if you need further assistance.</p>
   </div>
 </body>
 </html>
