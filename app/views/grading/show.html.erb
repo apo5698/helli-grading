@@ -14,7 +14,7 @@
   <% end %>
 </ul>
 
-<%= react_component('GradingPagePerRubricItem', props: {rubricItem: react_grading_page_rubric_item(@course, @assignment, @rubric_item), gradeItems: react_grading_page_grade_items(@course, @assignment, @rubric_item, @grade_items)} ) %>
+<%= react_component('grading/GradingPagePerRubricItem', {rubricItem: react_grading_page_rubric_item(@course, @assignment, @rubric_item), gradeItems: react_grading_page_grade_items(@course, @assignment, @rubric_item, @grade_items)} ) %>
 
 <!--suppress CssUnusedSymbol-->
 <style>
