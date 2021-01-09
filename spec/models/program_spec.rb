@@ -4,7 +4,7 @@ describe 'Program' do
 
   let!(:source) { create(:java_source, assignment_id: assignment.id) }
   let!(:test1) { create(:java_test, assignment_id: assignment.id, parent_program_id: source.id) }
-  let!(:test2) { create(:java_test, assignment_id: assignment.id, parent_program_id: source.id) }
+  let!(:test2) { create(:java_test, name: 'H.java', assignment_id: assignment.id, parent_program_id: source.id) }
 
   describe '#name' do
     it 'requires a name' do

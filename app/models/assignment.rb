@@ -4,6 +4,7 @@ class Assignment < ApplicationRecord
 
   belongs_to :course
 
+  has_many :programs, dependent: :destroy
   has_many :participants, dependent: :destroy
   has_one :rubric, dependent: :destroy
   has_many :rubric_items, through: :rubric, dependent: :destroy
@@ -39,6 +40,13 @@ class Assignment < ApplicationRecord
     project: 'Project'
   }
 
+  # Raised when the program to add already exists.
+  class ProgramExists < Helli::ApplicationError
+    def initialize(program)
+      super("#{program} already exists.")
+    end
+  end
+
   def to_s
     name
   end
@@ -72,23 +80,6 @@ class Assignment < ApplicationRecord
         new_rc.save
       end
     end
-  end
-
-  # Adds a program to the assignment.
-  def add_program(file)
-    raise ArgumentError, "#{file} already exists" if programs.include?(file)
-
-    pattern = Helli::Java::FILENAME_REGEXP_STR
-    raise ArgumentError, "#{file} does not match pattern #{pattern}" unless file.match(pattern)
-
-    programs << file
-  end
-
-  # Deletes a program from the assignment and save.
-  def delete_program(file)
-    raise ArgumentError, "#{file} does not exist" unless programs.include?(file)
-
-    programs.delete(file)
   end
 
   # Sets the grades scale of the assignment. The sum of these values must be 100.

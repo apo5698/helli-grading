@@ -40,10 +40,13 @@ Rails.application.routes.draw do
     end
 
     resources :assignments do
-      member do
-        put :programs, action: :program_add
-        delete :programs, action: :program_delete
+      resources :programs, only: %i[create destroy] do
+        collection do
+          delete :destroy_all, path: ''
+        end
+      end
 
+      member do
         put :input_files, action: :input_file_add
         delete :input_files, action: :input_file_delete
 

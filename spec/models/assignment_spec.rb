@@ -26,30 +26,19 @@ describe Assignment do
   end
 
   describe '.programs' do
-    context 'when adding a program' do
-      it 'adds a new program' do
-        expect { exercise.add_program(filename) }.not_to raise_error
-      end
-
-      it 'cannot add an existing program' do
-        expect do
-          exercise.add_program(filename)
-          exercise.add_program(filename)
-        end.to raise_error(ArgumentError)
-      end
+    it 'adds a new program' do
+      expect { exercise.programs.create(name: filename) }.not_to raise_error
     end
 
-    context 'when deleting a program' do
-      it 'deletes a existing program' do
-        expect do
-          exercise.add_program(filename)
-          exercise.delete_program(filename)
-        end.not_to raise_error
-      end
+    it 'cannot add an existing program' do
+      expect { 2.times { exercise.programs.create(name: filename) } }.to raise_error(Assignment::ProgramExists)
+    end
 
-      it 'cannot delete an non-existent program' do
-        expect { exercise.delete_program(filename) }.to raise_error(ArgumentError)
-      end
+    it 'deletes a program' do
+      expect do
+        exercise.programs.create(name: filename)
+        exercise.programs.find_by(name: filename).destroy
+      end.not_to raise_error
     end
   end
 

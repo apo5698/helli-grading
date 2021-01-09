@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_08_213858) do
+ActiveRecord::Schema.define(version: 2021_01_08_235933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -42,7 +42,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_213858) do
     t.string "name", null: false
     t.string "category", null: false
     t.text "description", default: "", null: false
-    t.string "programs", default: [], null: false, array: true
     t.jsonb "grades_scale", default: {}, null: false
     t.jsonb "zybooks_scale", default: {}, null: false
     t.datetime "created_at", precision: 6, null: false

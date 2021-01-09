@@ -1,0 +1,47 @@
+h3 Status
+.list-group
+  .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center[data-toggle="collapse" data-target="#programs" aria-expanded="false" aria-controls="programs"]
+    span
+      i.fas.fa-angle-right.mr-3.rotate
+      | Programs
+    - programs_count = @assignment.programs.count
+    - color = programs_count.positive? ? :success : :danger
+    span
+      = badge color, programs_count
+      = button_to course_assignment_programs_path(@course, @assignment), method: :delete, form_class: 'd-inline ml-2', class: 'btn text-primary p-0', data: { toggle: :tooltip, title: "Delete all programs" } do
+        i.fas.fa-times
+  #programs.collapse
+    - @assignment.programs.each do |program|
+      .list-group-item.d-flex.justify-content-between.align-items-center
+        = program
+        = button_to course_assignment_program_path(@course, @assignment, program), method: :delete, class: 'btn text-primary p-0', data: { toggle: :tooltip, title: "Delete #{program}" } do
+          i.fas.fa-times
+  .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center[data-toggle="collapse" data-target="#input-files" aria-expanded="false" aria-controls="input-files"]
+    span
+      i.fas.fa-angle-right.mr-3.rotate
+      | Input files
+    - programs_count = @assignment.input_files.count
+    = badge :success, programs_count if @assignment.input_files.attached?
+  #input-files.collapse
+    - @assignment.input_files.each do |attachment|
+      .list-group-item.d-flex.justify-content-between
+        - filename = attachment.filename
+        = filename
+        = button_to input_files_course_assignment_path(name: filename), method: :delete, class: 'btn text-primary p-0', data: { toggle: :tooltip, title: "Delete #{filename}" } do
+          i.fas.fa-times
+  .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center[data-toggle="collapse" data-target="#participants" aria-expanded="false" aria-controls="participants"]
+    span
+      i.fas.fa-angle-right.mr-3.rotate
+      | Participants
+    - participants_count = @assignment.participants.count
+    - color = participants_count.positive? ? :success : :danger
+    span
+      = badge color, participants_count
+  #participants.collapse
+    - @grades.each do |grade|
+      .list-group-item
+        = grade.full_name
+        | &nbsp;
+        | (
+        = grade.email_address
+        | )

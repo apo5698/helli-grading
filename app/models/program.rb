@@ -12,5 +12,28 @@ class Program < ApplicationRecord
 
   validates :name, presence: true
 
-  after_initialize -> { self.extension ||= File.extname(name) }
+  after_initialize :infer_extension
+
+  # Check uniqueness to its assignment
+  before_save -> { raise Assignment::ProgramExists, name unless unique_to_assignment? }
+
+  # Infers the extension from its name.
+  #
+  # @return [String] extension
+  def infer_extension
+    return if name.nil?
+
+    self.extension ||= File.extname(name)
+  end
+
+  # Checks if the program is unique to its assignment by name.
+  #
+  # @return [Boolean] uniqueness
+  def unique_to_assignment?
+    self.class.find_by(assignment_id: assignment.id, name: name).blank?
+  end
+
+  def to_s
+    name
+  end
 end
