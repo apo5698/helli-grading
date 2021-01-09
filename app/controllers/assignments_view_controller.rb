@@ -13,7 +13,10 @@ class AssignmentsViewController < ApplicationController
     @assignment = Assignment.find(assignment_id)
 
     # records
+    @programs = @assignment.programs
     @participants = @assignment.participants.order(:created_at)
+    @input_files = @assignment.input_files
+
     @submissions = @assignment.submissions
     @rubric_items = @assignment.rubric_items
     @grades = @assignment.grades.order(:created_at)

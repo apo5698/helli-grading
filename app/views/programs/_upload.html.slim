@@ -1,0 +1,14 @@
+.mb-2
+  h3.inline-header
+    | Programs
+  span.align-middle
+    = @has_program ? badge_checkmark : badge_exclamation
+= form_with model: [@course, @assignment, @program] do |f|
+  .form-group
+    .d-flex
+      .input-group
+        .input-group-prepend.code
+          span.input-group-text.code $
+        = f.text_field :name, class: 'form-control code', placeholder: 'HelloWorld.java', required: true
+        .input-group-append
+          = f.submit 'Add', class: 'input-group-text', id: 'add-program'

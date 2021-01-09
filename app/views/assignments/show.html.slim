@@ -1,0 +1,13 @@
+- breadcrumb_for request.path
+= render partial: 'assignment_sidebar'
+h2
+  | Setup
+hr
+div style='max-width: 400px'
+  = render partial: 'programs/upload'
+div style='max-width: 550px'
+  = render partial: 'grades/upload_moodle'
+div style='max-width: 400px'
+  = render partial: 'assignments/input_files'
+div style='max-width: 400px'
+  = render partial: 'assignments/status'
