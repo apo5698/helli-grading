@@ -95,12 +95,11 @@ module Helli
         end
       end
 
-      private
-
       # Checks if a given csv header is valid.
+      # In other words, actual header contains all columns from expected.
       #
-      #   expected = ['Primary email', 'School email', 'Total']
-      #   actual = ['Total', 'School email']
+      #   expected = ['Total', 'School email']
+      #   actual = ['Primary email', 'School email', 'Total']
       #
       #   header_valid?(expected, actual) #=> true
       #
@@ -108,7 +107,7 @@ module Helli
       # @param [Array] actual actual values
       # @return [Boolean] validity
       def header_valid?(expected, actual)
-        expected.intersection(actual) == actual
+        expected.intersection(actual) == expected
       end
     end
   end
