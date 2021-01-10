@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Lint/MissingCopEnableDirective
 # rubocop:disable Rails/DynamicFindBy
 # rubocop:disable Style/ClassAndModuleChildren
 # rubocop:disable Style/Documentation
