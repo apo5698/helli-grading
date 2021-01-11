@@ -1,4 +1,7 @@
 class Student < ApplicationRecord
+  validates :name, :email, presence: true
+  validates :email, uniqueness: true
+
   def ==(other)
     email == other.email
   end
