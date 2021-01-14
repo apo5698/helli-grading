@@ -6,9 +6,9 @@ u1 = User.create_or_find_by(name: 'Dingdong Yao',
                             role: :admin)
 u1.skip_confirmation!
 u1.save
-c = Course.create_or_find_by(name: 'CSC 116', term: 3, section: '004', user_id: u1.id)
-Assignment.create_or_find_by(name: 'Day 1', category: :exercise, course_id: c.id)
-Assignment.create_or_find_by(name: 'Project 1', category: :project, course_id: c.id)
+c1 = Course.create_or_find_by(user_id: u1.id, name: 'CSC 116', term: 3, section: '004')
+Assignment.create_or_find_by(course_id: c1.id, name: 'Day 1', category: :exercise)
+Assignment.create_or_find_by(course_id: c1.id, name: 'Project 1', category: :project)
 
 u2 = User.create_or_find_by(name: 'Yulin Zhang',
                             username: 'yzhan114',
@@ -18,6 +18,6 @@ u2 = User.create_or_find_by(name: 'Yulin Zhang',
                             role: :admin)
 u2.skip_confirmation!
 u2.save
-c = Course.create_or_find_by(name: 'CSC 116', term: 3, section: '002', user_id: u2.id)
-Assignment.create_or_find_by(name: 'Day 1', category: :exercise, course_id: c.id)
-Assignment.create_or_find_by(name: 'Project 1', category: :project, course_id: c.id)
+c2 = Course.create_or_find_by(user_id: u2.id, name: 'CSC 116', term: 3, section: '002')
+Assignment.create_or_find_by(course_id: c2.id, name: 'Day 1', category: :exercise)
+Assignment.create_or_find_by(course_id: c2.id, name: 'Project 1', category: :project)

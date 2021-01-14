@@ -19,15 +19,11 @@ class AssignmentsViewController < ApplicationController
 
     @submissions = @assignment.submissions
     @rubric_items = @assignment.rubric_items
-    @grades = @assignment.grades.order(:created_at)
 
     # statuses
-    @has_program = @assignment.programs.present?
+    @has_programs = @assignment.programs.present?
     @has_input_files = @assignment.input_files.attached?
-    @has_grades_uploaded = @grades.any?
-    @has_submission = @submissions.present?
-    @has_rubric = @rubric_items.present? && @rubric_items.all? { |r| r.rubric_criteria.present? }
-    @has_grades_filled = @grades.pluck(:grade).any?
+    @has_rubric = @rubric_items.present? && @rubric_items.all? { |i| i.criteria.present? }
   }
 
   # #  GET /

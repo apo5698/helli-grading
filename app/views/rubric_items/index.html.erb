@@ -4,6 +4,27 @@
 
 <h2>Rubric</h2>
 <hr>
+<%= form_with model: @rubric_item do |form| %>
+  <%= form.fields_for :rubric_item do |f| %>
+    <div class="row d-flex justify-content-center p-3">
+      <div class="col-lg-4">
+        <div class="input-group">
+          <%= f.select :type,
+                       Rubrics::Item::Base.subclasses.map { |klass| { klass.basename => klass.name } }.reduce(:merge),
+                       {},
+                       class: "custom-select" %>
+          <div class="input-group-append">
+            <%= f.submit 'New',
+                         class: "btn btn-outline-secondary",
+                         id: 'new-rubric-item',
+                         data: { toggle: :tooltip,
+                                 title: 'Be sure you have all items saved before creating new ones.' } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
 <% if @rubric_items.empty? %>
   <div class="center">No rubrics added.</div>
 <% else %>
@@ -14,28 +35,10 @@
       <% end %>
     </div>
   </div>
-  <%= link_to('Save all', course_assignment_rubric_items_path, method: :put) %>
-<% end %>
-<%= form_with model: @rubric do |form| %>
-  <%= form.fields_for :rubric_item do |f| %>
-    <div class="row d-flex justify-content-center p-3">
-      <div class="col-lg-4">
-        <div class="input-group">
-          <%= f.select :type,
-                       RubricItem.subclasses.map { |sc| { sc.title => sc.model_name.name } }.reduce(:merge),
-                       {}, class: "custom-select" %>
-          <div class="input-group-append">
-            <%= f.submit 'New', class: "btn btn-outline-secondary", id: 'new-rubric',
-                         data: { toggle: "tooltip", title: "Be sure you have all items saved before creating new ones." } %>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% end %>
 <% end %>
 <% content_for(:js) do %>
   <script>
-    $('form[id="Rubric::Zybooks"]').submit(function (e) {
+    $('form[id="Rubrics::Zybooks"]').submit(function (e) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -47,12 +50,12 @@
         skipEmptyLines: true,
         complete: function (results) {
           $.ajax({
-            url: '<%= course_assignment_grades_path(@course, @assignment) + '/zybooks' %>',
+            url: '<%= course_assignment_participants_path(@course, @assignment) + '/zybooks' %>',
             type: 'POST',
             data: JSON.stringify(results.data),
-            contentType: 'application/json'
+            contentType: 'application/json',
           });
-        }
+        },
       });
 
     });

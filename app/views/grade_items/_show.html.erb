@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h5 class="modal-title">
-    <%= @grade_item.rubric_item %>: <%= @grade_item.participant.name %>
+    <%= @grade_item.rubric_item %>: <%= @grade_item.participant.full_name %>
   </h5>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -10,7 +10,7 @@
 <div class="modal-body">
   <% case view %>
   <% when 'file' %>
-    <pre class="p-2"><%= @grade_item.primary_file.download %></pre>
+    <pre class="p-2"><%= @grade_item.attachment.download %></pre>
   <% when 'output' %>
     <%= render partial: 'grade_items/output' %>
   <% when 'edit' %>
@@ -22,7 +22,8 @@
 <% unless view == 'edit' %>
   <div class="modal-footer">
     <% if view == 'file' %>
-      <%= link_to('Download', rails_blob_path(@grade_item.primary_file), class: 'btn btn-primary') %>
+      <%= @grade_item.attachment %>
+      <%= link_to('Download', rails_blob_path(@grade_item.attachment), class: 'btn btn-primary') %>
     <% end %>
     <%= button_tag('Close', type: 'button', class: 'btn btn-secondary', data: { dismiss: 'modal' }) %>
   </div>

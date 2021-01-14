@@ -2,7 +2,7 @@
   h3.inline-header
     | Programs
   span.align-middle
-    = @has_program ? badge_checkmark : badge_exclamation
+    = @has_programs ? badge_checkmark : badge_exclamation
 = form_with model: [@course, @assignment, @program] do |f|
   .form-group
     .d-flex

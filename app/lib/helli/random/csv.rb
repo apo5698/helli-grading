@@ -36,7 +36,7 @@ module Helli
           last = last_name
           row[moodle_header[:full_name]] = "#{first} #{last}"
           row[moodle_header[:email_address]] = f1l7_email(first, last)
-          row[moodle_header[:status]] = Grade.statuses[:submitted]
+          row[moodle_header[:status]] = Participant::STATUSES[true]
           row[moodle_header[:grade]] = ''
           row[moodle_header[:maximum_grade]] = '10.00'
           row[moodle_header[:grade_can_be_changed]] = 'Yes'
@@ -56,7 +56,7 @@ module Helli
           last = last_name
           row[moodle_header[:full_name]] = "#{first} #{last}"
           row[moodle_header[:email_address]] = f1l7_email(first, last)
-          row[moodle_header[:status]] = Grade.statuses[:no_submission]
+          row[moodle_header[:status]] = Participant::STATUSES[false]
           row[moodle_header[:grade]] = ''
           row[moodle_header[:maximum_grade]] = '10.00'
           row[moodle_header[:grade_can_be_changed]] = 'Yes'

@@ -1,0 +1,11 @@
+.row
+  .col-lg-8
+    = form_with do |f|
+      .form-group
+        .input-group
+          .custom-file
+            = f.file_field(:zip, class: 'custom-file-input', accept: 'application/zip', required: true)
+            = f.label(:zip, 'Choose file', class: 'custom-file-label')
+          .input-group-append
+            = f.submit('Upload', data: { disable_with: 'Uploading...' }, class: 'input-group-text', id: 'upload-submissions')
+        = react_component 'forms/Tip', message: 'It should look like "CSC 116 (004) FALL 2020-Day 11-293581.zip"'

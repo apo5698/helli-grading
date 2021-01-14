@@ -436,6 +436,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    state_machines (0.5.0)
     sync (0.5.0)
     sys-uname (1.2.2)
       ffi (~> 1.1)
@@ -520,6 +521,7 @@ DEPENDENCIES
   slim-rails
   spring
   spring-watcher-listen
+  state_machines
   turbolinks
   webdrivers
   webpacker

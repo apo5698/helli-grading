@@ -28,6 +28,7 @@ gem 'sass-rails'
 gem 'sidekiq'
 gem 'slim'
 gem 'slim-rails'
+gem 'state_machines'
 gem 'turbolinks'
 gem 'webpacker'
 

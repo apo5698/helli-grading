@@ -1,0 +1,8 @@
+<div class="mb-2">
+  <h3 class="inline-header">Moodle Grade Worksheet</h3>
+  <span class="align-middle">
+    <%= @participants.present? ? badge_checkmark : badge_exclamation %>
+  </span>
+</div>
+
+<%= react_component 'forms/MoodleUpload', url: course_assignment_participants_path(@course, @assignment) %>

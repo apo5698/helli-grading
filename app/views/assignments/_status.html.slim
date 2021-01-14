@@ -24,12 +24,12 @@ ul.nav.nav-tabs#status
         = button_to course_assignment_program_path(@course, @assignment, program), method: :delete, class: 'btn text-primary p-0', data: { toggle: :tooltip, title: "Delete #{program}" } do
           i.fas.fa-times
   .tab-pane.fade#participants
-    - @grades.each do |grade|
+    - @participants.each do |participant|
       .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center
-        = grade.full_name
+        = participant.full_name
         | &nbsp;
         | (
-        = grade.email_address
+        = participant.email_address
         | )
   .tab-pane.fade#input-files
     - @assignment.input_files.each do |attachment|

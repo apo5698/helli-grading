@@ -1,4 +1,8 @@
 class Student < ApplicationRecord
+  ###############
+  # Validations #
+  ###############
+
   validates :name, :email, presence: true
   validates :email, uniqueness: true
 

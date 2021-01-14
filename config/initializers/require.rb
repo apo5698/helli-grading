@@ -1,1 +1,1 @@
-require 'helli/errors'
+require 'helli/application_error'

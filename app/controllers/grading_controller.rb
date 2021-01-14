@@ -2,8 +2,8 @@ class GradingController < AssignmentsViewController
   before_action -> { @title = 'Automated Grading' }
 
   before_action lambda {
-    @rubric_item = RubricItem.find(params.require(:id))
-    @grade_items = @rubric_item.grade_items.presence || @rubric_item.generate_grade_items
+    @rubric_item = Rubrics::Item::Base.find(params.require(:id))
+    @grade_items = @rubric_item.create_grade_items
     @status_colors ||= Color.of(:grade_item_status)
   }, except: :index
 
@@ -46,7 +46,7 @@ class GradingController < AssignmentsViewController
   def destroy
     id = params.require(:id)
     GradeItem.where(rubric_item_id: id).destroy_all
-    title = RubricItem.find(id)
+    title = Rubrics::Item::Base.find(id)
 
     flash.notice = "Grading results for #{title} has been reset."
     redirect_back fallback_location: { action: :show }

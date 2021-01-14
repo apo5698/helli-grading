@@ -36,7 +36,7 @@ describe Dependency, ignore_clean: true do
 
   describe '.public_dependencies' do
     it 'returns all public dependencies' do
-      expect(described_class.public_dependencies).to eq(described_class.where(visibility: :public))
+      expect(described_class.public_dependencies).to eq(described_class.where(public: true))
     end
   end
 

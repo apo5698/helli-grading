@@ -1,8 +1,6 @@
 class GradeItemsController < AssignmentsViewController
   include GradingHelper
 
-  skip_before_action :verify_authenticity_token, :only => :run
-
   before_action lambda {
     id = params[:id] || params[:grade_item_id]
     @grade_item = GradeItem.find(id)

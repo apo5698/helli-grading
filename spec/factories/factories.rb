@@ -5,7 +5,7 @@ FactoryBot.define do
     source { Faker::Internet.url }
     type { Dependency.types[:direct] }
     executable { name.downcase }
-    visibility { Dependency.visibilities[:public] }
+    public { true }
   end
 
   factory :course do
@@ -17,7 +17,8 @@ FactoryBot.define do
         name: Faker::Number.name,
         email: Faker::Internet.email,
         password: '123456',
-        password_confirmation: '123456')
+        password_confirmation: '123456'
+      )
     end
   end
 
@@ -34,16 +35,10 @@ FactoryBot.define do
   end
 
   factory :participant do
-    program_total { 0 }
-    zybooks_total { 0 }
-    other_total { 0 }
-  end
-
-  factory :grade do
     identifier { Faker::Number.between(from: 100_000, to: 1_000_000) }
-    full_name { Faker::Name.first_name + ' ' + Faker::Name.last_name }
+    full_name { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
     email_address { Faker::Internet.email(domain: 'ncsu.edu') }
-    status { :submitted }
+    status { true }
     grade {}
     maximum_grade { 10 }
     grade_can_be_changed { true }
@@ -55,8 +50,8 @@ FactoryBot.define do
   end
 
   factory :wce, class: 'Rubric' do
-    type { Wce }
-    primary_file { Dir.glob('spec/fixtures/java/wce/**/*.java').sample }
+    type { CompileExecute }
+    filename { Dir.glob('spec/fixtures/java/wce/**/*.java').sample }
   end
 
   factory :user do

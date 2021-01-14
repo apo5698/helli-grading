@@ -15,6 +15,7 @@
     "bootswatch": "^4.5.0",
     "channels": "0.0.4",
     "form-serialize": "^0.7.2",
+    "formik": "^2.2.6",
     "jquery": "^3.5.1",
     "node-sass": "^5.0.0",
     "nouislider": "^14.6.2",
