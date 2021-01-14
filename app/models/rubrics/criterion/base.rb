@@ -139,8 +139,9 @@ module Rubrics
   end
 end
 
-require_dependency 'rubrics/item/checkstyle'
-require_dependency 'rubrics/item/compile'
-require_dependency 'rubrics/item/compile_execute'
-require_dependency 'rubrics/item/execute'
-require_dependency 'rubrics/item/zybooks'
+# See https://stackoverflow.com/a/16571498
+if Rails.env.development?
+  (Dir["#{__dir__}/*.rb"] - [__FILE__]).each do |f|
+    require_dependency f.delete_suffix('.rb')
+  end
+end
