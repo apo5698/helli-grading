@@ -22,4 +22,3 @@ Feature: Complete grading process
     * I run Compile for Main.java without options
 #    * I run Execute for Main.java without options
     * I go to Grades page from the assignment sidebar
-    *

@@ -12,7 +12,8 @@
   <ul class="navbar-nav">
     <li class="nav-item dropdown show">
       <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="avatar">
-        <i class="fas fa-user-circle fa-2x"></i>
+        <% avatar_url = "https://avatar.oxro.io/avatar.svg?name=#{current_user.name}" %>
+        <img src="<%= avatar_url %>" width="35px" style="border-radius: 50%"/>
       </a>
       <div class="dropdown-menu dropdown-menu-right">
         <%= link_to('Profile', '#', { class: 'dropdown-item' }) %>
