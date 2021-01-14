@@ -1,42 +1,48 @@
+<% upload_files_checked = @has_program && @has_grades_uploaded %>
+<% upload_submissions_checked = @has_submission %>
+<% setup_rubric_checked = @has_rubric %>
+<% export_checked = @has_grades_filled %>
+
 <% content_for(:sidebar) do %>
-  <h6 class="sidebar-heading d-flex justify-content-between align-items-center mt-4 mb-1 text-muted">
-    <span>Assignment: <%= @assignment.name %></span>
-  </h6>
-  <ul class="navbar-nav" id="assignment-sidebar">
-    <% url = course_assignment_path(@course, @assignment) %>
-    <li class="nav-item">
-      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
-        Setup
-        <%= @has_program && @has_grades_uploaded ? badge_checkmark : badge_exclamation %>
-      </a>
-    </li>
-    <% url = course_assignment_submissions_path(@course, @assignment) %>
-    <li class="nav-item">
-      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
-        Submissions
-        <%= @has_submission ? badge_checkmark : badge_exclamation %>
-      </a>
-    </li>
-    <% url = course_assignment_rubric_items_path(@course, @assignment) %>
-    <li class="nav-item">
-      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
-        Rubric
-        <%= @has_rubric ? badge_checkmark : badge_exclamation %>
-      </a>
-    </li>
-    <% url = course_assignment_grading_index_path(@course, @assignment) %>
-    <li class="nav-item">
-      <a href="<%= url %>" class="nav-link d-flex justify-content-between align-items-center">
-        Automated Grading
-        <!-- TODO: add badge -->
-      </a>
-    </li>
-    <% url = course_assignment_grades_path(@course, @assignment) %>
-    <li class="nav-item d-flex justify-content-between align-items-center">
-      <a href="<%= url %>" class="nav-link">
-        Grades
-      </a>
-      <%= @has_grades_filled ? badge_checkmark : badge_exclamation %>
-    </li>
-  </ul>
+  <div class="col-12 col-lg-3 col-xl-3">
+    <div class="pt-4">
+      <div class="card mb-3">
+        <div class="card-header"><span>Assignment: <%= @assignment.name %></span></div>
+        <div class="card-body">
+          <h5 class="card-title">Instruction</h5>
+          <p class="card-text">Go through steps 1 to 5 in sequence. Each step will become available once the previous steps are checked.</p>
+        </div>
+        <div class="list-group list-group-flush" id="assignment-sidebar">
+          <% url = course_assignment_path(@course, @assignment) %>
+          <a href="<%= url %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            1. Upload files
+            <%= upload_files_checked ? badge_checkmark : badge_exclamation %>
+          </a>
+          <% url = course_assignment_submissions_path(@course, @assignment) %>
+          <% disabled = upload_files_checked ? '' : 'disabled' %>
+          <a href="<%= url %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= disabled %>">
+            2. Upload submissions
+            <%= upload_submissions_checked ? badge_checkmark : badge_exclamation %>
+          </a>
+          <% url = course_assignment_rubric_items_path(@course, @assignment) %>
+          <% disabled = upload_submissions_checked ? '' : 'disabled' %>
+          <a href="<%= url %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= disabled %>">
+            3. Setup rubric
+            <%= setup_rubric_checked ? badge_checkmark : badge_exclamation %>
+          </a>
+          <% url = course_assignment_grading_index_path(@course, @assignment) %>
+          <% disabled = setup_rubric_checked ? '' : 'disabled' %>
+          <a href="<%= url %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= disabled %>">
+            4. Run automated grading
+            <!-- TODO: add badge -->
+          </a>
+          <% url = course_assignment_grades_path(@course, @assignment) %>
+          <a href="<%= url %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            5. Export
+            <%= export_checked ? badge_checkmark : badge_exclamation %>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>
