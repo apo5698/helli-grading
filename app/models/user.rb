@@ -18,7 +18,10 @@ class User < ApplicationRecord
   # Validations
   validates :name, presence: true
   validates :username, presence: true, uniqueness: true
-  validates :email, presence: true, uniqueness: true
+  validates :email,
+            presence: true,
+            uniqueness: true,
+            format: { with: /.*((ncsu\.edu)|(helli\.app))/, message: I18n.t('errors.email.ncsu_only') }
   validates :password, presence: true
   validates :password_confirmation, presence: true
 
