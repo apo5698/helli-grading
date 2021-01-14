@@ -12,12 +12,12 @@ module GradingHelper
     { id: grade_item.id,
       status: grade_item.status,
       statusInText: GradeItem.statuses[grade_item.status],
-      grade: grade_item.grade,
+      point: grade_item.point,
       feedback: grade_item.feedback,
       error: grade_item.error,
       stdout: grade_item.stdout,
       stderr: grade_item.stderr,
-      participant: { name: grade_item.participant.name },
+      participant: { name: grade_item.participant.full_name },
       path: course_assignment_grading_grade_item_path(course, assignment, rubric_item, grade_item) }
   end
 
@@ -25,8 +25,8 @@ module GradingHelper
     { id: rubric_item.id,
       name: rubric_item.to_s,
       path: course_assignment_grading_path(course, assignment, rubric_item),
-      maxGrade: rubric_item.maximum_grade,
-      primaryFile: rubric_item.primary_file,
-      type: rubric_item.type.downcase.sub('rubricitem::', '')}
+      maxPoint: rubric_item.maximum_points_possible,
+      filename: rubric_item.filename,
+      type: rubric_item.type.downcase.sub('rubrics::item::', '') }
   end
 end

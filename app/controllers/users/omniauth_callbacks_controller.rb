@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require 'helli/errors'
-
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: User.providers.keys
-
   User.providers.each_key do |provider|
     define_method provider do
       authenticate(provider)

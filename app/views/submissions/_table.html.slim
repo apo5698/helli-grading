@@ -1,0 +1,40 @@
+= form_with(method: :delete) do |f|
+  .table-responsive
+    table.table.table-hover
+      thead
+        tr
+          th[scope="col"]
+            .custom-control.custom-checkbox
+              input#select-all.custom-control-input[type="checkbox"]
+              label.custom-control-label[for="select-all"]
+          th[scope="col"]
+            | Full name
+          th[scope="col"]
+            | Attachments
+          th[scope="col"]
+            | Actions
+      tbody
+        - @participants.each do |participant|
+          tr
+            th[scope="row"]
+              .custom-control.custom-checkbox
+                = f.check_box("participants[#{participant.id}]", class: 'custom-control-input')
+                = f.label("participants[#{participant.id}]", 0.chr, class: 'custom-control-label')
+            td
+              = participant.full_name
+            td
+              - participant.submissions.each do |submission|
+                = link_to submission.filename, rails_blob_path(submission.attachment)
+                br
+            td
+              - participant.submissions.each do |submission|
+                = link_to(course_assignment_submission_path(@course, @assignment, submission.id),
+                        data: { method: :delete,
+                                toggle: :tooltip,
+                                title: "Delete #{participant.full_name}/#{submission.filename}" }) do
+                  i.far.fa-trash-alt
+                br
+  button#select-all.btn.btn-secondary[type="button"]
+    | Select / deselect all
+  .form-group.float-right
+    = f.submit('Delete', data: { disable_with: 'Deleting...' }, class: 'btn btn-primary')

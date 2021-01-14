@@ -13,17 +13,12 @@ class Dependency < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :version, :type, presence: true
 
-  before_destroy { :delete_download }
+  before_destroy { :delete_downloads }
 
   enum type: {
     direct: 'direct',
     git: 'git'
   }
-
-  enum visibility: {
-    private: 'private',
-    public: 'public'
-  }, _prefix: true
 
   # Loads dependencies from config to database.
   #
@@ -36,7 +31,7 @@ class Dependency < ApplicationRecord
         source: prop['source'],
         executable: prop['executable'] || File.basename(prop['source']),
         checksum: prop['checksum'],
-        visibility: prop['visibility'] || visibilities[:private]
+        public: prop['public'].to_b || false
       )
     end
   end
@@ -54,12 +49,12 @@ class Dependency < ApplicationRecord
 
   # Returns all public dependencies.
   def self.public_dependencies
-    where(visibility: visibilities[:public])
+    where(public: true)
   end
 
   # Deletes local files of all dependencies.
   def self.delete_all_downloads
-    all.find_each(&:delete_download)
+    all.find_each(&:delete_downloads)
   end
 
   # Downloads the dependency from its source.
@@ -87,7 +82,7 @@ class Dependency < ApplicationRecord
   end
 
   # Deletes all local files of the dependency.
-  def delete_download
+  def delete_downloads
     FileUtils.remove_entry_secure(dir) if Dir.exist?(dir)
   end
 end

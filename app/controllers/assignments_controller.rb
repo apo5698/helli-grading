@@ -27,6 +27,7 @@ class AssignmentsController < AssignmentsViewController
   #  GET /courses/:course_id/assignments/:id
   def show
     @title = @assignment.name
+    @program = Program.new
   end
 
   #  PUT /courses/:course_id/assignments/:id
@@ -46,30 +47,6 @@ class AssignmentsController < AssignmentsViewController
 
     flash.notice = "Assignment '#{name}' deleted."
     redirect_back fallback_location: { action: :index }
-  end
-
-  #  PUT /courses/:course_id/assignments/:id/programs
-  def program_add
-    program = params.require(:program)
-    @assignment.add_program(program)
-    @assignment.save!
-    flash.notice = "Program '#{program}' added."
-  rescue ArgumentError => e
-    flash.alert = e.message
-  ensure
-    redirect_back fallback_location: { action: :show }
-  end
-
-  #  DELETE /courses/:course_id/assignments/:id/programs?name=#{name}
-  def program_delete
-    name = params.require(:name)
-    @assignment.delete_program(name)
-    @assignment.save!
-    flash.notice = "Program '#{name}' deleted."
-  rescue ArgumentError => e
-    flash.alert = e.message
-  ensure
-    redirect_back fallback_location: { action: :show }
   end
 
   #  PUT /courses/:course_id/assignments/:id/input_files
@@ -111,6 +88,6 @@ class AssignmentsController < AssignmentsViewController
   end
 
   def selected_courses
-    params.require(:courses).permit!.keep_if { |_, v| v == "1" }.keys
+    params.require(:courses).permit!.keep_if { |_, v| v == '1' }.keys
   end
 end

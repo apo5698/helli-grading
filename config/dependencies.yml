@@ -8,7 +8,7 @@
 
 cs-checkstyle:
   type: git
-  version: 16
+  version: 17
   source: https://github.ncsu.edu/engr-csc116-staff/cs-checkstyle.git
   executable: checkstyle
 
@@ -17,4 +17,4 @@ junit:
   version: 1.6.2
   source: https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar
   checksum: 241682ad8aa17fd0af1f984b44d34e74
-  visibility: public
+  public: true
