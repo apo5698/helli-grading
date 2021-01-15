@@ -13,6 +13,4 @@ class SettingsController < ApplicationController
       disposition: :inline
     )
   end
-
-  def show; end
 end
