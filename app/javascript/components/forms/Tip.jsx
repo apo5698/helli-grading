@@ -1,8 +1,10 @@
+/* eslint-disable react/destructuring-assignment */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 
 const Tip = (props) => (
-  <small className="form-text text-muted" id={props.id}>
+  <small className="form-text text-muted" id={`${props.id}-tip`}>
     {props.message}
   </small>
 );

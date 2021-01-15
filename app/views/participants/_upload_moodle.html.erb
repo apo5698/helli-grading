@@ -5,4 +5,9 @@
   </span>
 </div>
 
-<%= react_component 'forms/MoodleUpload', url: course_assignment_participants_path(@course, @assignment) %>
+<%= react_component(
+      'forms/CSV',
+      url: course_assignment_participants_path(@course, @assignment),
+      id: 'moodle',
+      tip: 'It should look like "Grades-CSC 116 (004) FALL 2020-Day 11-293581.csv"')
+%>
