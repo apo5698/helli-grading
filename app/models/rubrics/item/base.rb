@@ -69,14 +69,18 @@ module Rubrics
         # Returns the default criteria for the rubric item.
         #
         # @return [Array<Hash>] default criteria list
-        def default_criteria; end
+        def default_criteria
+          []
+        end
 
         # Returns the requirements of the rubric item.
         # Available values:
         #   :filename, :file
         #
         # @return [Array<Symbol>]
-        def requirements; end
+        def requirements
+          []
+        end
       end
 
       def to_s
@@ -96,6 +100,17 @@ module Rubrics
         end
 
         GradeItem.where(rubric_item_id: id)
+      end
+
+      # Indicates if all requirements are met.
+      #
+      # @return [Boolean] complete status
+      def complete?
+        requirements.each do |r|
+          next if self[r].present?
+
+          return false
+        end
       end
 
       # Run grading on a file with options.
