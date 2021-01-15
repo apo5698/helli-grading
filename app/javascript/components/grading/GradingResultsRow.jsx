@@ -6,7 +6,7 @@ class GradingResultsRow extends React.Component {
     super(props);
 
     this.state = {
-      gradeItem: props.gradeItem
+      gradeItem: props.gradeItem,
     };
 
     this.studentCell = this.studentCell.bind(this);
@@ -21,33 +21,21 @@ class GradingResultsRow extends React.Component {
   }
 
   run(options) {
-    fetch(this.state.gradeItem.path + "/run", {
+    const { gradeItem: { path } } = this.state;
+    const { incrementCount } = this.props;
+
+    console.log(JSON.stringify({options: options}));
+    fetch(path + '/run', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
-      body: options
+      body: JSON.stringify({options: options})
     }).then(r => {return r.json()})
       .then(r => {
         this.setState({
-          gradeItem: r
+          gradeItem: r,
         });
-        this.props.incrementCount();
+        incrementCount();
       });
-  }
-
-  render() {
-    let gradeItem = this.state.gradeItem;
-    let trColor = ['success', 'inactive'].includes(gradeItem.status) ? '' : 'table-danger';
-    return (
-      <tr className={trColor} id={`autograding-item-${gradeItem.id}`}>
-        {this.studentCell(gradeItem)}
-        {this.fileCell(gradeItem)}
-        {this.statusCell(gradeItem)}
-        {this.gradeCell(gradeItem)}
-        {this.outputCell(gradeItem)}
-        {this.feedbackCell(gradeItem)}
-        {this.actionCell(gradeItem)}
-      </tr>
-    )
   }
 
   studentCell(gradeItem) {
@@ -57,11 +45,13 @@ class GradingResultsRow extends React.Component {
   }
 
   fileCell(gradeItem) {
+    const { rubricItem: { primaryFile } } = this.props;
+
     return (
       <td>
-        {this.props.rubricItem.primaryFile ?
+        {primaryFile ?
           <a href={gradeItem.path} data-remote='true'
-             data-toggle='modal' data-params='view=file'>{this.props.rubricItem.primaryFile}</a> :
+             data-toggle='modal' data-params='view=file'>{primaryFile}</a> :
           ''}
       </td>
     );
@@ -80,9 +70,11 @@ class GradingResultsRow extends React.Component {
   }
 
   gradeCell(gradeItem) {
+    const { rubricItem: { maxGrade } } = this.props;
+
     return (
       <td>
-        {gradeItem.grade || '?'}/{this.props.rubricItem.maxGrade}
+        {gradeItem.grade || '?'}/{maxGrade}
       </td>
     );
   }
@@ -96,8 +88,14 @@ class GradingResultsRow extends React.Component {
       return (
         <td>
           <span data-toggle="tooltip" title={title}>
-            <a href={gradeItem.path} data-remote='true'
-               data-toggle='modal' data-params='view=output'>View</a>
+            <a
+              href={gradeItem.path}
+              data-remote="true"
+              data-toggle="modal"
+              data-params="view=output"
+            >
+              View
+            </a>
           </span>
         </td>
       )
@@ -110,16 +108,42 @@ class GradingResultsRow extends React.Component {
 
   feedbackCell(gradeItem) {
     return (
-      <td style={{maxWidth: '250px'}}>{gradeItem.feedback}</td>
+      <td
+        style={{ maxWidth: '250px' }}
+      >
+        {gradeItem.feedback}
+      </td>
     )
   }
 
   actionCell(gradeItem) {
     return (
       <td>
-        <a href={gradeItem.path} data-remote='true'
-           data-toggle='modal' data-params='view=edit'>Edit</a>
+        <a
+          href={gradeItem.path}
+          data-remote="true"
+          data-toggle="modal"
+          data-params="view=edit"
+        >
+          Edit
+        </a>
       </td>
+    )
+  }
+
+  render() {
+    let gradeItem = this.state.gradeItem;
+    let trColor = ['success', 'inactive'].includes(gradeItem.status) ? '' : 'table-danger';
+    return (
+      <tr className={trColor} id={`autograding-item-${gradeItem.id}`}>
+        {this.studentCell(gradeItem)}
+        {this.fileCell(gradeItem)}
+        {this.statusCell(gradeItem)}
+        {this.gradeCell(gradeItem)}
+        {this.outputCell(gradeItem)}
+        {this.feedbackCell(gradeItem)}
+        {this.actionCell(gradeItem)}
+      </tr>
     )
   }
 }

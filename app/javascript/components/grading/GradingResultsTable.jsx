@@ -12,9 +12,27 @@ class GradingResultsTable extends React.Component {
   }
 
   runAll(options) {
-    this.children.forEach(child => child.current.run(options));
+    this.children.forEach((child) => child.current.run(options));
 
     event.preventDefault();
+  }
+
+  renderGradingResultsRows() {
+    const { rubricItem, gradeItems, incrementCount } = this.props;
+
+    const html = [];
+    gradeItems.forEach((gradeItem) => {
+      const ref = React.createRef();
+      this.children.push(ref);
+      html.push(<GradingResultsRow
+        ref={ref}
+        key={`autograding-item-${gradeItem.id}`}
+        rubricItem={rubricItem}
+        gradeItem={gradeItem}
+        incrementCount={incrementCount}
+      />);
+    });
+    return html;
   }
 
   render() {
@@ -22,34 +40,22 @@ class GradingResultsTable extends React.Component {
       <div className="table-responsive">
         <table className="table table-hover table-striped">
           <thead>
-          <tr className="table-active">
-            <th scope="col" style={{maxWidth: '100px'}}>Student</th>
-            <th scope="col">File</th>
-            <th scope="col">Status</th>
-            <th scope="col">Grade</th>
-            <th scope="col">Output</th>
-            <th scope="col" style={{maxWidth: '250px'}}>Feedback</th>
-            <th scope="col">Action</th>
-          </tr>
+            <tr className="table-active">
+              <th scope="col" style={{ maxWidth: '100px' }}>Student</th>
+              <th scope="col">File</th>
+              <th scope="col">Status</th>
+              <th scope="col">Grade</th>
+              <th scope="col">Output</th>
+              <th scope="col" style={{ maxWidth: '250px' }}>Feedback</th>
+              <th scope="col">Action</th>
+            </tr>
           </thead>
           <tbody>
             {this.renderGradingResultsRows()}
           </tbody>
         </table>
       </div>
-    )
-  }
-
-  renderGradingResultsRows() {
-    let html = [];
-    this.props.gradeItems.forEach(gradeItem => {
-        let ref = React.createRef();
-        this.children.push(ref);
-        html.push(<GradingResultsRow ref={ref} key={`autograding-item-${gradeItem.id}`}
-                                     rubricItem={this.props.rubricItem} gradeItem={gradeItem}
-                                     incrementCount={this.props.incrementCount}/>);
-    });
-    return html;
+    );
   }
 }
 

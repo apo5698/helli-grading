@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
     get 'register' => 'users/registrations#new', as: :new_user_registration
     post 'register' => 'users/registrations#create', as: :user_registration
+    get 'users/:id' => 'users/registrations#edit', as: :edit_user_registration
   end
 
   devise_for :users, skip: [:sessions], controllers: {

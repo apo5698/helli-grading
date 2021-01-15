@@ -25,7 +25,7 @@ class GradeItemsController < AssignmentsViewController
   def show; end
 
   def run
-    options = params.require(:options).permit!.to_h
+    options = params.require(:options).permit!.to_h if params[:options].present?
 
     @grade_item.run(options)
     flash.notice = "Run #{@rubric_item} complete."
