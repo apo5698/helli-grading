@@ -7,20 +7,43 @@
 
   <%= link_to('Helli Dev', root_path, { class: 'navbar-brand' }) %>
 
-  <div class="mr-auto"></div>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/courses">Courses</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/rubrics">Rubrics</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/settings">Settings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/help">Help</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/about">About</a>
+      </li>
+    </ul>
+  </div>
 
-  <ul class="navbar-nav">
+  <ul class="navbar-nav mr-auto">
     <li class="nav-item dropdown show">
       <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="avatar">
-        <i class="fas fa-user-circle fa-2x"></i>
+        <% avatar_url = "https://avatar.oxro.io/avatar.svg?name=#{current_user.name}" %>
+        <img src="<%= avatar_url %>" width="35px" style="border-radius: 50%"/>
       </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <%= link_to('Profile', '#', { class: 'dropdown-item' }) %>
+        <%#= link_to('Profile', edit_user_registration_path, { class: 'dropdown-item' }) %>
         <div class="dropdown-divider"></div>
         <%= link_to('Logout', destroy_user_session_path, { class: 'dropdown-item', method: :delete }) %>
       </div>
     </li>
   </ul>
+
 </nav>
 
 <% content_for :js do %>
