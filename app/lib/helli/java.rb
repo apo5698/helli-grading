@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'helli/errors'
 require 'open3'
 
 # Java-related commands.

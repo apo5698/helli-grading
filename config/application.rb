@@ -21,11 +21,6 @@ module Helli
 
     # config.active_job.queue_adapter = :sidekiq
 
-    # Creates folders for logs.
-    FileUtils.mkdir_p(Rails.root.join('log', Rails.env))
-
-    config.autoloader = :classic
-
     config.after_initialize do
       # only load dependencies when running server
       next unless defined?(Puma::DSL) || defined?(Rails::Server)

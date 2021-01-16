@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_08_235112) do
+ActiveRecord::Schema.define(version: 2021_01_02_000011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -49,79 +49,69 @@ ActiveRecord::Schema.define(version: 2021_01_08_235112) do
     t.string "name", null: false
     t.string "category", null: false
     t.text "description", default: "", null: false
-    t.string "programs", default: [], null: false, array: true
-    t.jsonb "grades_scale", default: {}, null: false
-    t.jsonb "zybooks_scale", default: {}, null: false
+    t.bigint "scale_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["course_id", "name"], name: "index_assignments_on_course_id_and_name", unique: true
     t.index ["course_id"], name: "index_assignments_on_course_id"
-    t.index ["grades_scale", "zybooks_scale"], name: "index_assignments_on_grades_scale_and_zybooks_scale", using: :gin
+    t.index ["scale_id"], name: "index_assignments_on_scale_id"
   end
 
   create_table "courses", force: :cascade do |t|
     t.bigint "user_id"
+    t.bigint "collaborator_ids", default: [], array: true
     t.string "name", null: false
     t.string "section", null: false
-    t.integer "term", null: false
+    t.integer "term", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "collaborator_ids", default: [], array: true
     t.index ["user_id", "name", "section", "term"], name: "index_courses_on_user_id_and_name_and_section_and_term", unique: true
     t.index ["user_id"], name: "index_courses_on_user_id"
   end
 
   create_table "dependencies", force: :cascade do |t|
     t.string "name", null: false
-    t.string "version", null: false
+    t.string "version"
     t.string "source", null: false
     t.string "type", null: false
     t.string "executable", null: false
-    t.string "visibility", null: false
+    t.string "checksum"
+    t.boolean "public", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "checksum"
     t.index ["name"], name: "index_dependencies_on_name", unique: true
   end
 
   create_table "grade_items", force: :cascade do |t|
     t.bigint "participant_id"
+    t.bigint "rubric_item_id"
     t.string "status", null: false
     t.text "stdout", default: "", null: false
     t.text "stderr", default: "", null: false
+    t.integer "exitstatus", default: 0, null: false
     t.integer "error", default: 0, null: false
-    t.decimal "grade", precision: 5, scale: 2, default: "0.0", null: false
+    t.decimal "point", precision: 5, scale: 2, default: "0.0", null: false
     t.text "feedback", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "rubric_item_id"
+    t.index ["participant_id", "rubric_item_id"], name: "index_grade_items_on_participant_id_and_rubric_item_id", unique: true
     t.index ["participant_id"], name: "index_grade_items_on_participant_id"
     t.index ["rubric_item_id"], name: "index_grade_items_on_rubric_item_id"
-  end
-
-  create_table "grades", force: :cascade do |t|
-    t.bigint "participant_id"
-    t.integer "identifier", null: false
-    t.string "full_name", null: false
-    t.string "email_address", null: false
-    t.string "status", null: false
-    t.decimal "grade", precision: 5, scale: 2
-    t.decimal "maximum_grade", precision: 5, scale: 2, null: false
-    t.boolean "grade_can_be_changed", null: false
-    t.datetime "last_modified_submission"
-    t.datetime "last_modified_grade"
-    t.text "feedback_comments"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_id"], name: "index_grades_on_participant_id", unique: true
   end
 
   create_table "participants", force: :cascade do |t|
     t.bigint "assignment_id"
     t.bigint "student_id"
-    t.decimal "program_total", precision: 5, scale: 2, default: "0.0", null: false
-    t.decimal "zybooks_total", precision: 5, scale: 2
-    t.decimal "other_total", precision: 5, scale: 2
+    t.integer "identifier", null: false
+    t.string "full_name", null: false
+    t.string "email_address", null: false
+    t.boolean "status", null: false
+    t.decimal "grade", precision: 5, scale: 2
+    t.decimal "maximum_grade", precision: 5, scale: 2, null: false
+    t.boolean "grade_can_be_changed", default: true, null: false
+    t.datetime "last_modified_submission"
+    t.datetime "last_modified_grade"
+    t.text "feedback_comments"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["assignment_id", "student_id"], name: "index_participants_on_assignment_id_and_student_id", unique: true
@@ -129,36 +119,52 @@ ActiveRecord::Schema.define(version: 2021_01_08_235112) do
     t.index ["student_id"], name: "index_participants_on_student_id"
   end
 
-  create_table "rubric_criteria", force: :cascade do |t|
-    t.string "action", null: false
-    t.decimal "point", precision: 5, scale: 2, default: "0.0", null: false
-    t.string "criterion", null: false
-    t.text "feedback", default: "", null: false
+  create_table "programs", force: :cascade do |t|
+    t.bigint "assignment_id"
+    t.bigint "parent_program_id"
+    t.string "name", null: false
+    t.string "extension", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["assignment_id"], name: "index_programs_on_assignment_id"
+    t.index ["parent_program_id"], name: "index_programs_on_parent_program_id"
+  end
+
+  create_table "rubric_criteria", force: :cascade do |t|
     t.bigint "rubric_item_id"
+    t.string "type", null: false
+    t.string "action", null: false
+    t.decimal "point", precision: 5, scale: 2, default: "0.0", null: false
+    t.string "feedback", default: "", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["rubric_item_id"], name: "index_rubric_criteria_on_rubric_item_id"
   end
 
   create_table "rubric_items", force: :cascade do |t|
+    t.bigint "rubric_id"
     t.string "type", null: false
-    t.string "primary_file"
-    t.string "secondary_file"
-    t.decimal "maximum_grade", precision: 5, scale: 2, default: "0.0", null: false
+    t.string "filename"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "rubric_id"
     t.index ["rubric_id"], name: "index_rubric_items_on_rubric_id"
   end
 
   create_table "rubrics", force: :cascade do |t|
-    t.bigint "assignment_id"
     t.bigint "user_id"
-    t.boolean "published", default: false
+    t.bigint "assignment_id"
+    t.boolean "published", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["assignment_id"], name: "index_rubrics_on_assignment_id"
     t.index ["user_id"], name: "index_rubrics_on_user_id"
+  end
+
+  create_table "scales", force: :cascade do |t|
+    t.string "type", null: false
+    t.jsonb "scale", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -177,11 +183,11 @@ ActiveRecord::Schema.define(version: 2021_01_08_235112) do
     t.index ["email"], name: "index_students_on_email", unique: true
   end
 
-  create_table "ts_files", force: :cascade do |t|
-    t.bigint "assignment_id"
+  create_table "submissions", force: :cascade do |t|
+    t.bigint "participant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["assignment_id"], name: "index_ts_files_on_assignment_id"
+    t.index ["participant_id"], name: "index_submissions_on_participant_id"
   end
 
   create_table "users", force: :cascade do |t|

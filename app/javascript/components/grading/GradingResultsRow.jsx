@@ -45,13 +45,13 @@ class GradingResultsRow extends React.Component {
   }
 
   fileCell(gradeItem) {
-    const { rubricItem: { primaryFile } } = this.props;
+    const { rubricItem: { filename } } = this.props;
 
     return (
       <td>
-        {primaryFile ?
+        {filename ?
           <a href={gradeItem.path} data-remote='true'
-             data-toggle='modal' data-params='view=file'>{primaryFile}</a> :
+             data-toggle='modal' data-params='view=file'>{filename}</a> :
           ''}
       </td>
     );
@@ -70,11 +70,11 @@ class GradingResultsRow extends React.Component {
   }
 
   gradeCell(gradeItem) {
-    const { rubricItem: { maxGrade } } = this.props;
+    const { rubricItem: { maxPoint } } = this.props;
 
     return (
       <td>
-        {gradeItem.grade || '?'}/{maxGrade}
+        {gradeItem.point || '?'}/{maxPoint}
       </td>
     );
   }

@@ -1,10 +1,11 @@
 class Course < ApplicationRecord
-  has_many :assignments, dependent: :destroy
   belongs_to :user
+
+  has_many :assignments, dependent: :destroy
 
   validates :name, presence: true
   validates :section, presence: true
-  validates :section, uniqueness: {scope: %i[name term]}
+  validates :section, uniqueness: { scope: %i[user_id name section term] }
 
   SEMESTERS = ['Spring', 'Summer I', 'Summer II', 'Fall'].freeze
 

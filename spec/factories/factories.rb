@@ -5,7 +5,7 @@ FactoryBot.define do
     source { Faker::Internet.url }
     type { Dependency.types[:direct] }
     executable { name.downcase }
-    visibility { Dependency.visibilities[:public] }
+    public { true }
   end
 
   factory :course do
@@ -17,7 +17,8 @@ FactoryBot.define do
         name: Faker::Number.name,
         email: Faker::Internet.email,
         password: '123456',
-        password_confirmation: '123456')
+        password_confirmation: '123456'
+      )
     end
   end
 
@@ -34,16 +35,10 @@ FactoryBot.define do
   end
 
   factory :participant do
-    program_total { 0 }
-    zybooks_total { 0 }
-    other_total { 0 }
-  end
-
-  factory :grade do
     identifier { Faker::Number.between(from: 100_000, to: 1_000_000) }
-    full_name { Faker::Name.first_name + ' ' + Faker::Name.last_name }
+    full_name { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
     email_address { Faker::Internet.email(domain: 'ncsu.edu') }
-    status { :submitted }
+    status { true }
     grade {}
     maximum_grade { 10 }
     grade_can_be_changed { true }
@@ -55,16 +50,16 @@ FactoryBot.define do
   end
 
   factory :wce, class: 'Rubric' do
-    type { Wce }
-    primary_file { Dir.glob('spec/fixtures/java/wce/**/*.java').sample }
+    type { CompileExecute }
+    filename { Dir.glob('spec/fixtures/java/wce/**/*.java').sample }
   end
 
   factory :user do
     name { 'User' }
     username { 'user' }
     email { 'user@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     confirmed_at { Time.zone.now }
   end
 
@@ -72,16 +67,16 @@ FactoryBot.define do
     name { 'Unconfirmed User' }
     username { 'unconfirmed_user' }
     email { 'unconfirmed_user@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
   end
 
   factory :admin, class: 'User' do
     name { 'Admin' }
     username { 'admin' }
     email { 'admin@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :admin }
     confirmed_at { Time.zone.now }
   end
@@ -90,8 +85,8 @@ FactoryBot.define do
     name { 'Instructor' }
     username { 'instructor' }
     email { 'instructor@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :instructor }
     confirmed_at { Time.zone.now }
   end
@@ -100,8 +95,8 @@ FactoryBot.define do
     name { 'Teaching Assistant' }
     username { 'ta' }
     email { 'ta@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :ta }
     confirmed_at { Time.zone.now }
   end
@@ -110,9 +105,19 @@ FactoryBot.define do
     name { 'Student' }
     username { 'student' }
     email { 'student@helli.app' }
-    password { '123456' }
-    password_confirmation { '123456' }
+    password { '12345678' }
+    password_confirmation { '12345678' }
     role { :student }
     confirmed_at { Time.zone.now }
+  end
+
+  # See https://github.com/thoughtbot/factory_bot/wiki/How-factory_bot-interacts-with-ActiveRecord
+  #
+  factory :java_source, class: 'Program' do
+    initialize_with { new(name: 'Helli.java') }
+  end
+  #
+  factory :java_test, class: 'Program' do
+    initialize_with { new(name: 'HelliTest.java') }
   end
 end

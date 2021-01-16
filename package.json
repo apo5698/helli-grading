@@ -3,6 +3,8 @@
   "private": true,
   "dependencies": {
     "@babel/preset-react": "^7.12.10",
+    "@primer/components": "^22.0.3",
+    "@primer/css": "^15.2.0",
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",
     "@rails/ujs": "^6.0.0",
@@ -13,6 +15,7 @@
     "bootswatch": "^4.5.0",
     "channels": "0.0.4",
     "form-serialize": "^0.7.2",
+    "formik": "^2.2.6",
     "jquery": "^3.5.1",
     "node-sass": "^5.0.0",
     "nouislider": "^14.6.2",
@@ -22,9 +25,9 @@
     "rails-erb-loader": "^5.5.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-on-rails": "latest",
     "react-router-dom": "latest",
     "react_ujs": "^2.6.1",
+    "styled-components": "^5.2.1",
     "turbolinks": "^5.2.0"
   },
   "version": "0.1.0",

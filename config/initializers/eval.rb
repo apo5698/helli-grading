@@ -1,26 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Lint/MissingCopEnableDirective
-# rubocop:disable Rails/DynamicFindBy
-# rubocop:disable Style/ClassAndModuleChildren
 # rubocop:disable Style/Documentation
-
-class ActiveStorage::Attached::Many
-  # Finds an attachment by name.
-  #
-  # @param [String] name filename
-  # @return [ActiveStorage::Attachment] attachment found
-  def find_by_filename(name)
-    attachments.find { |f| f.filename == name }
-  end
-
-  # Deletes an attachment by name.
-  #
-  # @param [String] name filename
-  def delete_by_filename(name)
-    find_by_filename(name).purge
-  end
-end
 
 # class Symbol
 #   # Supplies arguments for pretzel colon operator (&:).
@@ -79,5 +59,15 @@ class NilClass
   # @return [FalseClass] false
   def to_b
     false
+  end
+end
+
+class Hash
+  # Extracts key-value pairs with given keys from the hash.
+  #
+  # @param [Array] keys unique keys
+  # @return [Hash] result
+  def extract(*keys)
+    keys.uniq.reduce([]) { |result, key| result << assoc(key) }.to_h
   end
 end

@@ -41,10 +41,19 @@ Rails.application.routes.draw do
     end
 
     resources :assignments do
-      member do
-        put :programs, action: :program_add
-        delete :programs, action: :program_delete
+      resources :programs, only: %i[create destroy] do
+        collection do
+          delete :destroy_all, path: ''
+        end
+      end
 
+      resources :participants do
+        collection do
+          delete :destroy_all, path: ''
+        end
+      end
+
+      member do
         put :input_files, action: :input_file_add
         delete :input_files, action: :input_file_delete
 
@@ -59,14 +68,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :ts_files, only: %i[index destroy] do
-        collection do
-          post :destroy_selected
-          post :upload
-        end
-      end
-
-      resources :rubric_items do
+      resources :rubric_items, path: :rubrics do
         collection do
           put :update
         end
@@ -78,8 +80,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :grades do
-        post :zybooks
+      resources :grades, only: :index do
+        collection do
+          get :export
+          delete :destroy
+        end
       end
     end
   end

@@ -9,8 +9,8 @@ Feature: Login
     Then I should be able to view my homepage
     Examples:
       | name         | username | email             | password |
-      | Dingdong Yao | dyao3    | dyao3@ncsu.edu    | 123456   |
-      | Yulin Zhang  | yzhan114 | yzhan114@ncsu.edu | 123456   |
+      | Dingdong Yao | dyao3    | dyao3@ncsu.edu    | 12345678 |
+      | Yulin Zhang  | yzhan114 | yzhan114@ncsu.edu | 12345678 |
 
   Scenario Outline: Invalid credentials
     Given I have registered using name <name>, username <username>, email <email>, and password <password>
@@ -18,5 +18,5 @@ Feature: Login
     Then I should not be logged in
     Examples:
       | name         | username | email             | password | wrong_password |
-      | Dingdong Yao | dyao3    | dyao3@ncsu.edu    | 123456   | qwerty         |
-      | Yulin Zhang  | yzhan114 | yzhan114@ncsu.edu | 123456   | qwerty         |
+      | Dingdong Yao | dyao3    | dyao3@ncsu.edu    | 12345678 | qwerty         |
+      | Yulin Zhang  | yzhan114 | yzhan114@ncsu.edu | 12345678 | qwerty         |

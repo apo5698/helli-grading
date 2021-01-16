@@ -1,61 +1,54 @@
 class SubmissionsController < AssignmentsViewController
   def index
+    @title = 'Submissions'
+
     link = course_assignment_path(@course, @assignment)
     messages = []
 
-    unless @has_program
+    unless @has_programs
       messages << 'No programs found, '\
       "#{helpers.link_to 'add a program', link}"
     end
 
-    unless @has_grades_uploaded
+    if @participants.empty?
       messages << 'No participant found, '\
       "#{helpers.link_to 'upload the grade worksheet', link}"
     end
 
-    flash.alert = messages
+    flash.alert = messages if messages.present?
   end
 
+  #  POST /courses/1/assignments/1/submissions
   def create
-    zip_file = params[:zip]
-
-    if zip_file.nil?
-      flash.alert = 'Upload failed (no file chosen).'
-      return
-    end
-
-    count = Helli::Attachment.upload_moodle_zip(zip_file, @assignment).count
-    flash.notice = "Successfully uploaded #{zip_file.original_filename} (#{count} file#{'s' if count > 1})."
+    zip = params.require(:zip)
+    count = Submission.upload(zip.tempfile.path, @assignment.id).count
+    flash.notice = "Successfully uploaded #{zip.original_filename} (#{count} file#{'s' if count > 1})."
   rescue Helli::StudentNotParticipated => e
-    flash.alert = "Student #{e.message} does not participate in this assignment. Please check the submissions file."
+    flash.alert =
+      "Participant #{e.message} is not found in this assignment. Please check the zip file."
   ensure
     redirect_back fallback_location: { action: :index }
   end
 
+  #  DELETE /courses/1/assignments/1/submissions
+  #  DELETE /courses/1/assignments/1/submissions/:id
   def destroy
-    if params[:id].present?
+    if params[:id]
       # single file
-      Helli::Attachment.delete_by_id(params[:id])
+      Submission.destroy(params.require(:id))
       flash.notice = 'Submission deleted.'
-    else
+    elsif params[:participants]
       # multiple files
-      selected = params.require(:participants).permit!.to_h
-                       .map { |k, v| { k.to_i => v.to_i == 1 } }.reduce(:merge) # { id(int): selected?(boolean) }
-                       .select { |_, v| v }.keys # selected ids
-      raise 'No participant selected.' if selected.empty?
+      participants = params.require(:participants)
+                           .select { |_, v| v.to_b == true }
+                           .keys
+                           .map(&:to_i)
+      raise 'No participant selected.' if participants.empty?
 
-      selected.each { |id| Participant.find(id).files.purge }
-      flash.notice = 'Selected submissions deleted.'
+      Submission.where(participant_id: participants).destroy_all
+      flash.notice = 'Submissions of selected participants deleted.'
     end
 
     redirect_back fallback_location: { action: :index }
-  end
-
-  def download_all
-    zip = Helli::Attachment.download_submission_zip(@course, @assignment)
-    send_data(File.read(zip.path), filename: File.basename(zip), type: 'application/zip', disposition: 'attachment')
-  ensure
-    zip.close
-    zip.unlink
   end
 end

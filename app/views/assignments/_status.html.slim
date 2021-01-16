@@ -1,0 +1,40 @@
+h3 Status
+ul.nav.nav-tabs#status
+  li.nav-item
+    a.nav-link.active#program-tab href='#program' data-toggle='tab'
+      | Programs
+      span.ml-1
+        - programs_count = @assignment.programs.count
+        = badge programs_count.positive? ? :success : :danger, programs_count
+  li.nav-item
+    a.nav-link#participants-tab href='#participants' data-toggle='tab'
+      | Participants
+      span.ml-1
+        = badge @participants.count.positive? ? :success : :danger, @participants.count
+  li.nav-item
+    a.nav-link#input-files-tab href='#input-files' data-toggle='tab'
+      | Input files
+      span.ml-1
+        = badge :success, @input_files.count if @input_files.attached?
+.tab-content#status-content
+  .tab-pane.fade.show.active#program
+    - @assignment.programs.each do |program|
+      .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center
+        = program
+        = button_to course_assignment_program_path(@course, @assignment, program), method: :delete, class: 'btn text-primary p-0', data: { toggle: :tooltip, title: "Delete #{program}" } do
+          i.fas.fa-times
+  .tab-pane.fade#participants
+    - @participants.each do |participant|
+      .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center
+        = participant.full_name
+        | &nbsp;
+        | (
+        = participant.email_address
+        | )
+  .tab-pane.fade#input-files
+    - @assignment.input_files.each do |attachment|
+      .list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center
+        - filename = attachment.filename
+        = filename
+        = button_to input_files_course_assignment_path(name: filename), method: :delete, class: 'btn text-primary p-0', data: { toggle: :tooltip, title: "Delete #{filename}" } do
+          i.fas.fa-times

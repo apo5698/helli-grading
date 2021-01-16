@@ -1,19 +1,17 @@
 class RubricItemsController < AssignmentsViewController
-  before_action lambda {
-    @title = controller_name.classify.pluralize
-    @actions = RubricCriterion.actions.invert
-    @criteria = RubricCriterion.criteria.invert
-  }
-
   #  GET /courses/:course_id/assignments/:assignment_id/rubric_items
-  def index; end
+  def index
+    @title = 'Rubrics'
+    @actions = Rubrics::Criterion::Base.actions.invert
+    @criteria = Rubrics::Criterion::Base.criteria.invert
+  end
 
   #  POST /courses/:course_id/assignments/:assignment_id/rubric_items
   def create
-    @rubric = Rubric.find_or_create(@assignment.id)
-    @rubric_item = @rubric.create_rubric_item(rubric_item_params)
+    rubric = Rubric.find_or_create_by(assignment_id: @assignment.id)
+    @rubric_item = rubric.items.create!(rubric_item_params)
 
-    flash.notice = "Rubric item for #{@rubric_item.type} created."
+    flash.notice = "Rubric item for #{@rubric_item} created."
     redirect_back fallback_location: { action: :index }
   end
 
@@ -23,31 +21,24 @@ class RubricItemsController < AssignmentsViewController
     id = params[:id]
 
     if id
-      rubric_item = RubricItem.find(id)
-      rubric_item.update(rubric_item_params.except(:criteria))
-      rubric_item.update_criteria(rubric_item_params[:criteria])
-      RubricItem.find(id).generate_grade_items
+      rubric_item = Rubrics::Item::Base.find(id)
+      criteria = rubric_item_params.delete(:criteria)
+      rubric_item.update(rubric_item_params)
+      criteria.each { |cid, attributes| Rubrics::Criterion::Base.find(cid.to_i).update!(attributes) }
+      # RubricItem.find(id).create_grade_items
       flash.notice = "Rubric #{rubric_item} has been updated."
     else
-      flash.alert = 'Not implemented.'
+      flash.alert = 'Save all is not implemented.'
     end
 
     redirect_back fallback_location: { action: :index }
   end
 
   def destroy
-    RubricItem.destroy(params[:id])
+    Rubrics::Item::Base.destroy(params[:id])
 
     flash.notice = 'Selected rubric deleted.'
     redirect_back fallback_location: { action: :index }
-  end
-
-  def show
-    # code here
-  end
-
-  def all
-
   end
 
   private

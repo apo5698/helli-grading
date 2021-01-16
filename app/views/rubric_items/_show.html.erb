@@ -1,6 +1,6 @@
 <div class="list-group-item-action card-header" data-toggle="collapse" data-target="#rubric_item-<%= rubric_item.id %>">
-  <% has_file = rubric_item.primary_file || rubric_item.secondary_file %>
-  <% has_criteria = rubric_item.rubric_criteria.present? %>
+  <% has_file = rubric_item.filename %>
+  <% has_criteria = rubric_item.criteria.present? %>
   <% tooltip_title = [] %>
   <% tooltip_title << 'No input file' unless has_file %>
   <% tooltip_title << 'No criteria' unless has_criteria %>
@@ -12,29 +12,20 @@
     <%= form_with url: course_assignment_rubric_item_path(@course, @assignment, rubric_item), method: :put, id: rubric_item.type do |form| %>
       <%= form.fields_for :rubric_item do |f| %>
         <p class="card-text">
-          <b>Usage: </b><%= rubric_item.usage %>
+          <b>Usage: </b><%= rubric_item.class.description %>
         </p>
-        <% required_fields = rubric_item.required_fields %>
+        <% requirements = rubric_item.class.requirements %>
         <div class="row">
-          <% if required_fields.include?(:primary_file) %>
+          <% if requirements.include?(:filename) %>
             <div class="col-auto">
               <div class="form-group">
-                <%= f.label :primary_file, 'Primary file' %>
-                <%= f.select :primary_file, @assignment.programs, { selected: rubric_item.primary_file },
+                <%= f.label :filename, 'Filename' %>
+                <%= f.select :filename, @assignment.programs, { selected: rubric_item.filename },
                              { class: 'form-control', required: true } %>
               </div>
             </div>
           <% end %>
-          <% if required_fields.include?(:secondary_file) %>
-            <div class="col-auto">
-              <div class="form-group">
-                <%= f.label :secondary_file, "Secondary file" %>
-                <%= f.select :secondary_file, @assignment.programs, { selected: rubric_item.secondary_file },
-                             { class: 'form-control', required: true } %>
-              </div>
-            </div>
-          <% end %>
-          <% if rubric_item.is_a?(RubricItem::Zybooks) %>
+          <% if requirements.include?(:file) %>
             <div class="col" style="max-width: 800px">
               <div class="form-group">
                 <div class="input-group">
@@ -43,9 +34,9 @@
                     <%= f.label :zybooks, 'Choose file', class: 'custom-file-label' %>
                   </div>
                 </div>
-                <small class="form-text text-muted" id="zybooks-activity-report">
-                  It should look like "NCSUCSC116BalikFall2020_report_004_2020-09-23_2345.csv"
-                </small>
+                <%= react_component 'forms/Tip',
+                                    message: 'It should look like "NCSUCSC116xxxSpring2021_report_004_2021-01-01_2345.csv"',
+                                    id: 'zybooks-activity-report' %>
               </div>
             </div>
           <% end %>
