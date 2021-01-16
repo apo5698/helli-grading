@@ -8,6 +8,7 @@ gem 'activerecord-session_store'
 gem 'amoeba'
 gem 'arbre'
 gem 'aws-sdk-s3'
+gem 'barnes'
 gem 'bcrypt'
 gem 'bootsnap', require: false
 gem 'devise'

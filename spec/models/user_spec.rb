@@ -27,6 +27,11 @@ describe User do
       admin.email = 'helli.app'
       expect(admin).to be_invalid
     end
+
+    it 'forbids non-NCSU email' do
+      admin.email = 'user@example.com'
+      expect(admin).to be_invalid
+    end
   end
 
   describe '#password' do
@@ -70,7 +75,6 @@ describe User do
   end
 
   describe 'after sign up' do
-    # rubocop:disable Lint/MissingCopEnableDirective
     # rubocop:disable RSpec/LetSetup
     let!(:unconfirmed_user) { create(:unconfirmed_user) }
 

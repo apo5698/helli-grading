@@ -99,6 +99,9 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    barnes (0.0.8)
+      multi_json (~> 1)
+      statsd-ruby (~> 1.1)
     bcrypt (3.1.16)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
@@ -437,6 +440,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     state_machines (0.5.0)
+    statsd-ruby (1.5.0)
     sync (0.5.0)
     sys-uname (1.2.2)
       ffi (~> 1.1)
@@ -481,6 +485,7 @@ DEPENDENCIES
   amoeba
   arbre
   aws-sdk-s3
+  barnes
   bcrypt
   better_errors
   binding_of_caller

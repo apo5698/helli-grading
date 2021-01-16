@@ -3,3 +3,6 @@ en:
     status:
       submitted: 'Submitted for grading'
       no_submission: 'No submission'
+  errors:
+    email:
+      ncsu_only: 'of NCSU required.'

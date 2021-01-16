@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import asyncParse from './AsyncPapa';
 
-class MoodleUpload extends React.Component {
+import asyncParse from './AsyncPapa';
+import Tip from './Tip';
+
+class CSV extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       file: null,
-      placeholder: 'Choose file',
+      label: 'Choose file',
       uploadButtonText: 'Upload',
       uploadButtonDisabled: false,
     };
@@ -31,7 +33,7 @@ class MoodleUpload extends React.Component {
   select(event) {
     this.setState({ file: event.target.files[0] }, () => {
       const { file } = this.state;
-      this.setState({ placeholder: file.name });
+      this.setState({ label: file.name });
     });
   }
 
@@ -42,22 +44,18 @@ class MoodleUpload extends React.Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ participant: data }),
-    }).then((response) => {
-      this.enableButton();
-
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      return response;
     }).then(() => {
+      this.enableButton();
       window.location.reload();
-    }).catch((error) => {
-      console.error(error);
     });
   }
 
   render() {
-    const { placeholder, uploadButtonText, uploadButtonDisabled } = this.state;
+    const { id, tip } = this.props;
+
+    const {
+      file, label, uploadButtonText, uploadButtonDisabled,
+    } = this.state;
 
     return (
       <div className="form-group">
@@ -66,12 +64,12 @@ class MoodleUpload extends React.Component {
             <input
               className="custom-file-input"
               type="file"
-              id="moodle-csv"
+              id={id}
               accept=".csv"
               required
               onChange={this.select}
             />
-            <label className="custom-file-label" htmlFor="moodle-csv">{placeholder}</label>
+            <label className="custom-file-label" htmlFor={id}>{label}</label>
           </div>
           <div className="input-group-append">
             <input
@@ -81,21 +79,25 @@ class MoodleUpload extends React.Component {
               disabled={uploadButtonDisabled}
               onClick={async () => {
                 this.disableButton();
-                this.upload(await asyncParse(this.state.file));
+                this.upload(await asyncParse(file));
               }}
             />
           </div>
         </div>
-        <small className="form-text text-muted" id="moodle-grade-worksheet">
-          It should look like &quot;Grades-CSC 116 (004) FALL 2020-Day 11-293581.csv&quot;
-        </small>
+        <Tip message={tip} id={id} />
       </div>
     );
   }
 }
 
-MoodleUpload.propTypes = {
+CSV.propTypes = {
+  id: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  tip: PropTypes.string,
 };
 
-export default MoodleUpload;
+CSV.defaultProps = {
+  tip: '',
+};
+
+export default CSV;
