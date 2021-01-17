@@ -140,7 +140,7 @@ module Rubrics
 end
 
 # See https://stackoverflow.com/a/16571498
-if Rails.env.development?
+unless Rails.env.production?
   (Dir["#{__dir__}/*.rb"] - [__FILE__]).each do |f|
     require_dependency f.delete_suffix('.rb')
   end
