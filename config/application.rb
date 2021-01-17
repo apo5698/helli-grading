@@ -29,5 +29,7 @@ module Helli
     end
 
     config.exceptions_app = routes
+
+    config.react.server_renderer_extensions = %w[jsx js tsx ts]
   end
 end

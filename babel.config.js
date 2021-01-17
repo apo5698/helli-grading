@@ -34,16 +34,17 @@ module.exports = function(api) {
           useBuiltIns: 'entry',
           corejs: 3,
           modules: false,
-          exclude: ['transform-typeof-symbol']
+          exclude: ['transform-typeof-symbol'],
         }
       ],
       [
         '@babel/preset-react',
         {
           development: isDevelopmentEnv || isTestEnv,
-          useBuiltIns: true
-        }
-      ]
+          useBuiltIns: true,
+        },
+      ],
+      ['@babel/preset-typescript', { 'allExtensions': true, 'isTSX': true }],
     ].filter(Boolean),
     plugins: [
       'babel-plugin-macros',
