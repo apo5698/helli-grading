@@ -90,4 +90,11 @@ Rails.application.routes.draw do
   end
 
   resources :rubrics
+
+  # api.helli.app
+  constraints subdomain: 'api' do
+    scope module: :api do
+      resources :grade_items, except: %i[index new edit]
+    end
+  end
 end

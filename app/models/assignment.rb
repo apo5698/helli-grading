@@ -95,7 +95,7 @@ class Assignment < ApplicationRecord
   end
 
   def export_grades
-    gi_max = rubric_items.sum(&:maximum_points_possible)
+    gi_max = rubric_items.sum(&:maximum_points)
     zybooks_scores = zybooks_scale.keys
 
     participants.each do |p|

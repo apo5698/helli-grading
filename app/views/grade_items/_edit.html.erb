@@ -7,7 +7,7 @@
   </div>
   <div class="form-row">
     <div class="form-group col-md-3">
-      <%= f.label(:point, "Grade<br/>(maximum #{@grade_item.rubric_item.maximum_points_possible})".html_safe) %>
+      <%= f.label(:point, "Grade<br/>(maximum #{@grade_item.rubric_item.maximum_points})".html_safe) %>
       <%= f.text_field(:point, class: 'form-control', value: @grade_item.point, required: true) %>
     </div>
   </div>
@@ -26,7 +26,7 @@
   $('#grade').on('input', function () {
     // DO NOT USE !==
     // String is being compared with Number here
-    if ($(this).val() == <%= @grade_item.rubric_item.maximum_points_possible %>) {
+    if ($(this).val() == <%= @grade_item.rubric_item.maximum_points %>) {
       $('#status').val('success');
     } else {
       $('#status').val('error');

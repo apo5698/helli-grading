@@ -89,8 +89,8 @@ module Rubrics
 
       # Calculates the maximum points as per its awarding rubric criteria.
       #
-      # @return [BigDecimal] points
-      def maximum_points_possible
+      # @return [BigDecimal] maximum points
+      def maximum_points
         criteria.reduce(0) { |sum, criterion| sum + (criterion.award? ? criterion.point : 0) }
       end
 

@@ -46,7 +46,7 @@ class GradeItem < ApplicationRecord
   ###############
 
   delegate :<=>, :name, to: :participant
-  delegate :to_s, :filename, :maximum_points_possible, to: :rubric_item
+  delegate :to_s, :filename, :maximum_points, to: :rubric_item
 
   def feedback=(feedback)
     super(Helli::SeparatedString.new(feedback).to_s)
