@@ -67,16 +67,17 @@ class GradeItem < ApplicationRecord
   # Accepts a series of options and then invokes #run per its rubric type.
   #
   # @param [Hash] options
+  # @return [GradeItem] self
   def run(options)
     # No submission per Moodle grade worksheet.
     if participant.no_submission?
       update!(attributes_preset_for(:no_submission))
-      return
+      return self
     end
 
     if attachment.nil?
       update!(attributes_preset_for(:no_matched_attachment))
-      return
+      return self
     end
 
     # Downloading strategy:
@@ -84,7 +85,7 @@ class GradeItem < ApplicationRecord
     #   2. Keep them for a period of time (default 4 hours)
     #   3. Delete using cron jobs (sidekiq)
     path = Helli::Attachment.download_one(attachment)
-    captures, error_count = rubric_item.run(path, options)
+    captures, error_count = rubric_item.run(path, options || {})
 
     @content = File.read(path)
 
@@ -145,6 +146,7 @@ class GradeItem < ApplicationRecord
     self.point = 0 if point.negative?
 
     save!
+    self
   end
 
   # An error message indicating that a manual resolution is needed.
