@@ -94,7 +94,11 @@ Rails.application.routes.draw do
   # api.helli.app
   constraints subdomain: 'api' do
     scope module: :api do
-      resources :grade_items, except: %i[index new edit]
+      resource :dependencies, only: :show
+      resources :submissions, except: %i[index new edit]
+      resources :grade_items, except: %i[index new edit] do
+        get :attachment
+      end
     end
   end
 end

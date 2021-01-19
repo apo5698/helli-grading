@@ -28,7 +28,7 @@ module Helli::Java
     #     p[1]              #=> ""
     #     p[2].exitstatus   #=> 0
     #
-    #   p = Helli::Java.javac("day1/student1/HelloWorldTest.java", junit: true)
+    #   p = Helli::Java.javac("day1/student1/HelloWorldTest.java", libraries: ['junit'])
     #     p[0]              #=> ""
     #     p[1]              #=> ""
     #     p[2].exitstatus   #=> 0
@@ -37,21 +37,22 @@ module Helli::Java
     #     p[0]              #=> ""
     #     p[1]              #=> "Invalid.java:4: error: ';' expected\n..."
     #     p[2].exitstatus   #=> 1
-    def javac(filename, args: '', junit: false)
+    def javac(filename, libraries: nil, arguments: nil)
       raise Helli::FileNotFound, filename unless File.exist?(filename)
       raise Helli::UnsupportedFileType, File.extname(filename) unless filename.end_with?(JAVA_FILE_EXTENSION)
 
-      wd = File.dirname(filename)
       destination = '.'
-      classpath = [destination.dup]
-      if junit
-        @junit ||= Dependency.find_by(name: 'junit').path
-        classpath << "#{File.dirname(@junit)}/*"
+
+      classpath = [destination]
+      libraries&.each do |lib|
+        classpath << "#{File.dirname(Dependency.find_by(name: lib).path)}/*"
       end
       classpath = classpath.join(CLASSPATH_SEPARATOR)
-      filename = File.basename(filename)
 
-      cmd = ['javac', '-d', destination, '-cp', classpath, filename, args].join(' ')
+      basename = File.basename(filename)
+
+      cmd = ['javac', '-d', destination, '-cp', classpath, basename, arguments].join(' ')
+      wd = File.dirname(filename)
       Open3.capture3(cmd, chdir: wd)
     end
 

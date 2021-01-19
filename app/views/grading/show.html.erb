@@ -14,14 +14,8 @@
   <% end %>
 </ul>
 
-<%= react_component('grading/GradingPagePerRubricItem', {
-  rubricItem: react_grading_page_rubric_item(@course, @assignment, @rubric_item),
-  gradeItems: react_grading_page_grade_items(@course, @assignment, @rubric_item, @grade_items)
-}) %>
-
-<!--suppress CssUnusedSymbol-->
-<style>
-  .tooltip-inner {
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-  }
-</style>
+<%= react_component(
+      'grading/Page',
+      type: @rubric_item.type.demodulize,
+      gradeItemIds: @rubric_item.grade_items.map(&:id))
+%>

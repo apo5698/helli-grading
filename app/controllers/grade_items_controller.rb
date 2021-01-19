@@ -1,6 +1,4 @@
 class GradeItemsController < AssignmentsViewController
-  include GradingHelper
-
   before_action lambda {
     id = params[:id] || params[:grade_item_id]
     @grade_item = GradeItem.find(id)
