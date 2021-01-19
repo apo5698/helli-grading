@@ -31,7 +31,7 @@ class Participant < ApplicationRecord
 
   # Moodle datetime format. For example:
   #   Wednesday, September 23, 2020, 9:00 PM
-  MOODLE_DATETIME_FORMAT = '%A, %B %e, %Y, %l:%M %p'
+  MOODLE_DATETIME_FORMAT = '%A, %B %e, %Y, %-l:%M %p'
 
   ################
   # Associations #
