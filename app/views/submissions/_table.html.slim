@@ -29,6 +29,7 @@
             td
               - participant.submissions.each do |submission|
                 = link_to(course_assignment_submission_path(@course, @assignment, submission.id),
+                        class: 'text-danger',
                         data: { method: :delete,
                                 toggle: :tooltip,
                                 title: "Delete #{participant.full_name}/#{submission.filename}" }) do
