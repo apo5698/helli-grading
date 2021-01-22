@@ -6,7 +6,7 @@ import { ChevronDownIcon, ChevronUpIcon, CpuIcon } from '@primer/octicons-react'
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-import { getHelliApi, putHelliApi } from '../HelliApiUtil';
+import { getHelliApi, putHelliApi } from '../../HelliApiUtil';
 import Status from './Status';
 
 type Props = {

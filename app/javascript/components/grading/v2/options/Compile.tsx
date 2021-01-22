@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 
 import { Col, Form, Spinner } from 'react-bootstrap';
 
-import { getDependencies } from '../../HelliApiUtil';
+import { getDependencies } from '../../../HelliApiUtil';
 
 type Props = {
   setOptions: Function,

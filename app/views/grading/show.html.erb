@@ -14,8 +14,10 @@
   <% end %>
 </ul>
 
-<%= react_component(
-      'grading/Page',
-      type: @rubric_item.type.demodulize,
-      gradeItemIds: @rubric_item.grade_items.map(&:id))
-%>
+<%= react_component('grading/v1/GradingPagePerRubricItem', {
+  rubricItem: react_grading_page_rubric_item(@course, @assignment, @rubric_item),
+  gradeItems: react_grading_page_grade_items(@course, @assignment, @rubric_item, @grade_items)
+}) %>
+
+<%# The full API version  %>
+<%#= react_component('grading/v2/Page', type: @rubric_item.type.demodulize, gradeItemIds: @rubric_item.grade_items.map(&:id)) %>
