@@ -8,8 +8,7 @@
       <div class="card h-100">
         <div style="height: 100px; width: 100%; display: block; background-color: <%= "##{Color.rand(course.id)}" %>"></div>
         <div class="card-body">
-          <% year, semester = course.term! %>
-          <h6 class="card-subtitle mb-2 text-muted"><%= year %> <%= semester %>
+          <h6 class="card-subtitle mb-2 text-muted"><%= Term.new(course.term) %>
             <% unless current_user?(course.user_id) %>
               <% owner = course.owner %>
               <span class="text-muted" data-toggle="tooltip" data-original-title="<%= "Shared by #{owner} (#{owner.email})" %>">

@@ -6,7 +6,7 @@ class CreateCourses < ActiveRecord::Migration[6.1]
 
       t.string :name, null: false
       t.string :section, null: false
-      t.integer :term, null: false, default: 0
+      t.integer :term, null: false
 
       t.timestamps
 

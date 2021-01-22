@@ -16,7 +16,7 @@
       <div class="form-group row">
         <%= f.label :term, "Term", class: "col-lg-2 col-form-label" %>
         <div class="col-lg-10">
-          <%= f.select :term, future_terms, {}, {class: 'form-control'} %>
+          <%= f.select :term, Term.future_terms(2), {}, { class: 'form-control' } %>
         </div>
       </div>
       <div class="row">

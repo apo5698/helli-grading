@@ -1,0 +1,15 @@
+# Use year as base key. Date format: MM-DD
+# first: First day of classes
+# last: Last day of classes
+# CSC courses do not offer 5-week sections
+2021:
+  spring:
+    first: 01-19
+    last: 04-30
+  summer1:
+    first: 05-19
+    last: 07-30
+  fall:
+    first: 08-16
+    last: 11-29
+
