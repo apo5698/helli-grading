@@ -2,20 +2,20 @@
 <div class="table-responsive">
   <table class="table table-hover table-striped table-bordered">
     <thead>
-    <tr class="table-active">
-      <% @csv_header.values.each do |col| %>
-        <th scope="col"><%= col %></th>
-      <% end %>
-    </tr>
-    </thead>
-    <tbody>
-    <% @participants.each do |participant| %>
-      <tr>
-        <% @csv_header.keys.each do |attr| %>
-          <td class="text-nowrap"><%= participant.original_string(attr) %></td>
+      <tr class="table-active">
+        <% @columns.values.each do |col| %>
+          <th scope="col"><%= col %></th>
         <% end %>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <% @participants.each do |participant| %>
+        <tr>
+          <% @columns.keys.each do |attr| %>
+            <td class="text-nowrap"><%= participant.translate_csv_attribute(attr) %></td>
+          <% end %>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>
@@ -25,6 +25,6 @@
                   data: { confirm: 'All exported grades will be cleared. Proceed?' }) %>
   </div>
   <div class="d-inline-block">
-    <%= button_to('Export', new_course_assignment_participant_path, { class: 'btn btn-primary', method: :get }) %>
+    <%= button_to('Export', export_course_assignment_grades_path, { class: 'btn btn-primary', method: :get }) %>
   </div>
 </div>
