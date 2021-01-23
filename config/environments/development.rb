@@ -75,4 +75,6 @@ Rails.application.configure do
 
   # Access subdomains in development
   config.action_dispatch.tld_length = 0
+
+  config.hosts << /.*winter.local/
 end

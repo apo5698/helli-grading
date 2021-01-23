@@ -96,6 +96,12 @@ Rails.application.routes.draw do
     scope module: :api do
       resource :dependencies, only: :show
       resources :submissions, except: %i[index new edit]
+
+      resources :base, module: 'rubrics/items', path: 'rubrics/items', only: :show do
+        get :get_grade_items, path: 'grade_items'
+        delete :delete_grade_items, path: 'grade_items'
+      end
+
       resources :grade_items, except: %i[index new edit] do
         get :attachment
       end

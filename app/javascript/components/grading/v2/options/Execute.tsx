@@ -12,7 +12,7 @@ type Dependency = {
   checksum: string,
 }
 
-const Compile = () => {
+const Execute = () => {
   const [dependencies, setDependencies] = useState<Dependency[]>(null);
 
   useEffect(() => {
@@ -45,4 +45,4 @@ const Compile = () => {
   );
 };
 
-export default Compile;
+export default Execute;
