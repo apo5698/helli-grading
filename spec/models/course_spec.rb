@@ -22,8 +22,4 @@ describe Course do
       expect(c2).to be_invalid
     end
   end
-
-  describe '.to_s' do
-    it { expect(c1.to_s).to eq("#{c1.name} (#{c1.section}) #{c1.term![1]} #{c1.term![0]}") }
-  end
 end

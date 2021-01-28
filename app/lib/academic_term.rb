@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Converts an integer term value to string form.
-class Term
+class AcademicTerm
   SEMESTERS = {
     spring: 'SPRG',
     summer1: 'SUM1',
@@ -53,8 +53,8 @@ class Term
 
   class << self
     def future_terms(count)
-      current = Term.new.to_i
-      (current..current + count).map { |i| Term.new(i).to_s }
+      current = new.to_i
+      (current..current + count).map { |i| new(i).to_s }
     end
   end
 end

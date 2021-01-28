@@ -20,10 +20,10 @@ class Course < ApplicationRecord
   #############
 
   # Set the term if it has not been set yet.
-  after_initialize { self.term ||= Term.new.to_i }
+  after_initialize { self.term ||= AcademicTerm.new.to_i }
 
   def to_s
-    "#{name} (#{section}) #{Term.new(term)}"
+    "#{name} (#{section}) #{AcademicTerm.new(term)}"
   end
 
   def super_dup
