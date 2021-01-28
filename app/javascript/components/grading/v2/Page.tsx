@@ -225,7 +225,7 @@ const Page = (props: { rubricItemIds: number[] }) => {
                 codeTagProps={{ style: { fontSize: '12px' } }}
                 showLineNumbers
               >
-                {attachment.data}
+                {attachment?.data}
               </SyntaxHighlighter>
             )
         }
