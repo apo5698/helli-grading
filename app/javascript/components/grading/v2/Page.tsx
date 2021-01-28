@@ -310,7 +310,11 @@ const Page = (props: { rubricItemIds: number[] }) => {
     >
       <Tabs
         defaultActiveKey={currentRubricItemId.toString()}
-        onTabClick={(key) => setCurrentRubricItemId(parseInt(key, 10))}
+        onTabClick={(key) => {
+          setTimeout(() => {
+            setCurrentRubricItemId(parseInt(key, 10));
+          }, 300);
+        }}
       >
         {
           rubricItems.map((i) => (
