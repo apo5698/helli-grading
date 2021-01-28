@@ -97,8 +97,8 @@ module Helli::Java
               ['java', '-cp', classpath, classname, args].join(' ')
             end
 
-      # Using Helli::Open3.capture3t to avoid running program that never terminates (e.g. infinite loop).
-      Helli::Open3.capture3t(cmd, chdir: wd, stdin_data: stdin, timeout: timeout)
+      # Using Open3.capture3t to avoid running program that never terminates (e.g. infinite loop).
+      Open3t.capture3t(cmd, chdir: wd, stdin_data: stdin, timeout: timeout)
     end
 
     # Runs checkstyle on a java file.

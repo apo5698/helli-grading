@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe Helli::Open3 do
+describe Open3t do
   shell = 'sh'
-  path = 'spec/fixtures/helli/open3'
+  path = 'spec/fixtures/open3t'
 
   stdout = 0
   stderr = 1
