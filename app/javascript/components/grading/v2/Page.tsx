@@ -317,9 +317,11 @@ const Page = (props: { rubricItemIds: number[] }) => {
         }}
       >
         {
-          rubricItems.map((i) => (
-            <TabPane tab={`${i.type} (${i.filename})`} key={i.id.toString()} />
-          ))
+          rubricItems
+            .sort((a, b) => (a.id - b.id))
+            .map((i) => (
+              <TabPane tab={`${i.type} (${i.filename})`} key={i.id.toString()} />
+            ))
         }
       </Tabs>
       <Form
