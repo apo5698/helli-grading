@@ -18,11 +18,7 @@ module Rubrics
       end
 
       def run(filename, options)
-        captures = Helli::Java.javac(
-          filename,
-          libraries: options[:libraries],
-          arguments: options[:arguments]
-        )
+        captures = JDK.javac(filename, options[:arguments], libraries: options[:libraries])
 
         # only matches "* error(s)" at the end of stderr
         # match returns +nil+ if no match found

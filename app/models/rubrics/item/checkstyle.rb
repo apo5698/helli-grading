@@ -21,7 +21,7 @@ module Rubrics
         options.transform_values!(&:to_b)
 
         # checkstyle errors are in stdout, not stderr
-        captures = Helli::Java.checkstyle(filename)
+        captures = JDK.checkstyle(filename)
 
         # warnings begin with [WARN]
         warnings = captures[0].split("\n").grep(/^\[WARN\]\s.+$/)

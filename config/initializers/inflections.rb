@@ -16,6 +16,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym 'CSC'
   inflect.acronym 'CSV'
   inflect.acronym 'HTML'
+  inflect.acronym 'JDK'
   inflect.acronym 'JSONB'
 
   inflect.plural 'criterion', 'criteria'
