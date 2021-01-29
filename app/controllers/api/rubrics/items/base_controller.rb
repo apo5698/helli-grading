@@ -12,7 +12,7 @@ module Api
         #   GET /rubrics/items/:base_id/grade_items
         # rubocop:disable Naming/AccessorMethodName
         def get_grade_items
-          render json: ::Rubrics::Item::Base.find(params.require(:base_id)).grade_items
+          render json: ::Rubrics::Item::Base.find(params.require(:base_id)).create_grade_items
         end
 
         #   DELETE /rubrics/items/:base_id/grade_items
