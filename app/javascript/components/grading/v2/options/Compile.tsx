@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Checkbox, Form, Input, Spin } from 'antd';
 import { getDependencies } from '../../../HelliApiUtil';
 
-type Dependency = {
+interface Dependency {
   name: string
   version: string,
   source: string,

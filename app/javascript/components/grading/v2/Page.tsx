@@ -24,13 +24,13 @@ import Compile from './options/Compile';
 import Execute from './options/Execute';
 import Checkstyle from './options/Checkstyle';
 
-type RubricItem = {
+interface RubricItem {
   id: number,
   type: string,
   filename: string,
 }
 
-type GradeItem = {
+interface GradeItem {
   id: number,
   participant: string,
   status: string,
@@ -43,7 +43,7 @@ type GradeItem = {
   error: number,
 }
 
-type Attachment = {
+interface Attachment {
   id: number,
   filename: string,
   contentType: string,
