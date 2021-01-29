@@ -7,6 +7,10 @@ const fetchHelliApi = async (url, method, body = {}) => {
 
   return (await fetch(HelliApiUrl(url), {
     method,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   })).json();
 };
