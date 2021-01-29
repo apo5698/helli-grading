@@ -323,8 +323,8 @@ const Page = (props: { rubricItemIds: number[] }) => {
       </Tabs>
       <Form
         form={form}
-        wrapperCol={{ span: 16 }}
-        layout="horizontal"
+        wrapperCol={{ lg: { span: 16 } }}
+        layout="vertical"
         onFinish={(value) => {
           // noinspection JSIgnoredPromiseFromCall
           run(value);
