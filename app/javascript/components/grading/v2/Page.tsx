@@ -12,9 +12,7 @@ import {
   Table,
   Tabs,
   Tag,
-  Tooltip,
 } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { deleteHelliApi, getHelliApi, putHelliApi } from '../../HelliApiUtil';
@@ -101,11 +99,9 @@ const columns: any = [
     dataIndex: 'action',
     fixed: 'right',
     width: 100,
-    render: () => (
-      <Tooltip title="Rerun">
-        <Button shape="circle" icon={<ReloadOutlined />} />
-      </Tooltip>
-    ),
+    render: () => {
+      // TODO
+    },
   },
 ];
 
