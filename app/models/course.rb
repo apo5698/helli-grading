@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# A course contains multiple assignments, such as CSC 116 (004).
 class Course < ApplicationRecord
   ################
   # Associations #
