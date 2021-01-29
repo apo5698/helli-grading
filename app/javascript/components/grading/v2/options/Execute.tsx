@@ -39,7 +39,10 @@ const Execute = () => {
         </Checkbox.Group>
       </Form.Item>
       <Form.Item name="arguments" label="Arguments">
-        <Input placeholder="Command line arguments" allowClear />
+        <Input allowClear />
+      </Form.Item>
+      <Form.Item name="stdin" label="Standard Input">
+        <Input allowClear />
       </Form.Item>
     </>
   );
