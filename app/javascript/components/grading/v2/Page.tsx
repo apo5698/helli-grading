@@ -163,6 +163,7 @@ const Page = (props: { rubricItemIds: number[] }) => {
         <Alert
           message="Select at least one grade item to run."
           type="error"
+          style={{ marginBottom: '24px' }}
         />,
       );
       return;
@@ -333,8 +334,8 @@ const Page = (props: { rubricItemIds: number[] }) => {
           run(value);
         }}
       >
-        {noSelectionWarning}
         <Options />
+        {noSelectionWarning}
         <Table
           columns={columns}
           rowKey={(record: GradeItem) => record.id}
