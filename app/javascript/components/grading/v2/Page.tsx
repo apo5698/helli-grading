@@ -17,7 +17,6 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { deleteHelliApi, getHelliApi, putHelliApi } from '../../HelliApiUtil';
 
-import 'antd/dist/antd.css';
 import Compile from './options/Compile';
 import Execute from './options/Execute';
 import Checkstyle from './options/Checkstyle';
