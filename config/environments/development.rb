@@ -73,8 +73,6 @@ Rails.application.configure do
   # BetterErrors
   BetterErrors::Middleware.allow_ip! '0.0.0.0/0'
 
-  # Access subdomains in development
-  config.action_dispatch.tld_length = 0
-
-  config.hosts << /.*winter.local/
+  config.hosts << /.*winter\.local/
+  config.hosts << /.*lvh\.me/
 end
