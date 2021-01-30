@@ -94,6 +94,10 @@ Rails.application.routes.draw do
   # api.helli.app
   constraints subdomain: 'api' do
     scope module: :api do
+      namespace :constants, path: '' do
+        get :checkstyle
+      end
+
       resource :dependencies, only: :show
       resources :submissions, except: %i[index new edit]
 
