@@ -102,42 +102,6 @@ class GradeItem < ApplicationRecord
     rubric_item.criteria.each do |c|
       c.grade_item = self
       new_feedback << c.validate
-      # elsif c.criterion.classname?
-      #   # search the file for classname
-      #   # index 0 ensures result is class name, not subclass name
-      #   classname = content.match(/(?<=public class )\w+/)[0]
-      #   if classname == File.basename(filename, '.java')
-      #     # classname matches -> success!
-      #     self.grade += c.point
-      #   else
-      #     # classname does not match -> error!
-      #     self.status = :error
-      #     feedback << Helli::String.format(c.feedback, actual: classname)
-      #   end
-      # elsif c.criterion.execute?
-      #   if exitstatus.nil?
-      #     self.status = :unresolved
-      #     feedback << Helli::String.resolve_manually('Execution expired')
-      #   elsif exitstatus.zero?
-      #     # exit 0 -> can execute: success
-      #     self.grade += c.point
-      #     feedback << 'Success'
-      #   elsif gi_stderr.empty? && content.include?("System.exit(#{exitstatus})")
-      #     # can execute & no stderr -> action_needed!
-      #     self.status = :unresolved
-      #     feedback << Helli::String.resolve_manually("No error found, but exits with status #{exitstatus}")
-      #   else
-      #     # exit not 0 -> can/cannot execute & has stderr -> error!
-      #     self.status = :error
-      #     self.grade -= c.point
-      #     feedback << c.feedback
-      #   end
-      # elsif c.criterion.checkstyle_warning? && gi_error.positive?
-      #   # has checkstyle warnings: error!
-      #   self.status = :error
-      #   self.grade -= c.point * gi_error
-      #   feedback << c.feedback
-      # end
     end
 
     self.feedback = new_feedback
