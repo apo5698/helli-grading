@@ -20,7 +20,7 @@ module Api
 
     #  PUT https://api.helli.app/grade_items/:id
     def update
-      render json: GradeItem.find(params.require(:id)).run({}), serializer: GradeItemSerializer
+      render json: GradeItem.find(params.require(:id)).run(params), serializer: GradeItemSerializer
     end
   end
 end

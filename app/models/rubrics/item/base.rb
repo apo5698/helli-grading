@@ -116,7 +116,7 @@ module Rubrics
       # Run grading on a file with options.
       #
       # @param [String] filename
-      # @param [Hash] options
+      # @param [Hash, ActionController::Parameters] options
       # @return [Array] [[stdout, stderr, status], error_count]
       def run(filename, options) end
     end

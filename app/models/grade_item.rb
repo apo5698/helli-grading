@@ -66,7 +66,7 @@ class GradeItem < ApplicationRecord
 
   # Accepts a series of options and then invokes #run per its rubric type.
   #
-  # @param [Hash] options
+  # @param [Hash, ActionController::Parameters] options
   # @return [GradeItem] self
   def run(options)
     # No submission per Moodle grade worksheet.
@@ -85,7 +85,7 @@ class GradeItem < ApplicationRecord
     #   2. Keep them for a period of time (default 4 hours)
     #   3. Delete using cron jobs (sidekiq)
     path = Helli::Attachment.download_one(attachment)
-    captures, error_count = rubric_item.run(path, options || {})
+    captures, error_count = rubric_item.run(path, options)
 
     @content = File.read(path)
 
