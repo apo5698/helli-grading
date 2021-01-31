@@ -5,7 +5,7 @@ module Rubrics
     class MaximumPoint < Base
       # Just let it pass...
       def validate
-        pass
+        award_point
       end
     end
   end

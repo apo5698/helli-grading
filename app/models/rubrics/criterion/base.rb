@@ -107,27 +107,58 @@ module Rubrics
 
       # Awards point to the associated grade item and returns the feedback (default is 'Pass').
       #
+      # @param [Integer, nil] for_each awards point for each thing, such as @grade_item.error
       # @param [String] with custom feedback
       # @return [String] feedback string
-      def pass(with = 'Pass')
-        @grade_item.point += point
+      def award_point(for_each: nil, with: 'Pass')
+        @grade_item.point += point * (for_each || 1)
         "#{default_criterion}: #{with}"
       end
 
-      def fail(with = feedback)
+      # Deducts point to the associated grade item and returns the feedback.
+      #
+      # @param [Integer, nil] for_each awards point for each thing, such as @grade_item.error
+      # @param [String] with custom feedback
+      # @return [String] feedback string
+      def deduct_point(for_each: nil, with: feedback)
+        @grade_item.status = :error
+        @grade_item.point -= point * (for_each || 1)
+        "#{default_criterion}: #{with}"
+      end
+
+      # Sets the status to error and returns the feedback.
+      #
+      # @param [String] with custom feedback
+      # @return [String] feedback string
+      def error!(with: feedback)
         @grade_item.status = :error
         "#{default_criterion}: #{with}"
       end
 
-      # Awards point and return 'Pass' to the associated grade item if the condition is met.
-      # Otherwise returns the feedback only, no point will be awarded.
+      # Awards point and return the success feedback (default is 'Pass') to the associated grade
+      # item if the condition is met. Otherwise returns the feedback only, no points will be
+      # awarded or deducted.
       #
       # @param [Boolean] condition condition to determine award point or not
+      # @param [Integer] for_each awards point for each thing, such as @grade_item.error
       # @param [String] with feedback on success, default 'Pass'
       # @param [String] otherwise custom feedback, if any
       # @return [String] feedback string
-      def pass_if(condition, with: 'Pass', otherwise: feedback)
-        condition ? pass(with) : fail(otherwise)
+      def award_if(condition, for_each: nil, with: 'Pass', otherwise: feedback)
+        condition ? award_point(for_each: for_each, with: with) : error!(with: otherwise)
+      end
+
+      # Deducts point and return the failure feedback to the associated grade item if the condition
+      # is met. Otherwise returns the feedback (default is 'Pass') only, no points will be awarded
+      # or deducted.
+      #
+      # @param [Boolean] condition condition to determine deduct point or not
+      # @param [Integer] for_each deducts point for each thing, such as @grade_item.error
+      # @param [String] with feedback on success, default 'Pass'
+      # @param [String] otherwise custom feedback, if any
+      # @return [String] feedback string
+      def deduct_if(condition, for_each: nil, with: feedback, otherwise: 'Pass')
+        condition ? deduct_point(for_each: for_each, with: with) : error!(with: otherwise)
       end
 
       # @param [Array] reps replacements

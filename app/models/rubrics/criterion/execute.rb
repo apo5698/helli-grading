@@ -4,7 +4,7 @@ module Rubrics
   module Criterion
     class Execute < Base
       def validate
-        pass_if @grade_item.stderr.empty? && @grade_item.error.zero?
+        award_if @grade_item.stderr.empty? && @grade_item.error.zero?
       end
     end
   end

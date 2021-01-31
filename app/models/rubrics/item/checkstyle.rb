@@ -29,6 +29,7 @@ module Rubrics
         config.reduce([]) { |arr, rule| arr + warnings.grep(/(?<=.\[).*#{rule}.*(?=\])/) } if warnings.present?
 
         # Keep filename only
+        # macOS prefixes '/private' for tmpdir, but Heroku uses Linux so it should be fine.
         captures[0] = warnings.map { |line| line.sub(filename, File.basename(filename)) }.join("\n")
 
         [captures, warnings.count]
