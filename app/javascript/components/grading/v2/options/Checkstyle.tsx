@@ -12,18 +12,20 @@ const Checkstyle = () => {
   }, []);
 
   return (
-    <Form.Item name="checkstyle-rules" label="Checkstyle rules">
-      {
-        Object
-          .entries(rules)
-          .map(([name, description]) => (
-            <Checkbox key={name}>
-              <b>{name}</b>
-              :&nbsp;
-              {description}
-            </Checkbox>
-          ))
-      }
+    <Form.Item name="rules" label="Checkstyle rules">
+      <Checkbox.Group>
+        {
+          Object
+            .entries(rules)
+            .map(([name, description]) => (
+              <Checkbox value={name} key={name} defaultChecked>
+                <b>{name}</b>
+                :&nbsp;
+                {description}
+              </Checkbox>
+            ))
+        }
+      </Checkbox.Group>
     </Form.Item>
   );
 };
