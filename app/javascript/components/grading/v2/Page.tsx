@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import {
   Alert,
+  Badge,
   Button,
   Card,
   Form,
@@ -82,10 +83,12 @@ const columns: any = [
   {
     title: 'Status',
     dataIndex: 'status',
-    render: (status: string) => (
-      <Tag color={statusTagColors[status] || 'default'} key={status}>
-        {status}
-      </Tag>
+    render: (_, record) => (
+      <Badge size="small" count={record.error}>
+        <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+          {record.status}
+        </Tag>
+      </Badge>
     ),
   },
   {
