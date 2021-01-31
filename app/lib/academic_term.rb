@@ -52,9 +52,13 @@ class AcademicTerm
   end
 
   class << self
+    # @param [Integer] count next consequential years
+    # @return [Hash] { year1: string1, ... }
     def future_terms(count)
       current = new.to_i
-      (current..current + count).map { |i| new(i).to_s }
+      (current..current + count).reduce({}) do |result, i|
+        result.merge(Hash[i, new(i).to_s])
+      end
     end
   end
 end
