@@ -40,6 +40,7 @@ module.exports = {
     'jsx-a11y/no-noninteractive-element-interactions': 'off',
     'no-use-before-define': 'off',
     'react/jsx-filename-extension': ['warn', { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'react/jsx-one-expression-per-line': 'off',
     'react/jsx-props-no-spreading': 'off',
   },
 };

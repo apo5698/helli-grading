@@ -210,23 +210,35 @@ const Page = (props: { rubricItemIds: number[] }) => {
     const attachment: Attachment = attachments[record.id];
 
     return (
-      <Card type="inner" title={attachment?.filename} loading={attachment === undefined}>
-        {
-          attachment === null
-            ? <span>Cannot load attachment.</span>
-            : (
-              <SyntaxHighlighter
-                language="java"
-                style={tomorrow}
-                codeTagProps={{ style: { fontSize: '12px' } }}
-                showLineNumbers
-              >
-                {attachment?.data}
-              </SyntaxHighlighter>
-            )
-        }
-
-      </Card>
+      <>
+        <Card type="inner" title={attachment?.filename} loading={attachment === undefined}>
+          {
+            attachment === null
+              ? <span>Cannot load attachment.</span>
+              : (
+                <SyntaxHighlighter
+                  language="java"
+                  style={tomorrow}
+                  codeTagProps={{ style: { fontSize: '12px' } }}
+                  showLineNumbers
+                >
+                  {attachment?.data}
+                </SyntaxHighlighter>
+              )
+          }
+        </Card>
+        <Card style={{ fontSize: '12px' }}>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{record.stdout}</pre>
+          <pre
+            className="ant-typography ant-typography-danger"
+            style={{ whiteSpace: 'pre-wrap' }}
+          >
+            {record.stderr}
+          </pre>
+          <br />
+          <pre>Process finished with exit code {record.exitstatus}</pre>
+        </Card>
+      </>
     );
   };
 
