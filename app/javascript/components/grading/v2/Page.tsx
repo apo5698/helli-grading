@@ -230,17 +230,23 @@ const Page = (props: { rubricItemIds: number[] }) => {
               )
           }
         </Card>
-        <Card style={{ fontSize: '12px' }}>
-          <pre style={{ whiteSpace: 'pre-wrap' }}>{record.stdout}</pre>
-          <pre
-            className="ant-typography ant-typography-danger"
-            style={{ whiteSpace: 'pre-wrap' }}
-          >
-            {record.stderr}
-          </pre>
-          <br />
-          <pre>Process finished with exit code {record.exitstatus}</pre>
-        </Card>
+        {
+          attachment === null
+            ? null
+            : (
+              <Card style={{ fontSize: '12px' }}>
+                <pre style={{ whiteSpace: 'pre-wrap' }}>{record.stdout}</pre>
+                <pre
+                  className="ant-typography ant-typography-danger"
+                  style={{ whiteSpace: 'pre-wrap' }}
+                >
+                  {record.stderr}
+                </pre>
+                <br />
+                <pre>Process finished with exit code {record.exitstatus}</pre>
+              </Card>
+            )
+        }
       </>
     );
   };
