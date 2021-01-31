@@ -344,7 +344,7 @@ const Page = (props: { rubricItemIds: number[] }) => {
           run(value);
         }}
       >
-        <Options />
+        <Options form={form} />
         {noSelectionWarning}
         <Table
           columns={columns}
