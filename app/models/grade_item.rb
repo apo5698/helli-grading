@@ -92,7 +92,9 @@ class GradeItem < ApplicationRecord
     # Assigns attributes before grading
     self.status = :success
     self.stdout = captures[0]
-    self.stderr = captures[1]
+    # Removes JAVA_TOOL_OPTIONS.
+    # See https://devcenter.heroku.com/articles/java-support#environment
+    self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
     self.exitstatus = captures[2].exitstatus
     self.error = error_count
     self.point = 0
