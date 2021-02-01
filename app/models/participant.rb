@@ -31,7 +31,10 @@ class Participant < ApplicationRecord
 
   # Moodle datetime format. For example:
   #   Wednesday, September 23, 2020, 9:00 PM
-  MOODLE_DATETIME_FORMAT = '%A, %B %e, %Y, %l:%M %p'
+  MOODLE_INPUT_DATETIME_FORMAT = '%A, %B %e, %Y, %l:%M %p'
+
+  # Moodle datetime format for output (without padding spaces)
+  MOODLE_OUTPUT_DATETIME_FORMAT = '%A, %B %e, %Y, %-l:%M %p'
 
   ################
   # Associations #
@@ -98,8 +101,8 @@ class Participant < ApplicationRecord
       grade: record[COLUMNS[:grade]],
       maximum_grade: record[COLUMNS[:maximum_grade]],
       grade_can_be_changed: record[COLUMNS[:grade_can_be_changed]] == 'Yes',
-      last_modified_submission: lms == '-' ? nil : DateTime.strptime(lms, MOODLE_DATETIME_FORMAT),
-      last_modified_grade: lmg == '-' ? nil : DateTime.strptime(lmg, MOODLE_DATETIME_FORMAT),
+      last_modified_submission: lms == '-' ? nil : DateTime.strptime(lms, MOODLE_INPUT_DATETIME_FORMAT),
+      last_modified_grade: lmg == '-' ? nil : DateTime.strptime(lmg, MOODLE_INPUT_DATETIME_FORMAT),
       feedback_comments: record[COLUMNS[:feedback_comments]]
     )
 
@@ -121,7 +124,7 @@ class Participant < ApplicationRecord
 
   # Receives and calculates the latest change on grades and feedback comments.
   def fetch
-    self.grade = maximum_grade * grade_items.sum(&:point) / grade_items.sum(&:maximum_points_possible)
+    self.grade = maximum_grade * grade_items.sum(&:point) / grade_items.sum(&:maximum_points)
     self.feedback_comments = if submitted?
                                Helli::SeparatedString.new(grade_items.map { |i| "#{i}: #{i.feedback}" })
                              else
@@ -131,17 +134,22 @@ class Participant < ApplicationRecord
   end
 
   # Converts attributes to their original form in grade worksheet.
-  def original_string(attribute)
-    datetime_format = MOODLE_DATETIME_FORMAT
+  def translate_csv_attribute(attribute)
+    datetime_format = MOODLE_OUTPUT_DATETIME_FORMAT
 
     str = {
       identifier: "Participant #{identifier}",
       status: STATUSES[status],
+      grade: grade.nil? ? '' : grade,
       grade_can_be_changed: grade_can_be_changed ? 'Yes' : 'No',
       last_modified_submission: last_modified_submission.nil? ? '-' : last_modified_submission.strftime(datetime_format),
       last_modified_grade: last_modified_grade.nil? ? '-' : last_modified_grade.strftime(datetime_format)
     }
 
     str[attribute] || self[attribute]
+  end
+
+  def to_csv
+    COLUMNS.reduce([]) { |csv, kv| csv << [kv[1], translate_csv_attribute(kv[0])] }.to_h
   end
 end

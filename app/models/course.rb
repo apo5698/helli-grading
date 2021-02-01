@@ -1,16 +1,32 @@
+# frozen_string_literal: true
+
+# A course contains multiple assignments, such as CSC 116 (004).
 class Course < ApplicationRecord
+  ################
+  # Associations #
+  ################
+
   belongs_to :user
 
   has_many :assignments, dependent: :destroy
+
+  ###############
+  # Validations #
+  ###############
 
   validates :name, presence: true
   validates :section, presence: true
   validates :section, uniqueness: { scope: %i[user_id name section term] }
 
-  SEMESTERS = ['Spring', 'Summer I', 'Summer II', 'Fall'].freeze
+  #############
+  # Callbacks #
+  #############
+
+  # Set the term if it has not been set yet.
+  after_initialize { self.term ||= AcademicTerm.new.to_i }
 
   def to_s
-    "#{name} (#{section}) #{term![1]} #{term![0]}"
+    "#{name} (#{section}) #{AcademicTerm.new(term)}"
   end
 
   def super_dup
@@ -27,13 +43,6 @@ class Course < ApplicationRecord
     assignments.each do |a|
       a.dup_to(new_course.id, true)
     end
-  end
-
-  def term!(to_add = 0)
-    t = (term || current_term) + to_add
-    year = 2020 + t / 4
-    semester = SEMESTERS[(t - 2020) % 4]
-    [year, semester]
   end
 
   def owner

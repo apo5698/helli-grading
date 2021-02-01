@@ -1,0 +1,12 @@
+en:
+  checkstyle:
+    ConstantName: 'Checks that constant names conform to a specified pattern.'
+    EmptyLineSeparator: 'Checks for empty line separators after header, package, all import declarations, fields, constructors, methods, nested classes, static initializers and instance initializers.'
+    Indentation: 'Checks correct indentation of Java code.'
+    JavadocMethod: 'Checks the Javadoc of a method or constructor.'
+    JavadocVariable: 'Checks that a variable has a Javadoc comment.'
+    MagicNumber: 'Checks that there are no "magic numbers" where a magic number is a numeric literal that is not defined as a constant. By default, -1, 0, 1, and 2 are not considered to be magic numbers.'
+    MissingJavadocMethod: 'Checks for missing Javadoc comments for a method or constructor'
+    MissingJavadocType: 'Checks for missing Javadoc comments for class, enum, interface, and annotation interface definitions.'
+    WhitespaceAfter: 'Checks that a token is followed by whitespace, with the exception that it does not check for whitespace after the semicolon of an empty for iterator.'
+    WhitespaceAround: 'Checks that a token is surrounded by whitespace.'

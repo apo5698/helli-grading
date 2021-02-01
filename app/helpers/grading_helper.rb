@@ -25,7 +25,7 @@ module GradingHelper
     { id: rubric_item.id,
       name: rubric_item.to_s,
       path: course_assignment_grading_path(course, assignment, rubric_item),
-      maxPoint: rubric_item.maximum_points_possible,
+      maxPoint: rubric_item.maximum_points,
       filename: rubric_item.filename,
       type: rubric_item.type.downcase.sub('rubrics::item::', '') }
   end

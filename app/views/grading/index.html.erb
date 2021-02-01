@@ -1,6 +1,3 @@
 <% breadcrumb_for request.path %>
-
 <%= render 'assignment_sidebar' %>
-<h2>Automated Grading</h2>
-<hr>
-<div class="center">No rubrics added.</div>
+<%= react_component('grading/v2/Page', rubricItemIds: @rubric_items.map(&:id)) %>

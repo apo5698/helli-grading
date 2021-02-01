@@ -1,7 +1,8 @@
 class GradesController < AssignmentsViewController
+  before_action -> { @columns ||= Participant::COLUMNS }
+
   def index
     @title = 'Grades'
-    @csv_header = Helli::CSV.header(:moodle)
     return unless @assignment.grade_items.any?(&:unresolved?)
 
     flash.alert = <<~HTML
@@ -11,9 +12,17 @@ class GradesController < AssignmentsViewController
   end
 
   def export
+    grades = @assignment.participants.reduce([]) { |array, participant| array << participant.to_csv }
 
-    flash.notice = 'Grades cleared.'
-    redirect_back fallback_location: :index
+    csv_string = CSV.generate(headers: @columns.values, force_quotes: false) do |csv|
+      csv << @columns.values
+      grades.each do |row|
+        csv << row.values
+      end
+    end
+
+    filename = ['Grades', 'Helli', @course.to_s, @assignment.to_s, @assignment.identifier, '.csv']
+    send_data csv_string, filename: filename.join('-'), type: 'text/csv'
   end
 
   def destroy

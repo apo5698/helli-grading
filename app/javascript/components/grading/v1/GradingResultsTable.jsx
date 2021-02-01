@@ -18,7 +18,11 @@ class GradingResultsTable extends React.Component {
   }
 
   renderGradingResultsRows() {
-    const { rubricItem, gradeItems, incrementCount } = this.props;
+    const {
+      rubricItem,
+      gradeItems,
+      incrementCount,
+    } = this.props;
 
     const html = [];
     gradeItems.forEach((gradeItem) => {

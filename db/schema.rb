@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2021_01_02_000011) do
 
   create_table "assignments", force: :cascade do |t|
     t.bigint "course_id"
+    t.integer "identifier"
     t.string "name", null: false
     t.string "category", null: false
     t.text "description", default: "", null: false
@@ -54,6 +55,7 @@ ActiveRecord::Schema.define(version: 2021_01_02_000011) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["course_id", "name"], name: "index_assignments_on_course_id_and_name", unique: true
     t.index ["course_id"], name: "index_assignments_on_course_id"
+    t.index ["identifier"], name: "index_assignments_on_identifier", unique: true
     t.index ["scale_id"], name: "index_assignments_on_scale_id"
   end
 
@@ -62,7 +64,7 @@ ActiveRecord::Schema.define(version: 2021_01_02_000011) do
     t.bigint "collaborator_ids", default: [], array: true
     t.string "name", null: false
     t.string "section", null: false
-    t.integer "term", default: 0, null: false
+    t.integer "term", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id", "name", "section", "term"], name: "index_courses_on_user_id_and_name_and_section_and_term", unique: true

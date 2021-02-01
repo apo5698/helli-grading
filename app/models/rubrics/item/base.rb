@@ -89,8 +89,8 @@ module Rubrics
 
       # Calculates the maximum points as per its awarding rubric criteria.
       #
-      # @return [BigDecimal] points
-      def maximum_points_possible
+      # @return [BigDecimal] maximum points
+      def maximum_points
         criteria.reduce(0) { |sum, criterion| sum + (criterion.award? ? criterion.point : 0) }
       end
 
@@ -116,7 +116,7 @@ module Rubrics
       # Run grading on a file with options.
       #
       # @param [String] filename
-      # @param [Hash] options
+      # @param [Hash, ActionController::Parameters] options
       # @return [Array] [[stdout, stderr, status], error_count]
       def run(filename, options) end
     end
@@ -124,7 +124,7 @@ module Rubrics
 end
 
 # See https://stackoverflow.com/a/16571498
-if Rails.env.development?
+unless Rails.env.production?
   (Dir["#{__dir__}/*.rb"] - [__FILE__]).each do |f|
     require_dependency f.delete_suffix('.rb')
   end

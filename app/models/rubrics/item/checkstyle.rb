@@ -18,26 +18,19 @@ module Rubrics
       end
 
       def run(filename, options)
-        options.transform_values!(&:to_b)
+        config = options[:config]
+        captures = JDK.checkstyle(filename)
 
         # checkstyle errors are in stdout, not stderr
-        captures = Helli::Java.checkstyle(filename)
-
         # warnings begin with [WARN]
         warnings = captures[0].split("\n").grep(/^\[WARN\]\s.+$/)
 
-        # invert match: remove unselected rules and keep those selected
-        if warnings.count.positive?
-          selected_rules = options.reject { |_, enabled| enabled }.keys
-          selected_rules.each { |rule| warnings = warnings.grep_v(/(?<=.\[).*#{rule}.*(?=\])/) }
-        end
+        # Keep warnings of presented checks only
+        config.reduce([]) { |arr, rule| arr + warnings.grep(/(?<=.\[).*#{rule}.*(?=\])/) } if warnings.present?
 
-        # hide full path in production
-        if Rails.env.production?
-          captures[0] = warnings.map do |line|
-            line.sub(Rails.root.join(filename).to_s, File.basename(filename))
-          end.join("\n")
-        end
+        # Keep filename only
+        # macOS prefixes '/private' for tmpdir, but Heroku uses Linux so it should be fine.
+        captures[0] = warnings.map { |line| line.sub(filename, File.basename(filename)) }.join("\n")
 
         [captures, warnings.count]
       end

@@ -3,6 +3,7 @@ class CreateAssignments < ActiveRecord::Migration[6.1]
     create_table :assignments do |t|
       t.belongs_to :course
 
+      t.integer :identifier, index: { unique: true }
       t.string :name, null: false
       t.string :category, null: false
       t.text :description, null: false, default: ''

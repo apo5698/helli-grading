@@ -1,5 +1,7 @@
-describe Helli::Java do
-  fixtures = 'spec/fixtures/helli/java'
+# frozen_string_literal: true
+
+describe JDK do
+  fixtures = 'spec/fixtures/jdk'
   before(:all) { Dir.glob("#{fixtures}/**/*.class").each { |f| File.delete(f) } }
 
   describe '.javac' do
@@ -23,16 +25,16 @@ describe Helli::Java do
 
     context 'when file is not a java file' do
       it 'raises Helli::UnsupportedFileTypeError' do
-        expect { described_class.javac("#{fixtures}/misc/NotJava.txt") }.to raise_error(Helli::UnsupportedFileType)
+        expect(described_class.javac("#{fixtures}/misc/NotJava.txt")[2].exitstatus).not_to be_zero
       end
     end
 
     context 'when file does not exist' do
-      it 'raises Helli::FileNotFoundError' do
+      it 'raises Errno::ENOENT' do
         filename = 'What.java'
         raise "remove /#{filename} to run this test" if File.exist?(filename)
 
-        expect { described_class.javac(filename) }.to raise_error(Helli::FileNotFound)
+        expect { described_class.javac(filename) }.to raise_error(Errno::ENOENT)
       end
     end
   end
@@ -60,24 +62,25 @@ describe Helli::Java do
 
     context 'when file has not been compiled' do
       Dir.glob("#{fixtures}/wce/execute/valid/*.java").each do |file|
-        it 'raises Helli::FileNotFoundError' do
-          expect { described_class.java(file) }.to raise_error(Helli::FileNotFound)
-        end
+        captures = described_class.java(file)
+        it('has stdout') { expect(captures[0]).not_to be_blank }
+        it('does not have stderr') { expect(captures[1]).to be_blank }
+        it('returns zero') { expect(captures[2].exitstatus).to be_zero }
       end
     end
 
     context 'when file is not a java file' do
       it 'raises Helli::UnsupportedFileTypeError' do
-        expect { described_class.java("#{fixtures}/misc/NotJava.txt") }.to raise_error(Helli::UnsupportedFileType)
+        expect(described_class.java("#{fixtures}/misc/NotJava.txt")[2].exitstatus).not_to be_zero
       end
     end
 
     context 'when file does not exist' do
-      it 'raises Helli::FileNotFoundError' do
+      it 'raises Errno::ENOENTError' do
         filename = 'What.java'
         raise "remove /#{filename} to run this test" if File.exist?(filename)
 
-        expect { described_class.java(filename) }.to raise_error(Helli::FileNotFound)
+        expect { described_class.java(filename) }.to raise_error(Errno::ENOENT)
       end
     end
   end

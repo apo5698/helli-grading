@@ -8,17 +8,24 @@ class InputOption extends React.Component {
   }
 
   onOptionChange(event) {
-    const { optionAttrName, updateOption } = this.props;
+    const {
+      optionAttrName,
+      updateOption,
+    } = this.props;
 
     let value = event.target.value;
     updateOption(optionAttrName, value);
   }
 
   render() {
-    const { optionAttrName, optionSmallText, optionPlaceHolder } = this.props;
+    const {
+      optionAttrName,
+      optionSmallText,
+      optionPlaceHolder,
+    } = this.props;
 
     return (
-      <div className='mt-2' id={`${optionAttrName}_enabled`} style={{display: 'none'}}>
+      <div className='mt-2' id={`${optionAttrName}_enabled`} style={{ display: 'none' }}>
         <div className='form-group'>
           <input
             className="form-control code"
@@ -31,7 +38,7 @@ class InputOption extends React.Component {
           </small>
         </div>
       </div>
-    )
+    );
   }
 }
 

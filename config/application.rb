@@ -28,6 +28,13 @@ module Helli
       Dependency.setup
     end
 
+    # Use custom error pages as defined in routes.rb
     config.exceptions_app = routes
+
+    # Render TypeScript
+    config.react.server_renderer_extensions = %w[jsx js tsx ts]
+
+    # Convert JSON keys to camelCase
+    ActiveModelSerializers.config.key_transform = :camel_lower
   end
 end

@@ -5,7 +5,7 @@ class SubmissionsController < AssignmentsViewController
     link = course_assignment_path(@course, @assignment)
     messages = []
 
-    unless @has_programs
+    if @programs.empty?
       messages << 'No programs found, '\
       "#{helpers.link_to 'add a program', link}"
     end

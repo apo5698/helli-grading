@@ -1,5 +1,5 @@
 import React from 'react';
-import Badge from '../templates/Badge';
+import Badge from '../../templates/Badge';
 
 class GradingResultsRow extends React.Component {
   constructor(props) {
@@ -24,12 +24,13 @@ class GradingResultsRow extends React.Component {
     const { gradeItem: { path } } = this.state;
     const { incrementCount } = this.props;
 
-    console.log(JSON.stringify({options: options}));
+    console.log(JSON.stringify({ options: options }));
     fetch(path + '/run', {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({options: options})
-    }).then(r => {return r.json()})
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ options: options }),
+    })
+      .then(r => {return r.json();})
       .then(r => {
         this.setState({
           gradeItem: r,
@@ -40,7 +41,7 @@ class GradingResultsRow extends React.Component {
 
   studentCell(gradeItem) {
     return (
-      <td style={{maxWidth: '100px'}}>{gradeItem.participant.name}</td>
+      <td style={{ maxWidth: '100px' }}>{gradeItem.participant.name}</td>
     );
   }
 
@@ -63,7 +64,9 @@ class GradingResultsRow extends React.Component {
         <Badge type={gradeItem.status}>{gradeItem.statusInText}</Badge>
         <span> </span>
         {
-          gradeItem.status === 'error' ? <Badge type={gradeItem.status}>{gradeItem.error}</Badge> : ''
+          gradeItem.status === 'error'
+            ? <Badge type={gradeItem.status}>{gradeItem.error}</Badge>
+            : ''
         }
       </td>
     );
@@ -98,11 +101,11 @@ class GradingResultsRow extends React.Component {
             </a>
           </span>
         </td>
-      )
+      );
     } else {
       return (
         <td></td>
-      )
+      );
     }
   }
 
@@ -113,7 +116,7 @@ class GradingResultsRow extends React.Component {
       >
         {gradeItem.feedback}
       </td>
-    )
+    );
   }
 
   actionCell(gradeItem) {
@@ -128,7 +131,7 @@ class GradingResultsRow extends React.Component {
           Edit
         </a>
       </td>
-    )
+    );
   }
 
   render() {
@@ -144,7 +147,7 @@ class GradingResultsRow extends React.Component {
         {this.feedbackCell(gradeItem)}
         {this.actionCell(gradeItem)}
       </tr>
-    )
+    );
   }
 }
 

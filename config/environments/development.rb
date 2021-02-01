@@ -72,4 +72,7 @@ Rails.application.configure do
 
   # BetterErrors
   BetterErrors::Middleware.allow_ip! '0.0.0.0/0'
+
+  config.hosts << /.*winter\.local/
+  config.hosts << /.*lvh\.me/
 end

@@ -90,4 +90,25 @@ Rails.application.routes.draw do
   end
 
   resources :rubrics
+
+  # api.helli.app
+  constraints subdomain: 'api' do
+    scope module: :api do
+      namespace :constants, path: '' do
+        get :checkstyle
+      end
+
+      resource :dependencies, only: :show
+      resources :submissions, except: %i[index new edit]
+
+      resources :base, module: 'rubrics/items', path: 'rubrics/items', only: :show do
+        get :get_grade_items, path: 'grade_items'
+        delete :delete_grade_items, path: 'grade_items'
+      end
+
+      resources :grade_items, except: %i[index new edit] do
+        get :attachment
+      end
+    end
+  end
 end

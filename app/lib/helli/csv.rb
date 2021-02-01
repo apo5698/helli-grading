@@ -33,19 +33,6 @@ module Helli
         ADAPTERS[type]::HEADER
       end
 
-      # Used for server-side parsing.
-      #
-      # @param [String] filename name of csv file
-      # @return [::CSV::Table, Array<::CSV>]
-      def read(filename)
-        raise Helli::EmptyFileError, filename if filename.blank?
-
-        str = File.read(filename, encoding: 'bom|utf-8')
-        raise Helli::EmptyFileError, filename if str.blank?
-
-        ::CSV.parse(str, headers: true)
-      end
-
       # Parses the data (from hash) that converted from a csv file with header.
       #
       #   data = [{"School email"=>"a@helli.app", "Total"=>"100"}, {"School email"=>"b@helli.app", "Total"=>"90"}]
@@ -59,10 +46,9 @@ module Helli
       # @param [Symbol] adapter adapter type
       # @return [Array<Hash>] parsed data
       def parse(data, adapter)
-        raise Helli::EmptyFileError if data.blank?
+        return nil if data.blank?
 
-        # noinspection RubyNilAnalysis
-        unless header_valid?(data.first.keys.map(&:downcase), Helli::CSV.header(adapter).values.map(&:downcase))
+        unless header_valid?(data.first&.keys&.map(&:downcase), Helli::CSV.header(adapter).values.map(&:downcase))
           raise Helli::ParseError, 'Unable to parse csv data with invalid headers.'
         end
 

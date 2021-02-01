@@ -58,13 +58,12 @@ class CSV extends React.Component {
     } = this.state;
 
     return (
-      <div className="form-group">
+      <div className="form-group" id={id}>
         <div className="input-group">
           <div className="custom-file">
             <input
               className="custom-file-input"
               type="file"
-              id={id}
               accept=".csv"
               required
               onChange={this.select}

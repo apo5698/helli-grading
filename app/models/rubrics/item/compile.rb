@@ -18,15 +18,7 @@ module Rubrics
       end
 
       def run(filename, options)
-        opts = options.deep_dup
-
-        lib = opts[:lib].transform_values(&:to_b)
-
-        captures = Helli::Java.javac(
-          filename,
-          junit: lib.delete(:enabled) && lib[:junit].to_b,
-          args: opts[:args][:javac]
-        )
+        captures = JDK.javac(filename, options[:arguments], libraries: options[:libraries])
 
         # only matches "* error(s)" at the end of stderr
         # match returns +nil+ if no match found

@@ -9,7 +9,7 @@ module Rubrics
         actual = @grade_item.content.match(/(?<=public class )\w+/)[0]
         expected = File.basename(@grade_item.filename, '.java')
 
-        pass_if actual == expected
+        award_if actual == expected
       end
     end
   end

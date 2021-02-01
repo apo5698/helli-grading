@@ -29,9 +29,4 @@ class ParticipantsController < AssignmentsViewController
   def destroy_all
     Participant.where(assignment_id: @assignment.id).destroy_all
   end
-
-  #  GET /courses/:course_id/assignments/:assignment_id/participants
-  def export
-
-  end
 end

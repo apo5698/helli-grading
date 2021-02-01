@@ -24,7 +24,7 @@ class CompileOptions extends React.Component {
     }
 
     this.setState({
-      options: options
+      options: options,
     }, () => {
       console.log(this.state.options);
       onOptionsChange(this.state.options);
@@ -34,7 +34,7 @@ class CompileOptions extends React.Component {
   renderLibOptions() {
     return (
       <Option
-        optionAttrName = "libraries"
+        optionAttrName="libraries"
         optionText="Libraries"
         optionSmallText="Compile with external libraries"
         updateOption={this.updateOption}
@@ -60,13 +60,13 @@ class CompileOptions extends React.Component {
     );
     return (
       <Option
-        optionAttrName = "arguments"
+        optionAttrName="arguments"
         optionText="Arguments"
         optionSmallText="javac arguments"
         updateOption={this.updateOption}
       >
         <InputOption
-          optionAttrName = "arguments"
+          optionAttrName="arguments"
           optionSmallText={optionSmallText}
           optionPlaceHolder="-Xlint:none"
           updateOption={this.updateOption}
@@ -78,13 +78,13 @@ class CompileOptions extends React.Component {
   renderCreateOptions() {
     return (
       <Option
-        optionAttrName = "create"
+        optionAttrName="create"
         optionText="Create files"
         optionSmallText="Program creates output files"
         updateOption={this.updateOption}
       >
         <InputOption
-          optionAttrName = "create"
+          optionAttrName="create"
           optionSmallText="Separated by spaces"
           optionPlaceHolder="output.txt"
           updateOption={this.updateOption}

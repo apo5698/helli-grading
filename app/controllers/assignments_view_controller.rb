@@ -16,14 +16,8 @@ class AssignmentsViewController < ApplicationController
     @programs = @assignment.programs
     @participants = @assignment.participants.order(:created_at)
     @input_files = @assignment.input_files
-
     @submissions = @assignment.submissions
     @rubric_items = @assignment.rubric_items
-
-    # statuses
-    @has_programs = @assignment.programs.present?
-    @has_input_files = @assignment.input_files.attached?
-    @has_rubric = @rubric_items.present? && @rubric_items.all? { |i| i.criteria.present? }
   }
 
   # #  GET /

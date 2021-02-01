@@ -1,7 +1,7 @@
 import React from 'react';
 import GradingOptions from './GradingOptions';
 import GradingResultsTable from './GradingResultsTable';
-import Alert from '../templates/Alert';
+import Alert from '../../templates/Alert';
 
 class GradingPagePerRubricItem extends React.Component {
   constructor(props) {
@@ -25,7 +25,8 @@ class GradingPagePerRubricItem extends React.Component {
   componentDidMount() {
     const { rubricItem: { id } } = this.props;
 
-    $(`#autograding-${id}`).tab('show');
+    $(`#autograding-${id}`)
+      .tab('show');
   }
 
   handleSubmit(event) {
@@ -49,9 +50,13 @@ class GradingPagePerRubricItem extends React.Component {
 
   incrementCount() {
     const { rubricItem: { name } } = this.props;
-    const { finishedCount, totalCount } = this.state;
+    const {
+      finishedCount,
+      totalCount,
+    } = this.state;
 
-    $('#flash').html(<Alert type="success" message={`Run ${name} complete.`} />);
+    $('#flash')
+      .html(<Alert type="success" message={`Run ${name} complete.`} />);
     this.setState({
       finishedCount: finishedCount + 1,
     });
@@ -61,7 +66,11 @@ class GradingPagePerRubricItem extends React.Component {
   }
 
   renderCount() {
-    const { submitting, finishedCount, totalCount } = this.state;
+    const {
+      submitting,
+      finishedCount,
+      totalCount,
+    } = this.state;
 
     if (submitting) {
       return (
@@ -94,7 +103,11 @@ class GradingPagePerRubricItem extends React.Component {
   }
 
   render() {
-    const { rubricItem, rubricItem: { path }, gradeItems } = this.props;
+    const {
+      rubricItem,
+      rubricItem: { path },
+      gradeItems,
+    } = this.props;
 
     return (
       <div className="tab-pane show active" id={`autograding-${rubricItem}`}>
