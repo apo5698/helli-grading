@@ -94,6 +94,10 @@ Rails.application.routes.draw do
   # api.helli.app
   constraints subdomain: 'api' do
     scope module: :api do
+      resources :assignments do
+        get :rubrics_items, path: 'rubrics/items'
+      end
+
       namespace :constants, path: '' do
         get :checkstyle
       end

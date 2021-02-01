@@ -107,10 +107,10 @@ const columns: any = [
   },
 ];
 
-const Page = (props: { rubricItemIds: number[] }) => {
-  const { rubricItemIds } = props;
+const Page = (props: { assignmentId: number }) => {
+  const { assignmentId } = props;
 
-  const [currentRubricItemId, setCurrentRubricItemId] = useState<number>(rubricItemIds[0]);
+  const [currentRubricItemId, setCurrentRubricItemId] = useState<number>(0);
   const [rubricItem, setRubricItem] = useState<RubricItem>({
     id: null,
     type: null,
@@ -141,19 +141,22 @@ const Page = (props: { rubricItemIds: number[] }) => {
   };
 
   useEffect(() => {
+    getHelliApi(`assignments/${assignmentId}/rubrics/items`)
+      .then((data: RubricItem[]) => {
+        setRubricItems(data);
+        setCurrentRubricItemId(data[0].id);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (currentRubricItemId === 0) {
+      return;
+    }
+
     getHelliApi(`rubrics/items/${currentRubricItemId}`)
       .then((data) => setRubricItem(data));
     fetchGradeItems();
   }, [currentRubricItemId]);
-
-  useEffect(() => {
-    const arr = [];
-    rubricItemIds.forEach((i) => {
-      getHelliApi(`rubrics/items/${i}`)
-        .then((data) => arr.push(data));
-    });
-    setRubricItems(arr);
-  }, []);
 
   const run = async (options) => {
     if (!selectedRowKeys.length) {
@@ -350,7 +353,7 @@ const Page = (props: { rubricItemIds: number[] }) => {
           run(value);
         }}
       >
-        <Options form={form} />
+        <Options form={form} assignmentId={assignmentId} />
         {noSelectionWarning}
         <Table
           columns={columns}
