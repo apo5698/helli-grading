@@ -96,10 +96,12 @@ Rails.application.routes.draw do
     scope module: :api do
       resources :assignments do
         get :rubrics_items, path: 'rubrics/items'
+        post :zybooks
       end
 
       namespace :constants, path: '' do
         get :checkstyle
+        get :zybooks
       end
 
       resource :dependencies, only: :show

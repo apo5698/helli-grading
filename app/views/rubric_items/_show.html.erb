@@ -2,9 +2,11 @@
   <% has_file = rubric_item.filename %>
   <% has_criteria = rubric_item.criteria.present? %>
   <% tooltip_title = [] %>
-  <% tooltip_title << 'No input file' unless has_file %>
+  <% if !has_file && rubric_item.type != 'Rubrics::Item::Zybooks'
+       tooltip_title << 'No input file'
+     end %>
   <% tooltip_title << 'No criteria' unless has_criteria %>
-  <%= has_file && has_criteria ? badge_checkmark : badge_exclamation(tooltip_title.join("\n")) %>
+  <%= tooltip_title.empty? ? badge_checkmark : badge_exclamation(tooltip_title.join("\n")) %>
   <span><%= rubric_item %></span>
 </div>
 <div id="rubric_item-<%= rubric_item.id %>" class="collapse show" data-parent="#rubrics_accordion">

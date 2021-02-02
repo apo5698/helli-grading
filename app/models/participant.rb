@@ -152,4 +152,8 @@ class Participant < ApplicationRecord
   def to_csv
     COLUMNS.reduce([]) { |csv, kv| csv << [kv[1], translate_csv_attribute(kv[0])] }.to_h
   end
+
+  def zybooks_redis_key
+    "participant:#{id}:zybooks"
+  end
 end

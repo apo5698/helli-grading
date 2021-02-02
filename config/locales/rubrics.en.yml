@@ -20,6 +20,7 @@ en:
         execute: 'Program runs'
         filename: 'File is correctly named'
         maximum_point: 'Maximum points possible'
+        range: 'Pass certain threshold'
       feedback:
         checkstyle: '%{error} checkstyle warning(s)'
         classname: 'Class is incorrectly named'
@@ -27,3 +28,4 @@ en:
         execute: 'Program does not run'
         filename: 'File is incorrectly named'
         maximum_point: ''
+        range: ''

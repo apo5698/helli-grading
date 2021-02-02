@@ -21,6 +21,7 @@ import { deleteHelliApi, getHelliApi, putHelliApi } from '../../HelliApiUtil';
 import Compile from './options/Compile';
 import Execute from './options/Execute';
 import Checkstyle from './options/Checkstyle';
+import Zybooks from './options/Zybooks';
 
 interface RubricItem {
   id: number,
@@ -54,6 +55,7 @@ const optionComponents = {
   Compile,
   Execute,
   Checkstyle,
+  Zybooks,
 };
 
 function nameSorter(a: string, b: string): number {
@@ -346,7 +348,6 @@ const Page = (props: { assignmentId: number }) => {
       </Tabs>
       <Form
         form={form}
-        wrapperCol={{ lg: { span: 16 } }}
         layout="vertical"
         onFinish={(value) => {
           // noinspection JSIgnoredPromiseFromCall

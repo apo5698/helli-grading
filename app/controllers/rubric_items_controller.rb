@@ -45,6 +45,6 @@ class RubricItemsController < AssignmentsViewController
   private
 
   def rubric_item_params
-    params.require(:rubric_item).permit!
+    params[:rubric_item].permit!
   end
 end

@@ -69,36 +69,49 @@ class GradeItem < ApplicationRecord
   # @param [Hash, ActionController::Parameters] options
   # @return [GradeItem] self
   def run(options)
-    # No submission per Moodle grade worksheet.
-    if participant.no_submission?
-      update!(attributes_preset_for(:no_submission))
-      return self
+    if rubric_item.type == 'Rubrics::Item::Zybooks'
+      path = participant.zybooks_redis_key
+    else
+      # No submission per Moodle grade worksheet.
+      if participant.no_submission?
+        update!(attributes_preset_for(:no_submission))
+        return self
+      end
+
+      if attachment.nil?
+        update!(attributes_preset_for(:no_matched_attachment))
+        return self
+      end
+
+      # Downloading strategy:
+      #   1. Download files to a temporary directory
+      #   2. Keep them for a period of time (default 4 hours)
+      #   3. Delete using cron jobs (sidekiq)
+      path = Helli::Attachment.download_one(attachment)
     end
-
-    if attachment.nil?
-      update!(attributes_preset_for(:no_matched_attachment))
-      return self
-    end
-
-    # Downloading strategy:
-    #   1. Download files to a temporary directory
-    #   2. Keep them for a period of time (default 4 hours)
-    #   3. Delete using cron jobs (sidekiq)
-    path = Helli::Attachment.download_one(attachment)
-    captures, error_count = rubric_item.run(path, options)
-
-    @content = File.read(path)
 
     # Assigns attributes before grading
     self.status = :success
-    self.stdout = captures[0]
-    # Removes JAVA_TOOL_OPTIONS.
-    # See https://devcenter.heroku.com/articles/java-support#environment
-    self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
-    self.exitstatus = captures[2].exitstatus
-    self.error = error_count
     self.point = 0
 
+    result = rubric_item.run(path, options)
+
+    # noinspection RubyCaseWithoutElseBlockInspection
+    case result
+    when Array
+      captures = result[0]
+
+      self.stdout = captures[0]
+      # Removes JAVA_TOOL_OPTIONS.
+      # See https://devcenter.heroku.com/articles/java-support#environment
+      self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
+      self.exitstatus = captures[2].is_a?(Process::Status) ? captures[2].exitstatus : captures[2]
+      self.error = result[1]
+    when Numeric
+      self.point = result
+    end
+
+    @content = File.read(path)
     new_feedback = Helli::SeparatedString.new
 
     rubric_item.criteria.each do |c|
