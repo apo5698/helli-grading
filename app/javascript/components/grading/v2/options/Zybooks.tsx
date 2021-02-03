@@ -15,9 +15,9 @@ const Zybooks = (props: { form: FormInstance, assignmentId: number }) => {
 
   const fileProps = {
     fileList,
-    accept: 'text/csv',
+    accept: 'text/csv, application/vnd.ms-excel',
     beforeUpload(file) {
-      if (file.type !== 'text/csv') {
+      if (file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
         message.error(`${file.name} is not a csv file.`);
         return false;
       }
