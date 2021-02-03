@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe Helli::Attachment do
+describe Attachment do
   url = 'https://file-examples-com.github.io/uploads/2017/02/file_example_JSON_1kb.json'
-  dest = 'spec/fixtures/helli/attachment/test'
+  dest = 'spec/fixtures/attachment/test'
 
   before do
     FileUtils.rm_rf(dest) if Dir.exist?(dest)
@@ -44,8 +44,8 @@ describe Helli::Attachment do
   end
 
   describe '.md5' do
-    file_a = %w[spec/fixtures/helli/attachment/1byte.bin spec/fixtures/helli/attachment/1byte_2.bin]
-    file_b = %w[spec/fixtures/helli/attachment/16bytes.bin spec/fixtures/helli/attachment/16bytes_2.bin]
+    file_a = %w[spec/fixtures/attachment/1byte.bin spec/fixtures/attachment/1byte_2.bin]
+    file_b = %w[spec/fixtures/attachment/16bytes.bin spec/fixtures/attachment/16bytes_2.bin]
     files = [file_a, file_b]
 
     context 'when files are identical' do

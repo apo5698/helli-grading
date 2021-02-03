@@ -64,7 +64,7 @@ class Dependency < ApplicationRecord
     when 'direct'
       dir = File.dirname(path)
       FileUtils.mkdir_p(dir)
-      Helli::Attachment.download_from_url(source, dir)
+      Attachment.download_from_url(source, dir)
     when 'git'
       FileUtils.mkdir_p(File.dirname(path))
       ::Open3.capture3('git submodule update --init --recursive')
