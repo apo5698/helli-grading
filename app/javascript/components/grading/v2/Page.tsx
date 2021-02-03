@@ -13,10 +13,11 @@ import {
   Table,
   Tabs,
   Tag,
+  Tooltip,
 } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { deleteHelliApi, getHelliApi, putHelliApi } from '../../HelliApiUtil';
+import { deleteHelliApi, getHelliApi, HelliApiUrl, putHelliApi } from '../../HelliApiUtil';
 
 import Compile from './options/Compile';
 import Execute from './options/Execute';
@@ -87,9 +88,11 @@ const columns: any = [
     dataIndex: 'status',
     render: (_, record) => (
       <Badge size="small" count={record.error}>
-        <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
-          {record.status}
-        </Tag>
+        <Tooltip title={record.feedback}>
+          <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+            {record.status}
+          </Tag>
+        </Tooltip>
       </Badge>
     ),
   },
@@ -207,11 +210,20 @@ const Page = (props: { assignmentId: number }) => {
       return;
     }
 
-    getHelliApi(`grade_items/${record.id}/attachment`)
-      .then((attachment) => {
-        attachments[record.id] = attachment;
+    fetch(HelliApiUrl(`grade_items/${record.id}/attachment`))
+      .then((response) => {
+        if (!response.ok) { throw response.text(); }
+        return response.json();
+      })
+      .then((data) => {
+        attachments[record.id] = data;
         setAttachments((prevAttachments) => ({ ...prevAttachments, ...attachments }));
-      });
+      })
+      .catch((error) => error.then((text) => {
+        attachments[record.id] = text;
+        setAttachments((prevAttachments) => ({ ...prevAttachments, ...attachments }));
+        message.error(text);
+      }));
   };
 
   const renderExpanded = (record: GradeItem) => {
@@ -220,25 +232,18 @@ const Page = (props: { assignmentId: number }) => {
     return (
       <>
         <Card type="inner" title={attachment?.filename} loading={attachment === undefined}>
-          {
-            attachment === null
-              ? <span>Cannot load attachment.</span>
-              : (
-                <SyntaxHighlighter
-                  language="java"
-                  style={tomorrow}
-                  codeTagProps={{ style: { fontSize: '12px' } }}
-                  showLineNumbers
-                >
-                  {attachment?.data}
-                </SyntaxHighlighter>
-              )
-          }
+          <SyntaxHighlighter
+            language="java"
+            style={tomorrow}
+            codeTagProps={{ style: { fontSize: '12px' } }}
+            showLineNumbers
+          >
+            {attachment?.data || attachment}
+          </SyntaxHighlighter>
         </Card>
         {
-          attachment === null
-            ? null
-            : (
+          attachment?.id
+            ? (
               <Card style={{ fontSize: '12px' }}>
                 <pre style={{ whiteSpace: 'pre-wrap' }}>{record.stdout}</pre>
                 <pre
@@ -251,6 +256,7 @@ const Page = (props: { assignmentId: number }) => {
                 <pre>Process finished with exit code {record.exitstatus}</pre>
               </Card>
             )
+            : null
         }
       </>
     );

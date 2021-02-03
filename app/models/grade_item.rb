@@ -123,9 +123,13 @@ class GradeItem < ApplicationRecord
 
     # Grade cannot be negative
     self.point = 0 if point.negative?
-
+  rescue Encoding::UndefinedConversionError => e
+    unresolved!
+    self.feedback = "Failed to grade during transcoding - #{e}"
+  ensure
     save!
-    self
+    # rubocop:disable Lint/EnsureReturn
+    return self
   end
 
   # An error message indicating that a manual resolution is needed.

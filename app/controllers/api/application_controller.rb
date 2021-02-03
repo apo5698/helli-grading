@@ -9,5 +9,9 @@ module Api
     rescue_from ActiveRecord::RecordNotFound do |exception|
       render json: exception, status: :not_found
     end
+
+    rescue_from Encoding::UndefinedConversionError do |exception|
+      render plain: "#{exception.class.name} - #{exception}", status: :internal_server_error
+    end
   end
 end
