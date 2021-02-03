@@ -67,7 +67,7 @@ module JDK
 
       basename = File.basename(filename)
       classfile = filename.sub(File.extname(filename), '.class')
-      classname = basename.delete_suffix('.class')
+      classname = File.basename(basename, '.*')
 
       destination = '.'
       cp = classpath(destination, libraries)
