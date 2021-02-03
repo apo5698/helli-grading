@@ -60,15 +60,6 @@ describe JDK do
       end
     end
 
-    context 'when file has not been compiled' do
-      Dir.glob("#{fixtures}/wce/execute/valid/*.java").each do |file|
-        captures = described_class.java(file)
-        it('has stdout') { expect(captures[0]).not_to be_blank }
-        it('does not have stderr') { expect(captures[1]).to be_blank }
-        it('returns zero') { expect(captures[2].exitstatus).to be_zero }
-      end
-    end
-
     context 'when file is not a java file' do
       it 'raises Helli::UnsupportedFileTypeError' do
         expect(described_class.java("#{fixtures}/misc/NotJava.txt")[2].exitstatus).not_to be_zero
