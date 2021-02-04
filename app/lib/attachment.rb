@@ -61,11 +61,11 @@ module Attachment
       end
     end
 
-    # Creates the temporary directory for Helli.
+    # Returns the temporary directory: "<Dir.tmpdir>/helli".
+    #
+    # @return [String] the temporary directory
     def tmpdir
-      helli_tmpdir = "#{Dir.tmpdir}/helli"
-      FileUtils.mkdir_p(helli_tmpdir)
-      Dir.mktmpdir(nil, helli_tmpdir)
+      "#{Dir.tmpdir}/helli"
     end
   end
 end

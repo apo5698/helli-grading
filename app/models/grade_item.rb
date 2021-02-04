@@ -87,7 +87,7 @@ class GradeItem < ApplicationRecord
       #   1. Download files to a temporary directory
       #   2. Keep them for a period of time (default 4 hours)
       #   3. Delete using cron jobs (sidekiq)
-      path = Attachment.download_one(attachment)
+      path = Attachment.download_one(attachment, "participant-#{participant.id}")
     end
 
     # Assigns attributes before grading
