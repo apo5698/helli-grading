@@ -69,36 +69,46 @@ class GradeItem < ApplicationRecord
   # @param [Hash, ActionController::Parameters] options
   # @return [GradeItem] self
   def run(options)
-    # No submission per Moodle grade worksheet.
-    if participant.no_submission?
-      update!(attributes_preset_for(:no_submission))
-      return self
+    if rubric_item.type == 'Rubrics::Item::Zybooks'
+      path = participant.zybooks_redis_key
+    else
+      # No submission per Moodle grade worksheet.
+      if participant.no_submission?
+        update!(attributes_preset_for(:no_submission))
+        return self
+      end
+
+      if attachment.nil?
+        update!(attributes_preset_for(:no_matched_attachment))
+        return self
+      end
+
+      # Downloading strategy:
+      #   1. Download files to a temporary directory
+      #   2. Keep them for a period of time (default 4 hours)
+      #   3. Delete using cron jobs (sidekiq)
+      path = Attachment.download_one(attachment, "participant-#{participant.id}")
     end
-
-    if attachment.nil?
-      update!(attributes_preset_for(:no_matched_attachment))
-      return self
-    end
-
-    # Downloading strategy:
-    #   1. Download files to a temporary directory
-    #   2. Keep them for a period of time (default 4 hours)
-    #   3. Delete using cron jobs (sidekiq)
-    path = Helli::Attachment.download_one(attachment)
-    captures, error_count = rubric_item.run(path, options)
-
-    @content = File.read(path)
 
     # Assigns attributes before grading
     self.status = :success
-    self.stdout = captures[0]
-    # Removes JAVA_TOOL_OPTIONS.
-    # See https://devcenter.heroku.com/articles/java-support#environment
-    self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
-    self.exitstatus = captures[2].exitstatus
-    self.error = error_count
     self.point = 0
 
+    captures, error = rubric_item.run(path, options)
+
+    if rubric_item.type == 'Rubrics::Item::Zybooks'
+      self.point = captures[0]
+      self.feedback = captures[1]
+    else
+      self.stdout = captures[0]
+      # Removes JAVA_TOOL_OPTIONS.
+      # See https://devcenter.heroku.com/articles/java-support#environment
+      self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
+      self.exitstatus = captures[2].is_a?(Process::Status) ? captures[2].exitstatus : captures[2]
+      self.error = error
+    end
+
+    @content = File.read(path)
     new_feedback = Helli::SeparatedString.new
 
     rubric_item.criteria.each do |c|
@@ -110,9 +120,13 @@ class GradeItem < ApplicationRecord
 
     # Grade cannot be negative
     self.point = 0 if point.negative?
-
+  rescue Encoding::UndefinedConversionError => e
+    unresolved!
+    self.feedback = "Failed to grade during transcoding - #{e}"
+  ensure
     save!
-    self
+    # rubocop:disable Lint/EnsureReturn
+    return self
   end
 
   # An error message indicating that a manual resolution is needed.

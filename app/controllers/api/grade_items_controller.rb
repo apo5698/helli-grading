@@ -10,12 +10,12 @@ module Api
     #  GET https://api.helli.app/grade_items/:id/attachment
     def attachment
       attachment = GradeItem.find(params.require(:grade_item_id)).attachment
-
-      if attachment
-        render json: attachment, serializer: ActiveStorageAttachmentSerializer
-      else
-        render json: nil, status: :not_found
+      unless attachment
+        raise ActiveRecord::RecordNotFound,
+              "Couldn't find attachment of GradeItem with 'id'=#{params.require(:grade_item_id)}"
       end
+
+      render json: attachment, serializer: ActiveStorageAttachmentSerializer
     end
 
     #  PUT https://api.helli.app/grade_items/:id

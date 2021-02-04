@@ -65,8 +65,9 @@ module JDK
       stdin ||= ''
       timeout ||= 5
 
+      basename = File.basename(filename)
       classfile = filename.sub(File.extname(filename), '.class')
-      classname = File.basename(classfile).delete_suffix('.class')
+      classname = File.basename(basename, '.*')
 
       destination = '.'
       cp = classpath(destination, libraries)
@@ -74,6 +75,8 @@ module JDK
       # TODO: junit-standalone uses different command to launch unit tests
       cmd = if libraries.include?('junit')
               ['java', '-jar', Dependency.find_by(name: 'junit').path, '-cp', destination, '-c', classname, arguments]
+            elsif !File.exist?(classfile)
+              ['java', filename]
             else
               ['java', '-cp', cp, classname, arguments]
             end.join(' ')

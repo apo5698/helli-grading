@@ -1,4 +1,4 @@
-const HelliApiUrl = (url = '') => `${window.location.protocol}//api.${window.location.host}/${url}`;
+export const HelliApiUrl = (url = '') => `${window.location.protocol}//api.${window.location.host}/${url}`;
 
 const fetchHelliApi = async (url, method, body = {}) => {
   if (method === 'GET') {

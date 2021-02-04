@@ -13,14 +13,16 @@ import {
   Table,
   Tabs,
   Tag,
+  Tooltip,
 } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { deleteHelliApi, getHelliApi, putHelliApi } from '../../HelliApiUtil';
+import { deleteHelliApi, getHelliApi, HelliApiUrl, putHelliApi } from '../../HelliApiUtil';
 
 import Compile from './options/Compile';
 import Execute from './options/Execute';
 import Checkstyle from './options/Checkstyle';
+import Zybooks from './options/Zybooks';
 
 interface RubricItem {
   id: number,
@@ -54,6 +56,7 @@ const optionComponents = {
   Compile,
   Execute,
   Checkstyle,
+  Zybooks,
 };
 
 function nameSorter(a: string, b: string): number {
@@ -85,9 +88,11 @@ const columns: any = [
     dataIndex: 'status',
     render: (_, record) => (
       <Badge size="small" count={record.error}>
-        <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
-          {record.status}
-        </Tag>
+        <Tooltip title={record.feedback}>
+          <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+            {record.status}
+          </Tag>
+        </Tooltip>
       </Badge>
     ),
   },
@@ -107,10 +112,10 @@ const columns: any = [
   },
 ];
 
-const Page = (props: { rubricItemIds: number[] }) => {
-  const { rubricItemIds } = props;
+const Page = (props: { assignmentId: number }) => {
+  const { assignmentId } = props;
 
-  const [currentRubricItemId, setCurrentRubricItemId] = useState<number>(rubricItemIds[0]);
+  const [currentRubricItemId, setCurrentRubricItemId] = useState<number>(0);
   const [rubricItem, setRubricItem] = useState<RubricItem>({
     id: null,
     type: null,
@@ -141,19 +146,22 @@ const Page = (props: { rubricItemIds: number[] }) => {
   };
 
   useEffect(() => {
+    getHelliApi(`assignments/${assignmentId}/rubrics/items`)
+      .then((data: RubricItem[]) => {
+        setRubricItems(data);
+        setCurrentRubricItemId(data[0].id);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (currentRubricItemId === 0) {
+      return;
+    }
+
     getHelliApi(`rubrics/items/${currentRubricItemId}`)
       .then((data) => setRubricItem(data));
     fetchGradeItems();
   }, [currentRubricItemId]);
-
-  useEffect(() => {
-    const arr = [];
-    rubricItemIds.forEach((i) => {
-      getHelliApi(`rubrics/items/${i}`)
-        .then((data) => arr.push(data));
-    });
-    setRubricItems(arr);
-  }, []);
 
   const run = async (options) => {
     if (!selectedRowKeys.length) {
@@ -202,11 +210,20 @@ const Page = (props: { rubricItemIds: number[] }) => {
       return;
     }
 
-    getHelliApi(`grade_items/${record.id}/attachment`)
-      .then((attachment) => {
-        attachments[record.id] = attachment;
+    fetch(HelliApiUrl(`grade_items/${record.id}/attachment`))
+      .then((response) => {
+        if (!response.ok) { throw response.text(); }
+        return response.json();
+      })
+      .then((data) => {
+        attachments[record.id] = data;
         setAttachments((prevAttachments) => ({ ...prevAttachments, ...attachments }));
-      });
+      })
+      .catch((error) => error.then((text) => {
+        attachments[record.id] = text;
+        setAttachments((prevAttachments) => ({ ...prevAttachments, ...attachments }));
+        message.error(text);
+      }));
   };
 
   const renderExpanded = (record: GradeItem) => {
@@ -215,25 +232,18 @@ const Page = (props: { rubricItemIds: number[] }) => {
     return (
       <>
         <Card type="inner" title={attachment?.filename} loading={attachment === undefined}>
-          {
-            attachment === null
-              ? <span>Cannot load attachment.</span>
-              : (
-                <SyntaxHighlighter
-                  language="java"
-                  style={tomorrow}
-                  codeTagProps={{ style: { fontSize: '12px' } }}
-                  showLineNumbers
-                >
-                  {attachment?.data}
-                </SyntaxHighlighter>
-              )
-          }
+          <SyntaxHighlighter
+            language="java"
+            style={tomorrow}
+            codeTagProps={{ style: { fontSize: '12px' } }}
+            showLineNumbers
+          >
+            {attachment?.data || attachment}
+          </SyntaxHighlighter>
         </Card>
         {
-          attachment === null
-            ? null
-            : (
+          attachment?.id
+            ? (
               <Card style={{ fontSize: '12px' }}>
                 <pre style={{ whiteSpace: 'pre-wrap' }}>{record.stdout}</pre>
                 <pre
@@ -246,6 +256,7 @@ const Page = (props: { rubricItemIds: number[] }) => {
                 <pre>Process finished with exit code {record.exitstatus}</pre>
               </Card>
             )
+            : null
         }
       </>
     );
@@ -343,14 +354,13 @@ const Page = (props: { rubricItemIds: number[] }) => {
       </Tabs>
       <Form
         form={form}
-        wrapperCol={{ lg: { span: 16 } }}
         layout="vertical"
         onFinish={(value) => {
           // noinspection JSIgnoredPromiseFromCall
           run(value);
         }}
       >
-        <Options form={form} />
+        <Options form={form} assignmentId={assignmentId} />
         {noSelectionWarning}
         <Table
           columns={columns}

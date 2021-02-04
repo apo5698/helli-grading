@@ -94,45 +94,6 @@ class Assignment < ApplicationRecord
     end
   end
 
-  def export_grades
-    gi_max = rubric_items.sum(&:maximum_points)
-    zybooks_scores = zybooks_scale.keys
-
-    participants.each do |p|
-      gi_total = p.grade_items.sum(&:grade)
-      p.update(program_total: gi_total)
-
-      moodle_max = p.grade.maximum_grade
-      program_max = moodle_max * grades_scale[:program] / 100.0
-      zybooks_max = moodle_max * grades_scale[:zybooks] / 100.0
-
-      program_partial = program_max * (gi_total / gi_max)
-      zybooks_percentage = zybooks_scale[zybooks_scores.select { |score| (p.zybooks_total || 0) >= score }[0]] || 0
-      zybooks_partial = zybooks_max * (zybooks_percentage / 100.0)
-
-      p.grade.update(grade: program_partial + zybooks_partial + (p.other_total || 0))
-    end
-  end
-
-  def export_feedbacks
-    participants.each do |p|
-      feedback = []
-      p.grade_items.each do |gi|
-        feedback << gi.to_s + gi.feedback if gi.feedback.present?
-      end
-
-      if grades_scale[:zybooks].positive?
-        moodle_max = p.grade.maximum_grade
-        zybooks_max = moodle_max * grades_scale[:zybooks] / 100.0
-        zybooks_percentage = zybooks_scale[zybooks_scores.select { |score| (p.zybooks_total || 0) >= score }[0]] || 0
-        zybooks_partial = zybooks_max * (zybooks_percentage / 100.0)
-        feedback << "[zyBooks]Total: #{p.zybooks_total || 0} => #{zybooks_partial}"
-      end
-
-      p.grade.update(feedback_comments: feedback.join('; '))
-    end
-  end
-
   # percentage = 1 - number_of_unresolved / total
   def percentage_complete
     return 0 if grade_items.empty?

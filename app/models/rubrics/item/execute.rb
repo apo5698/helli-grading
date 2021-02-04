@@ -8,7 +8,7 @@ module Rubrics
         def default_criteria
           [
             { type: 'Rubrics::Criterion::Classname', action: :award, point: 1.0 },
-            { type: 'Rubrics::Criterion::Execute', action: :award, point: 2.0 }
+            { type: 'Rubrics::Criterion::Execute', action: :award, point: 4.0 }
           ]
         end
 
