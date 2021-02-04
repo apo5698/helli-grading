@@ -94,21 +94,18 @@ class GradeItem < ApplicationRecord
     self.status = :success
     self.point = 0
 
-    result = rubric_item.run(path, options)
+    captures, error = rubric_item.run(path, options)
 
-    # noinspection RubyCaseWithoutElseBlockInspection
-    case result
-    when Array
-      captures = result[0]
-
+    if rubric_item.type == 'Rubrics::Item::Zybooks'
+      self.point = captures[0]
+      self.feedback = captures[1]
+    else
       self.stdout = captures[0]
       # Removes JAVA_TOOL_OPTIONS.
       # See https://devcenter.heroku.com/articles/java-support#environment
       self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
       self.exitstatus = captures[2].is_a?(Process::Status) ? captures[2].exitstatus : captures[2]
-      self.error = result[1]
-    when Numeric
-      self.point = result
+      self.error = error
     end
 
     @content = File.read(path)
