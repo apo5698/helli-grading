@@ -117,7 +117,7 @@ module Rubrics
       #
       # @param [String] filename
       # @param [Hash, ActionController::Parameters] options
-      # @return [Array] [[stdout, stderr, status], error_count]
+      # @return [Array] [[stdout, stderr, status], error]
       def run(filename, options) end
     end
   end

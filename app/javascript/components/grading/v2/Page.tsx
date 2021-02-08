@@ -10,12 +10,12 @@ import {
   message,
   PageHeader,
   Popconfirm,
+  Popover,
   Row,
   Spin,
   Table,
   Tabs,
   Tag,
-  Tooltip,
 } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -42,7 +42,7 @@ interface GradeItem {
   stdout: string,
   stderr: string,
   exitstatus: number,
-  error: number,
+  error: string[],
 }
 
 interface Attachment {
@@ -88,13 +88,26 @@ const columns: any = [
   {
     title: 'Status',
     dataIndex: 'status',
-    render: (_, record) => (
-      <Badge size="small" count={record.error}>
-        <Tooltip title={record.feedback}>
-          <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
-            {record.status}
-          </Tag>
-        </Tooltip>
+    render: (_, record: GradeItem) => (
+      <Badge size="small" count={record.error.length}>
+        {
+          record.error.length === 0
+            ? (
+              <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+                {record.status}
+              </Tag>
+            )
+            : (
+              <Popover
+                title="Errors"
+                content={<ul>{record.error.map((cause) => <li>{cause}</li>)}</ul>}
+              >
+                <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+                  {record.status}
+                </Tag>
+              </Popover>
+            )
+        }
       </Badge>
     ),
   },

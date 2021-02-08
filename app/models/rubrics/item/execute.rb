@@ -18,11 +18,13 @@ module Rubrics
       end
 
       def run(filename, options)
+        stdin = options[:stdin]
+
         captures = JDK.java(
           filename,
           options[:arguments],
           libraries: options[:libraries],
-          stdin: options[:stdin],
+          stdin: stdin,
           timeout: options[:timeout]
         )
 
@@ -30,16 +32,27 @@ module Rubrics
         stderr = captures[1]
         exitstatus = captures[2].exitstatus
 
-        error_count = 0
-        error_count += 1 if stderr.present? && exitstatus != 0
+        error = []
+
+        error << I18n.t('rubrics.item.errors.execute.stderr') if stderr.present?
+        error << I18n.t('rubrics.item.errors.execute.exitstatus', exitstatus: exitstatus) if exitstatus != 0
 
         pattern = options[:stdout]
         if pattern.present?
           regexp = pattern.to_regexp
-          error_count += 1 if regexp.nil? && stdout.exclude?(pattern) || !(regexp.nil? || regexp.match?(stdout))
+
+          # pattern is a string
+          if regexp.nil? && stdout.exclude?(pattern)
+            error << I18n.t('rubrics.item.errors.execute.stdout.string', string: pattern, stdin: stdin)
+          end
+
+          # pattern is a regexp
+          unless regexp.nil? || regexp.match?(stdout)
+            error << I18n.t('rubrics.item.errors.execute.stdout.regexp', regexp: regexp, stdin: stdin)
+          end
         end
 
-        [captures, error_count]
+        [captures, error]
       end
     end
   end

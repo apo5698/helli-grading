@@ -12,6 +12,13 @@ en:
         checkstyle:
           Javadoc: 'Missing Javadoc comment'
           MagicNumber: 'Contains magic numbers'
+      errors:
+        execute:
+          exitstatus: 'Nonzero exit status %{exitstatus}'
+          stderr: 'stderr is present'
+          stdout:
+            string: 'Output does not include "%{string}" using input "%{stdin}"'
+            regexp: 'Output does not match "%{regexp}" using input "%{stdin}"'
     criterion:
       criterion:
         checkstyle: 'File passes checkstyle'
