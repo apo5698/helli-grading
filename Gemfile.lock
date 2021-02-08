@@ -454,6 +454,7 @@ GEM
     tilt (2.0.10)
     tins (1.26.0)
       sync
+    to_regexp (0.2.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -530,6 +531,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen
   state_machines
+  to_regexp
   turbolinks
   webdrivers
   webpacker

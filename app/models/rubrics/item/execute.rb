@@ -25,13 +25,19 @@ module Rubrics
           stdin: options[:stdin],
           timeout: options[:timeout]
         )
+
+        stdout = captures[0]
         stderr = captures[1]
+        exitstatus = captures[2].exitstatus
 
         error_count = 0
-        # runtime errors
-        error_count += 1 if stderr.include?('Exception in thread')
-        # rare situation
-        error_count += 1 if stderr.include?('java.lang.NoClassDefFoundError')
+        error_count += 1 if stderr.present? && exitstatus != 0
+
+        pattern = options[:stdout]
+        if pattern.present?
+          regexp = pattern.to_regexp
+          error_count += 1 if regexp.nil? && stdout.exclude?(pattern) || !(regexp.nil? || regexp.match?(stdout))
+        end
 
         [captures, error_count]
       end
