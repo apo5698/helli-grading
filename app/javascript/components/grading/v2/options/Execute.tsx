@@ -39,10 +39,10 @@ const Execute = () => {
         </Checkbox.Group>
       </Form.Item>
       <Form.Item name="arguments" label="Arguments">
-        <Input allowClear />
+        <Input style={{ fontFamily: 'monospace' }} allowClear />
       </Form.Item>
       <Form.Item name="stdin" label="Standard Input">
-        <Input allowClear />
+        <Input style={{ fontFamily: 'monospace' }} allowClear />
       </Form.Item>
     </>
   );
