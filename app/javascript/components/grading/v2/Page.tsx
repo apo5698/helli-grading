@@ -5,10 +5,12 @@ import {
   Badge,
   Button,
   Card,
+  Col,
   Form,
   message,
   PageHeader,
   Popconfirm,
+  Row,
   Spin,
   Table,
   Tabs,
@@ -360,7 +362,11 @@ const Page = (props: { assignmentId: number }) => {
           run(value);
         }}
       >
-        <Options form={form} assignmentId={assignmentId} />
+        <Row>
+          <Col xs={24} lg={16} xl={12}>
+            <Options form={form} assignmentId={assignmentId} />
+          </Col>
+        </Row>
         {noSelectionWarning}
         <Table
           columns={columns}
