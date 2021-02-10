@@ -5,6 +5,8 @@ import { Checkbox, Form, Input, Spin, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { getDependencies } from '../../../HelliApiUtil';
 
+const { TextArea } = Input;
+
 interface Dependency {
   name: string
   version: string,
@@ -43,7 +45,7 @@ const Execute = () => {
         <Input style={{ fontFamily: 'monospace' }} allowClear />
       </Form.Item>
       <Form.Item name="stdin" label="Standard Input">
-        <Input style={{ fontFamily: 'monospace' }} allowClear />
+        <TextArea style={{ fontFamily: 'monospace' }} allowClear autoSize />
       </Form.Item>
       <Form.Item
         name="stdout"
@@ -56,7 +58,7 @@ const Execute = () => {
           </>
         )}
       >
-        <Input style={{ fontFamily: 'monospace' }} allowClear />
+        <TextArea style={{ fontFamily: 'monospace' }} allowClear autoSize />
       </Form.Item>
     </>
   );
