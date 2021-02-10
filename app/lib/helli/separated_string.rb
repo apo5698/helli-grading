@@ -5,9 +5,10 @@ module Helli
   class SeparatedString
     attr_accessor :trailing_separator
 
-    def initialize(*string, separator: '; ')
+    def initialize(*string, separator: '; ', trailing_separator: false)
       @feedback = Array(string)
       @separator = separator
+      @trailing_separator = trailing_separator
     end
 
     def <<(string)
