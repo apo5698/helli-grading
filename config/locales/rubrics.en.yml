@@ -14,11 +14,11 @@ en:
           MagicNumber: 'Contains magic numbers'
       errors:
         execute:
-          exitstatus: 'Nonzero exit status %{exitstatus}'
-          stderr: 'stderr is present'
+          exitstatus: 'Program exits with code %{exitstatus}'
+          stderr: 'stderr is present (failed to compile or run)'
           stdout:
-            string: 'Output does not include "%{string}" using input "%{stdin}"'
-            regexp: 'Output does not match "%{regexp}" using input "%{stdin}"'
+            string: 'Output does not include "%{string}" or match format using input "%{stdin}"'
+            regexp: 'Output does not match regular expression %{regexp} using input "%{stdin}"'
     criterion:
       criterion:
         checkstyle: 'File passes checkstyle'
