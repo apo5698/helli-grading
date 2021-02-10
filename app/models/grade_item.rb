@@ -106,9 +106,10 @@ class GradeItem < ApplicationRecord
       self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
       self.exitstatus = captures[2].is_a?(Process::Status) ? captures[2].exitstatus : captures[2]
       self.error = error
+
+      @content = File.read(path)
     end
 
-    @content = File.read(path)
     new_feedback = Helli::SeparatedString.new
 
     rubric_item.criteria.each do |c|
