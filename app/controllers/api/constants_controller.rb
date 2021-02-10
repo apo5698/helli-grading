@@ -8,7 +8,7 @@ module Api
     end
 
     def zybooks
-      render json: I18n.t('zybooks').to_json
+      render json: Config.get('zybooks').to_json
     end
   end
 end
