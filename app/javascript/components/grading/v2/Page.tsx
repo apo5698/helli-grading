@@ -131,7 +131,7 @@ const Page = (props: { assignmentId: number }) => {
   const { assignmentId } = props;
 
   const [currentRubricItemId, setCurrentRubricItemId] = useState<number>(0);
-  const [rubricItem, setRubricItem] = useState<RubricItem>({
+  const [currentRubricItem, setCurrentRubricItem] = useState<RubricItem>({
     id: null,
     type: null,
     filename: null,
@@ -148,7 +148,7 @@ const Page = (props: { assignmentId: number }) => {
 
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
-  const Options = optionComponents[rubricItem.type] || Spin;
+  const Options = optionComponents[currentRubricItem.type] || Spin;
 
   const fetchGradeItems = () => {
     setLoading(true);
@@ -174,7 +174,7 @@ const Page = (props: { assignmentId: number }) => {
     }
 
     getHelliApi(`rubrics/items/${currentRubricItemId}`)
-      .then((data) => setRubricItem(data));
+      .then((data) => setCurrentRubricItem(data));
     fetchGradeItems();
   }, [currentRubricItemId]);
 
@@ -190,8 +190,12 @@ const Page = (props: { assignmentId: number }) => {
       return;
     }
 
-    const key = 'running';
-    message.loading({ content: `Running 0 of ${selectedRowKeys.length}`, key, duration: 0 });
+    const key = currentRubricItemId;
+    message.loading({
+      content: `Running ${currentRubricItem.type} (${currentRubricItem.filename}): 0 / ${selectedRowKeys.length}`,
+      key,
+      duration: 0,
+    });
 
     setNoSelectionWarning(null);
     setLoading(true);
@@ -201,7 +205,11 @@ const Page = (props: { assignmentId: number }) => {
       const gid = selectedRowKeys[i];
       // eslint-disable-next-line no-await-in-loop
       await putHelliApi(`grade_items/${gid}`, options);
-      message.loading({ content: `Running ${i} of ${selectedRowKeys.length}`, key, duration: 0 });
+      message.loading({
+        content: `Running ${currentRubricItem.type} (${currentRubricItem.filename}): ${i} / ${selectedRowKeys.length}`,
+        key,
+        duration: 0,
+      });
     }
 
     message.success({ content: 'Done!', key, duration: 2 });
@@ -332,7 +340,7 @@ const Page = (props: { assignmentId: number }) => {
     <PageHeader
       className="site-page-header"
       title="Automated Grading"
-      subTitle={rubricItem.type}
+      subTitle={currentRubricItem.type}
       extra={[
         <Popconfirm
           title="Are you sure to reset grade items on this page?"
