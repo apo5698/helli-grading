@@ -14,6 +14,7 @@ en:
           MagicNumber: 'Contains magic numbers'
       errors:
         execute:
+          classname: 'Classname "%{classname}" does not match filename "%{filename}"'
           exitstatus: 'Program exits with code %{exitstatus}'
           stderr: 'stderr is present (failed to compile or run)'
           stdout:

@@ -100,11 +100,9 @@ class GradeItem < ApplicationRecord
       self.point = captures[0]
       self.feedback = captures[1]
     else
-      self.stdout = captures[0]
-      # Removes JAVA_TOOL_OPTIONS.
-      # See https://devcenter.heroku.com/articles/java-support#environment
-      self.stderr = captures[1].split("\n").grep_v(/.*JAVA_TOOL_OPTIONS.*/).join("\n")
-      self.exitstatus = captures[2].is_a?(Process::Status) ? captures[2].exitstatus : captures[2]
+      self.stdout = captures.stdout
+      self.stderr = captures.stderr
+      self.exitstatus = captures.exitstatus
       self.error = error
 
       @content = File.read(path)
@@ -141,9 +139,9 @@ class GradeItem < ApplicationRecord
   def attributes_preset_for(type)
     case type
     when :no_submission
-      { status: :no_submission, feedback: 'No submission' }
+      { status: :no_submission, error: ['No submission'] }
     when :no_matched_attachment
-      { status: :unresolved, feedback: resolve_manually('No matched file') }
+      { status: :unresolved, error: [resolve_manually('No matched filename')] }
     else
       raise "Unknown attributes type: #{type}"
     end

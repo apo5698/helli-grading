@@ -33,7 +33,9 @@ module JDK
       basename = File.basename(filename)
 
       cmd = ['javac', '-d', destination, '-cp', cp, basename, arguments].join(' ').strip
-      Open3.capture3(cmd, chdir: File.dirname(filename))
+      capture = Open3.capture3(cmd, chdir: File.dirname(filename))
+
+      Capture.new(cmd, capture)
     end
 
     # Runs a compiled Java file.
@@ -82,7 +84,9 @@ module JDK
             end.join(' ')
 
       # Using Open3.capture3t to avoid running program that never terminates (e.g. infinite loop).
-      Open3t.capture3t(cmd, chdir: File.dirname(filename), stdin_data: stdin, timeout: timeout)
+      capture = Open3t.capture3t(cmd, chdir: File.dirname(filename), stdin_data: stdin, timeout: timeout)
+
+      Capture.new(cmd, capture)
     end
 
     # Runs checkstyle on a Java file.
@@ -98,7 +102,9 @@ module JDK
     #     p[2].exitstatus   #=> 0
     def checkstyle(filename)
       cmd = [Dependency.find_by(name: 'cs-checkstyle').path, File.basename(filename)].join(' ')
-      Open3.capture3(cmd, chdir: File.dirname(filename))
+      capture = Open3.capture3(cmd, chdir: File.dirname(filename))
+
+      Capture.new(cmd, capture)
     end
 
     private

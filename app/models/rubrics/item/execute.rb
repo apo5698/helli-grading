@@ -7,8 +7,7 @@ module Rubrics
       class << self
         def default_criteria
           [
-            { type: 'Rubrics::Criterion::Classname', action: :award, point: 1.0 },
-            { type: 'Rubrics::Criterion::Execute', action: :award, point: 4.0 }
+            { type: 'Rubrics::Criterion::Execute', action: :award }
           ]
         end
 
@@ -18,32 +17,51 @@ module Rubrics
       end
 
       def run(filename, options)
+        error = []
+
+        # TODO: regexp does not work every time
+        basename = File.basename(filename, '.*')
+        # rubocop:disable Lint/MixedRegexpCaptureTypes
+        /(public)?\s+(class)\s+(?<classname>\w+)\s*{/ =~ File.read(filename)
+
+        unless basename == classname
+          error << I18n.t('rubrics.item.errors.execute.classname',
+                          classname: classname,
+                          filename: File.basename(filename))
+        end
+
         stdin = options[:stdin]
 
-        captures = JDK.java(
-          filename,
-          options[:arguments],
-          libraries: options[:libraries],
-          stdin: stdin,
-          timeout: options[:timeout]
-        )
+        # Removes JAVA_TOOL_OPTIONS.
+        # See https://devcenter.heroku.com/articles/java-support#environment
+        capture = JDK.java(filename,
+                           options[:arguments],
+                           libraries: options[:libraries],
+                           stdin: stdin,
+                           timeout: options[:timeout])
+                     .remove_line(:stderr, /.*JAVA_TOOL_OPTIONS.*/)
 
-        stdout = captures[0]
-        stderr = captures[1]
-        exitstatus = captures[2].exitstatus
-
-        error = []
+        stdout = capture.stdout
+        stderr = capture.stderr
+        exitstatus = capture.exitstatus
 
         error << I18n.t('rubrics.item.errors.execute.stderr') if stderr.present?
         error << I18n.t('rubrics.item.errors.execute.exitstatus', exitstatus: exitstatus) if exitstatus != 0
 
-        pattern = options[:stdout]
-        if pattern.present?
-          regexp = pattern.to_regexp
+        expected_stdout = options[:stdout]
+
+        if expected_stdout.present?
+          regexp = expected_stdout.to_regexp
 
           # pattern is a string
-          if regexp.nil? && stdout.exclude?(pattern)
-            error << I18n.t('rubrics.item.errors.execute.stdout.string', string: pattern, stdin: stdin)
+          if regexp.nil?
+            str_list = expected_stdout.split("\n")
+
+            str_list.each do |str|
+              if stdout.exclude?(str)
+                error << I18n.t('rubrics.item.errors.execute.stdout.string', string: str, stdin: stdin)
+              end
+            end
           end
 
           # pattern is a regexp
@@ -52,7 +70,7 @@ module Rubrics
           end
         end
 
-        [captures, error]
+        [capture, error]
       end
     end
   end

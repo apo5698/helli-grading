@@ -19,20 +19,20 @@ module Rubrics
 
       def run(filename, options)
         config = options[:config]
-        captures = JDK.checkstyle(filename)
+        capture = JDK.checkstyle(filename)
 
         # checkstyle errors are in stdout, not stderr
         # warnings begin with [WARN]
-        warnings = captures[0].split("\n").grep(/^\[WARN\]\s.+$/)
+        warnings = capture.stdout.split("\n").grep(/^\[WARN\]\s.+$/)
 
         # Keep warnings of presented checks only
         config.reduce([]) { |arr, rule| arr + warnings.grep(/(?<=.\[).*#{rule}.*(?=\])/) } if warnings.present?
 
         # Keep filename only
         # macOS prefixes '/private' for tmpdir, but Heroku uses Linux so it should be fine.
-        captures[0] = warnings.map { |line| line.sub(filename, File.basename(filename)) }.join("\n")
+        capture.stdout = warnings.map { |line| line.sub(filename, File.basename(filename)) }.join("\n")
 
-        [captures, warnings.count]
+        [capture, warnings]
       end
     end
   end
