@@ -100,11 +100,10 @@ Rails.application.routes.draw do
       end
 
       namespace :constants, path: '' do
-        get :checkstyle
         get :zybooks
       end
 
-      resource :dependencies, only: :show
+      resources :dependencies, param: :name, only: %i[index show]
       resources :submissions, except: %i[index new edit]
 
       resources :base, module: 'rubrics/items', path: 'rubrics/items', only: :show do
