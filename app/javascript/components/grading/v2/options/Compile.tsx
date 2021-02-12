@@ -39,11 +39,7 @@ const Compile = () => {
         </Checkbox.Group>
       </Form.Item>
       <Form.Item name="arguments" label="Arguments">
-        <Input
-          placeholder="Command line arguments"
-          style={{ fontFamily: 'monospace' }}
-          allowClear
-        />
+        <Input placeholder="Command line arguments" allowClear />
       </Form.Item>
     </>
   );
