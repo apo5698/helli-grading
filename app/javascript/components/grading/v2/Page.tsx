@@ -19,7 +19,7 @@ import {
 } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { deleteHelliApi, getHelliApi, HelliApiUrl, putHelliApi } from '../../HelliApiUtil';
+import { deleteHelliApi, getHelliApi, helliApiUrl, putHelliApi } from '../../HelliApiUtil';
 
 import Compile from './options/Compile';
 import Execute from './options/Execute';
@@ -233,7 +233,7 @@ const Page = (props: { assignmentId: number }) => {
       return;
     }
 
-    fetch(HelliApiUrl(`grade_items/${record.id}/attachment`))
+    fetch(helliApiUrl(`grade_items/${record.id}/attachment`))
       .then((response) => {
         if (!response.ok) { throw response.text(); }
         return response.json();

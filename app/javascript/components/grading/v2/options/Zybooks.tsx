@@ -4,7 +4,7 @@ import { Button, Form, Input, message, Space, Upload } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { InboxOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Papa from 'papaparse';
-import { getHelliApi, HelliApiUrl } from '../../../HelliApiUtil';
+import { getHelliApi, helliApiUrl } from '../../../HelliApiUtil';
 
 const { Dragger } = Upload;
 
@@ -37,7 +37,7 @@ const Zybooks = (props: { form: FormInstance, assignmentId: number }) => {
           .data
           .map((e) => ({ email: e['School email'], total: e.Total }));
 
-        fetch(HelliApiUrl(`assignments/${assignmentId}/zybooks`), {
+        fetch(helliApiUrl(`assignments/${assignmentId}/zybooks`), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
