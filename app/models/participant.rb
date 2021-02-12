@@ -125,11 +125,22 @@ class Participant < ApplicationRecord
   # Receives and calculates the latest change on grades and feedback comments.
   def fetch
     self.grade = maximum_grade * grade_items.sum(&:point) / grade_items.sum(&:maximum_points)
-    self.feedback_comments = if submitted?
-                               Helli::SeparatedString.new(grade_items.map { |i| "#{i}: #{i.feedback}" })
-                             else
-                               STATUSES[false]
-                             end
+
+    feedback = Helli::SeparatedString.new
+
+    if no_submission?
+      self.feedback_comments = STATUSES[false]
+    else
+      grade_items.each do |gi|
+        errors = gi.error
+        next if errors.empty?
+
+        feedback << "#{gi}: #{errors.join('; ')}"
+      end
+    end
+
+    self.feedback_comments = feedback
+
     save!
   end
 

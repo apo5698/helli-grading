@@ -1,34 +1,29 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Checkbox, Form } from 'antd';
-import { FormInstance } from 'antd/lib/form';
-import { getHelliApi } from '../../../HelliApiUtil';
+import { Descriptions } from 'antd';
+import { helliApiUrl } from '../../../HelliApiUtil';
 
-const Checkstyle = (props: { form: FormInstance }) => {
-  const [config, setConfig] = useState([]);
-  const [initialValue, setInitialValue] = useState([]);
+interface Dependency {
+  version: string,
+}
+
+const Checkstyle = () => {
+  const [checkstyle, setCheckstyle] = useState<Dependency>({
+    version: '',
+  });
 
   useEffect(() => {
-    getHelliApi('checkstyle')
+    fetch(helliApiUrl('dependencies/cs-checkstyle'))
+      .then((response) => response.json())
       .then((data) => {
-        setInitialValue(Object.keys(data));
-
-        const arr = [];
-        Object
-          .entries(data)
-          .forEach(([name, description]) => {
-            arr.push({ label: <span><b>{name}</b>: {description}</span>, value: name });
-          });
-        setConfig(arr);
+        setCheckstyle(data);
       });
   }, []);
 
-  useEffect(() => props.form.resetFields(), [initialValue]);
-
   return (
-    <Form.Item name="config" label="Checkstyle Configurations" initialValue={initialValue}>
-      <Checkbox.Group options={config} />
-    </Form.Item>
+    <Descriptions title="Checkstyle Info">
+      <Descriptions.Item label="Version">{checkstyle.version}</Descriptions.Item>
+    </Descriptions>
   );
 };
 

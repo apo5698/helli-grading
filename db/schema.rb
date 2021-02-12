@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_02_000011) do
+ActiveRecord::Schema.define(version: 2021_02_08_223902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -91,11 +91,11 @@ ActiveRecord::Schema.define(version: 2021_01_02_000011) do
     t.text "stdout", default: "", null: false
     t.text "stderr", default: "", null: false
     t.integer "exitstatus", default: 0, null: false
-    t.integer "error", default: 0, null: false
     t.decimal "point", precision: 5, scale: 2, default: "0.0", null: false
     t.text "feedback", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "error", default: [], array: true
     t.index ["participant_id", "rubric_item_id"], name: "index_grade_items_on_participant_id_and_rubric_item_id", unique: true
     t.index ["participant_id"], name: "index_grade_items_on_participant_id"
     t.index ["rubric_item_id"], name: "index_grade_items_on_rubric_item_id"

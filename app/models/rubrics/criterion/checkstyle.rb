@@ -5,7 +5,7 @@ module Rubrics
     class Checkstyle < Base
       # Pass if there are no checkstyle warnings, fail otherwise.
       def validate
-        deduct_if @grade_item.error.positive?, for_each: @grade_item.error
+        deduct_if @grade_item.error.count.positive?, for_each: @grade_item.error.count
       end
     end
   end

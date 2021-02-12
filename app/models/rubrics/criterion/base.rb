@@ -105,14 +105,12 @@ module Rubrics
       # @return [String] actual feedback
       def validate; end
 
-      # Awards point to the associated grade item and returns the feedback (default is 'Pass').
+      # Awards point to the associated grade item. Does not return the feedback.
       #
       # @param [Integer, nil] for_each awards point for each thing, such as @grade_item.error
-      # @param [String] with custom feedback
-      # @return [String] feedback string
-      def award_point(for_each: nil, with: 'Pass')
+      def award_point(for_each: nil)
         @grade_item.point += point * (for_each || 1)
-        "#{default_criterion}: #{with}"
+        nil
       end
 
       # Deducts point to the associated grade item and returns the feedback.
@@ -135,17 +133,15 @@ module Rubrics
         "#{default_criterion}: #{with}"
       end
 
-      # Awards point and return the success feedback (default is 'Pass') to the associated grade
-      # item if the condition is met. Otherwise returns the feedback only, no points will be
-      # awarded or deducted.
+      # Awards point to the associated grade item if the condition is met.
+      # Otherwise returns the feedback only, no points will be awarded or deducted.
       #
       # @param [Boolean] condition condition to determine award point or not
       # @param [Integer] for_each awards point for each thing, such as @grade_item.error
-      # @param [String] with feedback on success, default 'Pass'
       # @param [String] otherwise custom feedback, if any
-      # @return [String] feedback string
-      def award_if(condition, for_each: nil, with: 'Pass', otherwise: feedback)
-        condition ? award_point(for_each: for_each, with: with) : error!(with: otherwise)
+      # @return [String, nil] feedback string if failed
+      def award_if(condition, for_each: nil, otherwise: feedback)
+        condition ? award_point(for_each: for_each) : error!(with: otherwise)
       end
 
       # Deducts point and return the failure feedback to the associated grade item if the condition

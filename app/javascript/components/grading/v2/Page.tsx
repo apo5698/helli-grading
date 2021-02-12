@@ -5,19 +5,21 @@ import {
   Badge,
   Button,
   Card,
+  Col,
   Form,
   message,
   PageHeader,
   Popconfirm,
+  Popover,
+  Row,
   Spin,
   Table,
   Tabs,
   Tag,
-  Tooltip,
 } from 'antd';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { deleteHelliApi, getHelliApi, HelliApiUrl, putHelliApi } from '../../HelliApiUtil';
+import { deleteHelliApi, getHelliApi, helliApiUrl, putHelliApi } from '../../HelliApiUtil';
 
 import Compile from './options/Compile';
 import Execute from './options/Execute';
@@ -40,7 +42,7 @@ interface GradeItem {
   stdout: string,
   stderr: string,
   exitstatus: number,
-  error: number,
+  error: string[],
 }
 
 interface Attachment {
@@ -86,13 +88,26 @@ const columns: any = [
   {
     title: 'Status',
     dataIndex: 'status',
-    render: (_, record) => (
-      <Badge size="small" count={record.error}>
-        <Tooltip title={record.feedback}>
-          <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
-            {record.status}
-          </Tag>
-        </Tooltip>
+    render: (_, record: GradeItem) => (
+      <Badge size="small" count={record.error.length}>
+        {
+          record.error.length === 0
+            ? (
+              <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+                {record.status}
+              </Tag>
+            )
+            : (
+              <Popover
+                title="Errors"
+                content={<ul>{record.error.map((cause) => <li>{cause}</li>)}</ul>}
+              >
+                <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
+                  {record.status}
+                </Tag>
+              </Popover>
+            )
+        }
       </Badge>
     ),
   },
@@ -116,7 +131,7 @@ const Page = (props: { assignmentId: number }) => {
   const { assignmentId } = props;
 
   const [currentRubricItemId, setCurrentRubricItemId] = useState<number>(0);
-  const [rubricItem, setRubricItem] = useState<RubricItem>({
+  const [currentRubricItem, setCurrentRubricItem] = useState<RubricItem>({
     id: null,
     type: null,
     filename: null,
@@ -133,7 +148,7 @@ const Page = (props: { assignmentId: number }) => {
 
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
-  const Options = optionComponents[rubricItem.type] || Spin;
+  const Options = optionComponents[currentRubricItem.type] || Spin;
 
   const fetchGradeItems = () => {
     setLoading(true);
@@ -159,7 +174,7 @@ const Page = (props: { assignmentId: number }) => {
     }
 
     getHelliApi(`rubrics/items/${currentRubricItemId}`)
-      .then((data) => setRubricItem(data));
+      .then((data) => setCurrentRubricItem(data));
     fetchGradeItems();
   }, [currentRubricItemId]);
 
@@ -175,8 +190,12 @@ const Page = (props: { assignmentId: number }) => {
       return;
     }
 
-    const key = 'running';
-    message.loading({ content: `Running 0 of ${selectedRowKeys.length}`, key, duration: 0 });
+    const key = currentRubricItemId;
+    message.loading({
+      content: `Running ${currentRubricItem.type} (${currentRubricItem.filename}): 0 / ${selectedRowKeys.length}`,
+      key,
+      duration: 0,
+    });
 
     setNoSelectionWarning(null);
     setLoading(true);
@@ -186,7 +205,11 @@ const Page = (props: { assignmentId: number }) => {
       const gid = selectedRowKeys[i];
       // eslint-disable-next-line no-await-in-loop
       await putHelliApi(`grade_items/${gid}`, options);
-      message.loading({ content: `Running ${i} of ${selectedRowKeys.length}`, key, duration: 0 });
+      message.loading({
+        content: `Running ${currentRubricItem.type} (${currentRubricItem.filename}): ${i} / ${selectedRowKeys.length}`,
+        key,
+        duration: 0,
+      });
     }
 
     message.success({ content: 'Done!', key, duration: 2 });
@@ -210,7 +233,7 @@ const Page = (props: { assignmentId: number }) => {
       return;
     }
 
-    fetch(HelliApiUrl(`grade_items/${record.id}/attachment`))
+    fetch(helliApiUrl(`grade_items/${record.id}/attachment`))
       .then((response) => {
         if (!response.ok) { throw response.text(); }
         return response.json();
@@ -317,7 +340,7 @@ const Page = (props: { assignmentId: number }) => {
     <PageHeader
       className="site-page-header"
       title="Automated Grading"
-      subTitle={rubricItem.type}
+      subTitle={currentRubricItem.type}
       extra={[
         <Popconfirm
           title="Are you sure to reset grade items on this page?"
@@ -360,7 +383,11 @@ const Page = (props: { assignmentId: number }) => {
           run(value);
         }}
       >
-        <Options form={form} assignmentId={assignmentId} />
+        <Row>
+          <Col xs={24} lg={16} xl={12}>
+            <Options form={form} assignmentId={assignmentId} />
+          </Col>
+        </Row>
         {noSelectionWarning}
         <Table
           columns={columns}

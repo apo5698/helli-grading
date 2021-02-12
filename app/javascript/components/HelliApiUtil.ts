@@ -1,11 +1,11 @@
-export const HelliApiUrl = (url = '') => `${window.location.protocol}//api.${window.location.host}/${url}`;
+export const helliApiUrl = (url = '') => `${window.location.protocol}//api.${window.location.host}/${url}`;
 
 const fetchHelliApi = async (url, method, body = {}) => {
   if (method === 'GET') {
-    return (await fetch(HelliApiUrl(url))).json();
+    return (await fetch(helliApiUrl(url))).json();
   }
 
-  return (await fetch(HelliApiUrl(url), {
+  return (await fetch(helliApiUrl(url), {
     method,
     headers: {
       Accept: 'application/json',

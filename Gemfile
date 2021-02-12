@@ -31,6 +31,7 @@ gem 'sidekiq'
 gem 'slim'
 gem 'slim-rails'
 gem 'state_machines'
+gem 'to_regexp'
 gem 'turbolinks'
 gem 'webpacker'
 

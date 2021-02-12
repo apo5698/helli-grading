@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Checkbox, Form, Input, Spin } from 'antd';
+import { Checkbox, Form, Input, Spin, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { getDependencies } from '../../../HelliApiUtil';
+
+const { TextArea } = Input;
 
 interface Dependency {
   name: string
@@ -42,7 +45,20 @@ const Execute = () => {
         <Input allowClear />
       </Form.Item>
       <Form.Item name="stdin" label="Standard Input">
-        <Input allowClear />
+        <TextArea allowClear autoSize />
+      </Form.Item>
+      <Form.Item
+        name="stdout"
+        label={(
+          <>
+            Standard Output Pattern&nbsp;
+            <Tooltip title="Add forward slashes for regular expression">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </>
+        )}
+      >
+        <TextArea allowClear autoSize />
       </Form.Item>
     </>
   );

@@ -18,7 +18,7 @@
               <%= f1.select :action, @actions, { selected: criterion[:action] }, { class: 'custom-select border-0' } %>
             </td>
             <td style="max-width: 100px">
-              <%= f1.text_field :point, value: criterion[:point], class: 'form-control border-0', required: true %>
+              <%= f1.text_field :point, value: criterion[:point].zero? ? nil : criterion[:point], class: 'form-control border-0', required: true %>
             </td>
             <td style="max-width: 300px">
               <%= f1.select :type, @criteria, { selected: criterion.class.name }, { class: 'custom-select border-0' } %>

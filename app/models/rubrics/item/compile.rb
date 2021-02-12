@@ -18,13 +18,12 @@ module Rubrics
       end
 
       def run(filename, options)
-        captures = JDK.javac(filename, options[:arguments], libraries: options[:libraries])
+        capture = JDK.javac(filename, options[:arguments], libraries: options[:libraries])
 
-        # only matches "* error(s)" at the end of stderr
-        # match returns +nil+ if no match found
-        error_count = captures[2].exitstatus.zero? ? 0 : captures[1].match(/\d+(?= errors?)/)[0] || 0
+        error = []
+        error << capture.stderr.strip.split("\n").last unless capture.exitstatus.zero?
 
-        [captures, error_count]
+        [capture, error]
       end
     end
   end
