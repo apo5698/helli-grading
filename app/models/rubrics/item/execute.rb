@@ -66,7 +66,7 @@ module Rubrics
 
           # pattern is a regexp
           unless regexp.nil? || regexp.match?(stdout)
-            error << I18n.t('rubrics.item.errors.execute.stdout.regexp', regexp: regexp, stdin: stdin)
+            error << I18n.t('rubrics.item.errors.execute.stdout.regexp', regexp: regexp.inspect, stdin: stdin)
           end
         end
 
