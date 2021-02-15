@@ -94,15 +94,15 @@ class GradeItem < ApplicationRecord
     self.status = :success
     self.point = 0
 
-    captures, error = rubric_item.run(path, options)
+    capture, error = rubric_item.run(path, options)
 
     if rubric_item.type == 'Rubrics::Item::Zybooks'
-      self.point = captures[0]
-      self.feedback = captures[1]
+      self.point = capture
+      self.error = error
     else
-      self.stdout = captures.stdout
-      self.stderr = captures.stderr
-      self.exitstatus = captures.exitstatus
+      self.stdout = capture.stdout
+      self.stderr = capture.stderr
+      self.exitstatus = capture.exitstatus
       self.error = error
 
       @content = File.read(path)
