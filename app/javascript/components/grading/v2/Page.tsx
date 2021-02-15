@@ -34,6 +34,7 @@ interface RubricItem {
 
 interface GradeItem {
   id: number,
+  type: string,
   participant: string,
   status: string,
   point: string,
@@ -179,7 +180,9 @@ const Page = (props: { assignmentId: number }) => {
   }, [currentRubricItemId]);
 
   const run = async (options) => {
-    if (!selectedRowKeys.length) {
+    const total = selectedRowKeys.length;
+
+    if (!total) {
       setNoSelectionWarning(
         <Alert
           message="Select at least one grade item to run."
@@ -191,8 +194,11 @@ const Page = (props: { assignmentId: number }) => {
     }
 
     const key = currentRubricItemId;
+    const { type, filename } = currentRubricItem;
+    const displayName = `${type}${filename ? ` (${filename})` : ''}`;
+
     message.loading({
-      content: `Running ${currentRubricItem.type} (${currentRubricItem.filename}): 0 / ${selectedRowKeys.length}`,
+      content: `Running ${displayName}: 0 / ${total}`,
       key,
       duration: 0,
     });
@@ -201,12 +207,12 @@ const Page = (props: { assignmentId: number }) => {
     setLoading(true);
 
     // eslint-disable-next-line no-restricted-syntax
-    for (let i = 0; i < selectedRowKeys.length; i += 1) {
+    for (let i = 0; i < total; i += 1) {
       const gid = selectedRowKeys[i];
       // eslint-disable-next-line no-await-in-loop
       await putHelliApi(`grade_items/${gid}`, options);
       message.loading({
-        content: `Running ${currentRubricItem.type} (${currentRubricItem.filename}): ${i} / ${selectedRowKeys.length}`,
+        content: `Running ${displayName}: ${i} / ${total}`,
         key,
         duration: 0,
       });
@@ -250,6 +256,10 @@ const Page = (props: { assignmentId: number }) => {
   };
 
   const renderExpanded = (record: GradeItem) => {
+    if (record.type === 'Zybooks') {
+      return '';
+    }
+
     const attachment: Attachment = attachments[record.id];
 
     return (
@@ -371,7 +381,10 @@ const Page = (props: { assignmentId: number }) => {
           rubricItems
             .sort((a, b) => (a.id - b.id))
             .map((i) => (
-              <TabPane tab={`${i.type} (${i.filename})`} key={i.id.toString()} />
+              <TabPane
+                tab={`${i.type}${i.filename ? ` (${i.filename})` : ''}`}
+                key={i.id.toString()}
+              />
             ))
         }
       </Tabs>

@@ -12,6 +12,10 @@ module Rubrics
         end
       end
 
+      def to_s
+        "[#{basename}]"
+      end
+
       # Run grading on a file with options.
       #
       # @param [String] key redis key
