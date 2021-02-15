@@ -22,7 +22,7 @@ module JDK
     #     capture.stdout        #=> ""
     #     capture.stderr        #=> "Invalid.java:4: error: ';' expected\n..."
     #     capture.exitstatus    #=> 1
-    def javac(filename, arguments = '', libraries: [])
+    def javac(filename, arguments = '', libraries: [], hide_path: true)
       raise Errno::ENOENT, filename unless File.exist?(filename)
 
       arguments ||= ''
@@ -34,6 +34,11 @@ module JDK
 
       cmd = ['javac', '-d', destination, '-cp', cp, basename, arguments].join(' ').strip
       capture = Open3.capture3(cmd, chdir: File.dirname(filename))
+
+      if hide_path
+        capture[0] = capture[0].gsub(filename, File.basename(filename))
+        capture[1] = capture[1].gsub(filename, File.basename(filename))
+      end
 
       Capture.new(cmd, capture)
     end
@@ -59,7 +64,7 @@ module JDK
     #     capture.stdout        #=> "Thanks for using JUnit! Support its development at ..."
     #     capture.stderr        #=> ""
     #     capture.exitstatus    #=> 0
-    def java(filename, arguments = '', libraries: [], stdin: '', timeout: 5)
+    def java(filename, arguments = '', libraries: [], stdin: '', timeout: 5, hide_path: true)
       raise Errno::ENOENT, filename unless File.exist?(filename)
 
       arguments ||= ''
@@ -86,6 +91,11 @@ module JDK
       # Using Open3.capture3t to avoid running program that never terminates (e.g. infinite loop).
       capture = Open3t.capture3t(cmd, chdir: File.dirname(filename), stdin_data: stdin, timeout: timeout)
 
+      if hide_path
+        capture[0] = capture[0].gsub(filename, File.basename(filename))
+        capture[1] = capture[1].gsub(filename, File.basename(filename))
+      end
+
       Capture.new(cmd, capture)
     end
 
@@ -100,9 +110,14 @@ module JDK
     #     capture.stdout        #=> "** Doing style check...\nStarting audit...\n[WARN] ...\nAudit done.\n\n"
     #     capture.stderr        #=> ""
     #     capture.exitstatus    #=> 0
-    def checkstyle(filename)
+    def checkstyle(filename, hide_path: true)
       cmd = [Dependency.find_by(name: 'cs-checkstyle').path, File.basename(filename)].join(' ')
       capture = Open3.capture3(cmd, chdir: File.dirname(filename))
+
+      if hide_path
+        capture[0] = capture[0].gsub(filename, File.basename(filename))
+        capture[1] = capture[1].gsub(filename, File.basename(filename))
+      end
 
       Capture.new(cmd, capture)
     end
