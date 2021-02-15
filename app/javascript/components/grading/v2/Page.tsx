@@ -275,7 +275,7 @@ const Page = (props: { assignmentId: number }) => {
           </SyntaxHighlighter>
         </Card>
         {
-          attachment?.id
+          attachment?.id && record.status !== 'Inactive'
             ? (
               <Card style={{ fontSize: '12px' }}>
                 <pre style={{ whiteSpace: 'pre-wrap' }}>{record.stdout}</pre>
