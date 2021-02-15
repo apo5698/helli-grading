@@ -22,7 +22,7 @@ module Rubrics
         # TODO: regexp does not work every time
         basename = File.basename(filename, '.*')
         # rubocop:disable Lint/MixedRegexpCaptureTypes
-        /(public)?\s+(class)\s+(?<classname>\w+)\s*{/ =~ File.read(filename)
+        /(public)?(\s+)?(class)\s+(?<classname>\w+)\s*{/ =~ File.read(filename)
 
         unless basename == classname
           error << I18n.t('rubrics.item.errors.execute.classname',
