@@ -235,7 +235,7 @@ const Page = (props: { assignmentId: number }) => {
   };
 
   const downloadAttachment = (record: GradeItem) => {
-    if (attachments[record.id]) {
+    if (attachments[record.id] || record.type === 'Zybooks') {
       return;
     }
 
