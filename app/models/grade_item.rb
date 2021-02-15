@@ -141,7 +141,7 @@ class GradeItem < ApplicationRecord
     when :no_submission
       { status: :no_submission, error: ['No submission'] }
     when :no_matched_attachment
-      { status: :unresolved, error: [resolve_manually('No matched filename')] }
+      { status: :unresolved, error: ['No filename matched or no submission'] }
     else
       raise "Unknown attributes type: #{type}"
     end
