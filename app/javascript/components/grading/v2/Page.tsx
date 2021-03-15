@@ -101,7 +101,15 @@ const columns: any = [
             : (
               <Popover
                 title="Errors"
-                content={<ul>{record.error.map((cause) => <li>{cause}</li>)}</ul>}
+                content={(
+                  <ul>
+                    {
+                      record.error.map((cause) => (
+                        <li>{cause.replace(/ /g, '\u00a0')}</li>
+                      ))
+                    }
+                  </ul>
+                )}
               >
                 <Tag color={statusTagColors[record.status] || 'default'} key={record.status}>
                   {record.status}
