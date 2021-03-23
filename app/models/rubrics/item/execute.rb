@@ -46,7 +46,7 @@ module Rubrics
         exitstatus = capture.exitstatus
 
         error << I18n.t('rubrics.item.errors.execute.stderr') if stderr.present?
-        error << I18n.t('rubrics.item.errors.execute.exitstatus', exitstatus: exitstatus) if exitstatus != 0
+        # error << I18n.t('rubrics.item.errors.execute.exitstatus', exitstatus: exitstatus) if exitstatus != 0
 
         expected_stdout = options[:stdout]
 
